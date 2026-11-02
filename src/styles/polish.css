@@ -36,8 +36,6 @@ a { text-underline-offset: 3px; }
 .sf-brand p { color: var(--hanji-dim); font-size: .85rem; line-height: 1.8; margin: .5rem 0 0; }
 .sf-links, .sf-credits { display: flex; flex-direction: column; gap: .35rem; font-size: .85rem; }
 .sf-links b, .sf-credits b { color: var(--yuchae); font-size: .78rem; letter-spacing: .1em; margin-bottom: .2rem; }
-.sf-links a { color: var(--hanji-dim); text-decoration: none; transition: color .2s, transform .2s; }
-.sf-links a:hover { color: #fff; transform: translateX(4px); }
 .sf-credits span { color: var(--hanji-dim); }
 .sf-credits .sf-note { font-size: .74rem; opacity: .75; }
 .sf-copy { margin: 1.8rem 0 0; padding-top: 1.1rem; border-top: 1px solid var(--line); text-align: center; font-size: .76rem; color: var(--hanji-dim); }
@@ -85,3 +83,54 @@ a { text-underline-offset: 3px; }
   .site-nav .nav-link { white-space: nowrap; }
   .site-nav .nav-link span { white-space: nowrap; }
 }
+
+/* 푸터 "바로가기"만 움직인다: 차례로 나타남, 색이 하나씩 켜짐, 빛알갱이가 세로선을 따라 흐름, 마우스를 올리면 밀리며 밑줄 */
+.sf-links { position: relative; padding-left: 1.5rem; gap: .15rem; }
+.sf-rail { position: absolute; left: .3rem; top: 1.7rem; bottom: .3rem; width: 2px; border-radius: 2px; background: linear-gradient(180deg, rgba(125, 211, 252, .55), rgba(167, 139, 250, .35), rgba(249, 168, 212, 0)); overflow: visible; }
+.sf-rail i { position: absolute; left: -3px; top: 0; width: 8px; height: 8px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px 2px rgba(125, 211, 252, .9); opacity: 0; }
+.site-footer.in .sf-rail i { animation: sf-drop 4.6s 1.2s ease-in-out infinite; }
+@keyframes sf-drop { 0% { top: 0; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: calc(100% - 8px); opacity: 0; } }
+.sf-link { position: relative; width: fit-content; display: inline-flex; align-items: center; padding: .22rem 0; opacity: 0; color: var(--hanji-dim); transition: color .25s, transform .25s; }
+.site-footer.in .sf-link { animation: sf-link-in .6s ease-out both; animation-delay: calc(.15s + var(--k) * .09s); }
+@keyframes sf-link-in { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
+.sf-link .bi { display: inline-block; color: var(--lc); transition: transform .3s, filter .3s; }
+.site-footer.in .sf-link .bi { animation: sf-icon 6.6s ease-in-out infinite; animation-delay: calc(1.4s + var(--k) * .55s); }
+@keyframes sf-icon { 0%, 18%, 100% { transform: none; filter: none; } 6% { transform: scale(1.35) rotate(-8deg); filter: drop-shadow(0 0 7px var(--lc)); } 12% { transform: scale(1.1); filter: drop-shadow(0 0 4px var(--lc)); } }
+.sf-link::after { content: ''; position: absolute; left: 1.7rem; right: 0; bottom: 1px; height: 1px; background: linear-gradient(90deg, var(--lc), transparent); transform: scaleX(0); transform-origin: left; transition: transform .35s; }
+.sf-link:hover { color: #fff; transform: translateX(7px); }
+.sf-link:hover::after { transform: scaleX(1); }
+.sf-link:hover .bi { animation: none; transform: scale(1.3) rotate(-10deg); filter: drop-shadow(0 0 8px var(--lc)); }
+
+/* 푸터 전체 움직임: 흐르는 빛, 별똥별, 떠다니는 별가루, 일렁이는 산과 바다, 차례로 나타나는 글 */
+.site-footer { position: relative; overflow: hidden; padding-bottom: 5.5rem; }
+.sf-content { position: relative; z-index: 2; }
+.sf-sky { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.sf-sky i { position: absolute; bottom: 20px; border-radius: 50%; background: #cfe8ff; opacity: 0; box-shadow: 0 0 6px rgba(125, 211, 252, .8); animation: sf-rise linear infinite; }
+@keyframes sf-rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .75; } 100% { transform: translateY(-230px); opacity: 0; } }
+.sf-meteor { position: absolute; top: 14%; left: 8%; width: 90px; height: 2px; border-radius: 2px; opacity: 0; transform: rotate(24deg);
+  background: linear-gradient(90deg, transparent, #fff); box-shadow: 0 0 8px #7dd3fc; animation: sf-meteor 11s ease-in infinite; animation-delay: 2s; }
+.sf-meteor.m2 { top: 30%; left: 52%; width: 70px; animation-delay: 7.5s; animation-duration: 13s; }
+@keyframes sf-meteor { 0%, 82% { opacity: 0; translate: 0 0; } 84% { opacity: 1; } 100% { opacity: 0; translate: 300px 135px; } }
+.sf-line { position: relative; z-index: 1; }
+.sf-draw { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .8; }
+.site-footer.in .sf-draw { animation: sf-draw 2.4s .2s ease-out forwards; }
+@keyframes sf-draw { to { stroke-dashoffset: 0; } }
+.sf-dot { opacity: 0; }
+.site-footer.in .sf-dot { animation: sf-pop .6s ease-out forwards, twinkle 3s ease-in-out .8s infinite; }
+@keyframes sf-pop { from { opacity: 0; } to { opacity: 1; } }
+.sf-travel { fill: #fff; filter: drop-shadow(0 0 7px #7dd3fc); offset-distance: 0%; opacity: 0; }
+.site-footer.in .sf-travel { animation: sf-travel 6.5s 2.4s linear infinite; }
+@keyframes sf-travel { 0% { offset-distance: 0%; opacity: 0; } 8%, 92% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
+.sf-in { opacity: 0; }
+.site-footer.in .sf-in { animation: sf-in .7s ease-out both; animation-delay: calc(.3s + var(--k, 0) * .08s); }
+@keyframes sf-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.sf-logo { display: inline-flex; align-items: center; }
+.sf-logo > span { background: linear-gradient(90deg, #7dd3fc, #fff, #a78bfa, #f9a8d4, #fde68a, #7dd3fc); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: title-flow 9s linear infinite; }
+.sf-logo .bi { color: #fde68a; filter: drop-shadow(0 0 8px rgba(253, 230, 138, .7)); animation: gart-pulse 3.2s ease-in-out infinite; }
+.sf-hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 96px; z-index: 1; pointer-events: none; }
+.sf-hill.far { fill: #0c2c4d; opacity: .75; animation: sf-sway 20s ease-in-out infinite alternate; }
+.sf-hill.near { fill: #081d33; opacity: .95; animation: sf-sway 14s ease-in-out infinite alternate-reverse; }
+.sf-wave { fill: none; stroke: #7dd3fc; stroke-opacity: .35; animation: sf-wave 7s linear infinite; }
+.sf-wave.w2 { stroke: #a78bfa; stroke-opacity: .28; animation-duration: 10s; animation-direction: reverse; }
+@keyframes sf-sway { from { transform: translateX(-14px); } to { transform: translateX(14px); } }
+@keyframes sf-wave { from { transform: translateX(0); } to { transform: translateX(-100px); } }
