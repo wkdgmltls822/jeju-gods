@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import CountUp from '../components/CountUp'
 import Reveal from '../components/Reveal'
+import WeatherMap from '../components/WeatherMap'
 import { Chars, Words } from '../components/AnimatedText'
 import { godTimeline } from '../lib/godTimeline'
 import GodBanner from '../components/GodBanner'
@@ -132,6 +133,8 @@ export default function Weather() {
       </section>
 
       {forecast.length > 1 && <Reveal><Hours forecast={forecast} /></Reveal>}
+
+      <Reveal><WeatherMap patch={patch} /></Reveal>
 
       <div className="wx-god-title"><i className="bi bi-stars me-1" />오늘 날씨가 부른 신<span className="wx-god-line" /></div>
       <Reveal><section className="today-card wx-godcard" style={{ '--c': GOD_COLORS[god.id] }}>

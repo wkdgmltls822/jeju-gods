@@ -1,8 +1,11 @@
-// 기상청 단기예보 조회서비스 — 제주시/서귀포시의 앞으로 몇 시간 예보
+// 기상청 단기예보 조회서비스 — 제주시·서귀포시 등 지역별 앞으로 몇 시간 예보
 const URL_BASE = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
 
 // 기상청 격자 좌표
-const GRID = { 제주시: { nx: 52, ny: 38 }, 서귀포시: { nx: 52, ny: 33 } }
+// 한림·성산·모슬포는 위도·경도를 기상청 격자로 바꿔 구한 값이다 (지역별 날씨 지도에서 쓴다)
+const GRID = {
+  제주시: { nx: 52, ny: 38 }, 한림: { nx: 48, ny: 36 }, 성산: { nx: 60, ny: 37 }, 서귀포시: { nx: 52, ny: 33 }, 모슬포: { nx: 48, ny: 32 },
+}
 
 export const PLACES = Object.keys(GRID)
 
