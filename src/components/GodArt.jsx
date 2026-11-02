@@ -1,11 +1,8 @@
+import { GOD_COLORS } from '../data/gods'
 // 신마다 하나씩 그려 둔 그림 카드 (SVG 일러스트). 신 이야기의 핵심 장면을 상징으로 담았습니다.
 // 색은 --c(대표 빛깔)로 맞추고, 움직임은 theme.css 의 gart-* 애니메이션이 맡습니다.
 const STARS = [[30, 24], [88, 50], [140, 18], [210, 36], [262, 14], [330, 40], [372, 22], [60, 96], [352, 98], [18, 140], [386, 150], [300, 72], [170, 64], [120, 112]]
 
-const COLORS = {
-  seolmundae: '#7dd3fc', cheonjiwang: '#fde68a', daebyeol: '#f9a8d4', samseong: '#5eead4', baekjuddo: '#c4b5fd',
-  yeongdeung: '#a5f3fc', jacheongbi: '#bef264', munjeon: '#fdba74', jowang: '#fb923c', chilseong: '#a78bfa',
-}
 
 const SCENES = {
   // 한라산을 베고 누운 거인 여신, 치마에서 흘러내리는 흙이 오름이 된다
@@ -174,7 +171,7 @@ export default function GodArt({ id, className = '' }) {
   const Scene = SCENES[id]
   return (
     <svg className={`god-art ${className}`} viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"
-      style={{ '--c': COLORS[id] ?? '#7dd3fc' }}>
+      style={{ '--c': GOD_COLORS[id] ?? '#7dd3fc' }}>
       <defs>
         <linearGradient id={`sky-${id}`} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#0a1a2e" />

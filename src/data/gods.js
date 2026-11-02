@@ -86,3 +86,9 @@ export function pickGodForWeather(w) {
   const [id] = Object.entries(scores).sort((a, b) => b[1] - a[1])[0]
   return { god: godById(id), reason: reasons[id] }
 }
+
+// 신마다 대표 빛깔 (그림 카드와 3D 별자리에서 같이 씁니다)
+export const GOD_COLORS = {
+  seolmundae: '#7dd3fc', cheonjiwang: '#fde68a', daebyeol: '#f9a8d4', samseong: '#5eead4', baekjuddo: '#c4b5fd',
+  yeongdeung: '#a5f3fc', jacheongbi: '#bef264', munjeon: '#fdba74', jowang: '#fb923c', chilseong: '#a78bfa',
+}
