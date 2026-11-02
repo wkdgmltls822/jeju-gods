@@ -6,6 +6,7 @@ import { GODS, EDGES, GOD_COLORS, godById } from '../data/gods'
 import { COAST_XZ, LANDMARKS, PINS, ROADS, heightAt, toXZ } from '../lib/jeju'
 import { MilkyWay, Nebulae, SkyDome } from './StarMap3D'
 import { glowTexture } from '../lib/glow'
+import Scenery, { Sea } from './JejuScenery'
 
 // 별자리(2D 좌표 800×520)를 제주섬 위 하늘로 옮긴다. 별 높이는 신마다 조금씩 다르게.
 const SKY_Y = 3.4
@@ -59,10 +60,7 @@ function Island() {
   return (
     <group>
       <mesh geometry={geo} material={mat} />
-      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[90, 90]} />
-        <meshStandardMaterial color="#0a4a7c" transparent opacity={0.5} roughness={0.25} metalness={0.25} depthWrite={false} />
-      </mesh>
+      <Sea />
       <Line points={ring} color="#d8f1ff" lineWidth={2} transparent opacity={0.85} />
       {roads.map((r) => <Line key={r.name} points={r.pts} color={r.name === '일주도로' ? '#ffd166' : '#ffb07a'} lineWidth={r.name === '일주도로' ? 1.2 : 1} transparent opacity={0.55} dashed dashSize={0.1} gapSize={0.06} />)}
       {marks.map((l) => (
@@ -153,7 +151,7 @@ function Sky({ selectedId, todayId, onSelect }) {
 export default function JejuMap3D({ selectedId, todayId, onSelect }) {
   return (
     <div className="starmap3d jejumap3d" role="group" aria-label="제주 3D 지도와 신들의 별자리">
-      <Canvas camera={{ position: [0, 5.6, 9.2], fov: 48 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 4.6, 10.2], fov: 48 }} dpr={[1, 2]}>
         <SkyDome />
         <Nebulae />
         <MilkyWay />
@@ -162,9 +160,10 @@ export default function JejuMap3D({ selectedId, todayId, onSelect }) {
         <ambientLight intensity={0.9} color="#8fb3ff" />
         <directionalLight position={[-6, 9, 5]} intensity={1.6} color="#d6e6ff" />
         <hemisphereLight args={['#9fc4ff', '#1b3a2c', 0.5]} />
+        <Scenery />
         <Island />
         <Sky selectedId={selectedId} todayId={todayId} onSelect={onSelect} />
-        <OrbitControls target={[0, 1.3, 0]} enablePan={false} autoRotate autoRotateSpeed={0.35} minDistance={5} maxDistance={20} maxPolarAngle={1.45} dampingFactor={0.08} />
+        <OrbitControls target={[0, 1.9, 0]} enablePan={false} autoRotate autoRotateSpeed={0.35} minDistance={5} maxDistance={20} maxPolarAngle={1.45} dampingFactor={0.08} />
       </Canvas>
       <div className="starmap3d-hint"><i className="bi bi-hand-index me-1" />끌어서 돌려 보고, 별이나 핀을 눌러 보세요</div>
     </div>
