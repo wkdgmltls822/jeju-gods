@@ -1,0 +1,140 @@
+/* 탐라 이야기 디자인 토큰
+   제주 하늘색: 한밤 하늘 남색 + 하늘빛 포인트 */
+:root {
+  --basalt: #0b1b2e;
+  --basalt-2: #12273f;
+  --hanji: #eaf4fb;
+  --hanji-dim: #93aec4;
+  --line: #22405d;
+  --yuchae: #7dd3fc;   /* 하늘색: 포인트 */
+  --sea: #60a5fa;      /* 바다 파랑: 보조 */
+  --ember: #fda4af;    /* 귤빛 주황: 경고·강조 */
+  --on-accent: #06202e; /* 포인트색 위의 글자색 */
+  --nav-bg: rgba(11, 27, 46, 0.88);
+  --glow-1: rgba(96, 165, 250, 0.20);
+  --glow-2: rgba(125, 211, 252, 0.10);
+
+  --bs-body-bg: var(--basalt);
+  --bs-body-color: var(--hanji);
+  --bs-body-font-family: 'Noto Sans KR', system-ui, sans-serif;
+  --bs-border-color: var(--line);
+  --bs-secondary-color: var(--hanji-dim);
+  --bs-link-color: var(--yuchae);
+}
+
+body {
+  background:
+    radial-gradient(60rem 30rem at 85% -10%, var(--glow-1), transparent 60%),
+    radial-gradient(40rem 25rem at 0% 0%, var(--glow-2), transparent 60%),
+    var(--basalt);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
+.hero-title { font-weight: 900; letter-spacing: -0.03em; }
+.accent { color: var(--yuchae); }
+.sea { color: var(--sea); }
+
+/* 상단 메뉴 */
+.site-nav { background: var(--nav-bg); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.site-nav .nav-link { color: var(--hanji-dim); border-radius: 999px; padding: 0.4rem 0.9rem; }
+.site-nav .nav-link:hover { color: var(--hanji); }
+.site-nav .nav-link.active { color: var(--on-accent); background: var(--yuchae); font-weight: 700; }
+
+/* 버튼 */
+.btn-yuchae { background: var(--yuchae); color: var(--on-accent); font-weight: 700; border: 0; }
+.btn-yuchae:hover { filter: brightness(1.1); color: var(--on-accent); }
+.btn-hanji { border: 1px solid var(--hanji-dim); color: var(--hanji); }
+.btn-hanji:hover { background: var(--hanji); color: var(--basalt); }
+
+/* 히어로: 달 + 파도 */
+.hero {
+  position: relative; padding: 5rem 1rem 7rem; text-align: center; overflow: hidden;
+  /* 컨테이너를 벗어나 화면 전체 폭으로 */
+  width: 100vw; margin: -3rem 0 0 calc(50% - 50vw);
+}
+.moon {
+  position: absolute; top: 1.5rem; left: 50%; width: 15rem; height: 15rem; transform: translateX(-50%);
+  border-radius: 50%; z-index: 0;
+  background: radial-gradient(circle at 35% 35%, #ffffff, var(--yuchae) 55%, var(--sea));
+  opacity: 0.18; filter: blur(1px);
+  animation: breathe 6s ease-in-out infinite;
+}
+@keyframes breathe { 50% { transform: translateX(-50%) scale(1.06); opacity: 0.26; } }
+.hero > *:not(.moon):not(.waves) { position: relative; z-index: 1; }
+.waves { position: absolute; left: 0; right: 0; bottom: 0; height: 4.5rem; z-index: 0; }
+.waves path { fill: var(--sea); opacity: 0.18; }
+.waves path:nth-child(2) { opacity: 0.12; transform: translateX(-4%); }
+
+/* 설화 카드 */
+.myth-card {
+  background: var(--basalt-2); border: 1px solid var(--line); border-radius: 1rem;
+  padding: 1.5rem; height: 100%; position: relative; overflow: hidden;
+  transition: transform .2s, border-color .2s;
+}
+.myth-card:hover { transform: translateY(-4px); border-color: var(--yuchae); }
+.myth-card::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 3px;
+  background: linear-gradient(90deg, var(--yuchae), var(--sea));
+}
+.myth-card .tag { font-size: .75rem; color: var(--sea); letter-spacing: .08em; }
+
+.weather-badge { background: var(--basalt-2); border: 1px solid var(--line); color: var(--hanji); font-weight: 500; }
+.weather-badge .bi { color: var(--yuchae); }
+
+/* 오늘의 신 · 신 소개 패널 */
+.today-god, .god-panel {
+  background: var(--basalt-2); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem;
+  position: relative; overflow: hidden;
+}
+.today-god { max-width: 720px; margin-top: .5rem; }
+.today-god::before, .god-panel::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 3px;
+  background: linear-gradient(90deg, var(--yuchae), var(--sea));
+}
+.today-god .tag, .god-panel .tag { font-size: .75rem; color: var(--sea); letter-spacing: .08em; }
+.place-list li { padding: .5rem 0; border-top: 1px solid var(--line); }
+
+/* 별자리 지도 */
+.starmap { width: 100%; height: auto; background: radial-gradient(circle at 50% 30%, #14304f, var(--basalt-2) 70%);
+  border: 1px solid var(--line); border-radius: 1rem; }
+.starmap .edge { stroke: var(--sea); stroke-opacity: .35; stroke-width: 1.5; }
+.starmap .edge.lit { stroke: var(--yuchae); stroke-opacity: .9; }
+.starmap .star { cursor: pointer; outline: none; }
+.starmap .halo { fill: var(--yuchae); opacity: 0; transition: opacity .2s; }
+.starmap .core { fill: var(--hanji); transition: fill .2s, r .2s; }
+.starmap .label { fill: var(--hanji-dim); font-size: 14px; font-family: 'Noto Serif KR', serif; }
+.starmap .today-ring { fill: none; stroke: var(--yuchae); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.starmap .star:hover .halo, .starmap .star:focus-visible .halo { opacity: .18; }
+.starmap .star.active .halo { opacity: .28; }
+.starmap .star.active .core { fill: var(--yuchae); }
+.starmap .star.active .label { fill: var(--hanji); font-weight: 700; }
+
+/* 신과 대화 */
+.chat-box { background: var(--basalt-2); border: 1px solid var(--line); border-radius: 1rem; padding: 1rem;
+  min-height: 22rem; max-height: 60vh; overflow-y: auto; display: flex; flex-direction: column; gap: .75rem; }
+.bubble { max-width: 85%; }
+.bubble.user { align-self: flex-end; }
+.bubble .body { padding: .6rem .9rem; border-radius: 1rem; white-space: pre-wrap; line-height: 1.7; }
+.bubble.user .body { background: var(--yuchae); color: var(--on-accent); border-bottom-right-radius: .25rem; }
+.bubble.assistant .body { background: var(--basalt); border: 1px solid var(--line); border-bottom-left-radius: .25rem; }
+.bubble .who { font-size: .75rem; color: var(--sea); margin: 0 0 .2rem .4rem; font-family: 'Noto Serif KR', serif; }
+.steps { font-size: .75rem; margin: .35rem 0 0 .4rem; display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; }
+.step-chip { border: 1px solid var(--sea); color: var(--sea); border-radius: 999px; padding: .1rem .55rem; }
+.step-chip.fail { border-color: var(--ember); color: var(--ember); }
+
+/* 관람객 막대 */
+.visitor-chart { background: var(--basalt-2); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; }
+.bar-row { display: grid; grid-template-columns: 9.5rem 1fr 5.5rem; align-items: center; gap: .6rem; padding: .3rem 0; font-size: .9rem; }
+.bar-track { background: var(--basalt); border-radius: 999px; height: .7rem; overflow: hidden; }
+.bar-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--sea), var(--yuchae)); border-radius: 999px; transition: width .25s; }
+.bar-num { text-align: right; color: var(--hanji-dim); }
+@media (max-width: 575px) { .bar-row { grid-template-columns: 6.5rem 1fr 4.6rem; font-size: .8rem; } }
+
+/* 내 신 기록 */
+.fav-chip { background: var(--basalt-2); border: 1px solid var(--yuchae); border-radius: 999px; padding: .35rem .9rem; }
+.log-list li { padding: .6rem 0; border-top: 1px solid var(--line); white-space: pre-wrap; }
+
+.page-eyebrow { color: var(--sea); font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; }
+

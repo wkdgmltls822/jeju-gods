@@ -1,0 +1,29 @@
+import { Link } from 'react-router-dom'
+import WeatherBadge from '../components/WeatherBadge'
+import TodayGod from '../components/TodayGod'
+
+// 첫 화면: 기획 의도가 한 줄로 보여야 합니다
+const INTENT = '1만 8천 신이 깃든 땅의 신화와 설화를 AI 이야기꾼과 함께 오늘의 날씨와 장소 위에서 다시 만납니다.'
+
+export default function Home() {
+  return (
+    <>
+      <section className="hero">
+        <div className="moon" />
+        <div className="mb-3"><WeatherBadge /></div>
+        <p className="page-eyebrow mb-2">Jeju Myth · Public Data · AI Agent</p>
+        <h1 className="display-3 hero-title mb-3">신들의 섬, <span className="accent">제주</span></h1>
+        <p className="lead mx-auto mb-4 serif" style={{ maxWidth: 640, lineHeight: 1.8 }}>{INTENT}</p>
+        <div className="d-flex gap-2 justify-content-center flex-wrap">
+          <Link to="/myths" className="btn btn-yuchae btn-lg px-4">별자리 열기</Link>
+          <Link to="/agent" className="btn btn-hanji btn-lg px-4">신과 대화</Link>
+        </div>
+        <svg className="waves" viewBox="0 0 1200 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 50 Q150 0 300 50 T600 50 T900 50 T1200 50 V100 H0Z" />
+          <path d="M0 65 Q150 15 300 65 T600 65 T900 65 T1200 65 V100 H0Z" />
+        </svg>
+      </section>
+      <TodayGod />
+    </>
+  )
+}
