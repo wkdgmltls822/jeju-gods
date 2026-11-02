@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PageHeader from '../components/PageHeader'
+import GodAvatar from '../components/GodAvatar'
+import GodArt from '../components/GodArt'
 import { GODS, godById } from '../data/gods'
 import { useAppStore } from '../store/useAppStore'
 
@@ -51,18 +53,30 @@ export default function Agent() {
     <>
       <PageHeader title="신과 대화" desc="신을 고르면 그 신의 말투로 답해요. 날씨와 장소는 AI가 스스로 도구를 골라 확인해요." />
 
-      <div className="mb-3 d-flex align-items-center gap-2 flex-wrap">
-        <label htmlFor="god-select" className="text-secondary">대화할 신</label>
-        <select id="god-select" className="form-select w-auto" value={chatGodId} onChange={(e) => setChatGod(e.target.value)}>
-          {GODS.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-        </select>
-        <span className="accent small">{god.role}</span>
+      <div className="god-picker" role="radiogroup" aria-label="대화할 신">
+        {GODS.map((g) => (
+          <button key={g.id} type="button" role="radio" aria-checked={g.id === chatGodId} className={g.id === chatGodId ? 'pick on' : 'pick'}
+            onClick={() => setChatGod(g.id)}>
+            <GodAvatar id={g.id} size={54} active={g.id === chatGodId} />
+            <span>{g.name.replace(/\(.*\)/, '')}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="chat-head">
+        <GodArt id={god.id} className="chat-head-art" />
+        <div className="chat-head-text">
+          <div className="tale-chip mb-1"><i className="bi bi-book me-1" />{god.tale}</div>
+          <h2 className="h4 serif mb-0">{god.name}</h2>
+          <div className="accent small">{god.role}</div>
+        </div>
       </div>
 
       <div className="chat-box">
         {messages.length === 0 && (
           <div className="text-center text-secondary py-4">
-            <p className="serif mb-3">{god.name}에게 무엇이든 물어보세요.</p>
+            <GodAvatar id={god.id} size={72} active />
+            <p className="serif my-3">{god.name}에게 무엇이든 물어보세요.</p>
             <div className="d-flex gap-2 justify-content-center flex-wrap">
               {SUGGESTIONS.map((s) => (
                 <button key={s} type="button" className="btn btn-hanji btn-sm" onClick={() => submit(null, s)}>{s}</button>
@@ -72,16 +86,26 @@ export default function Agent() {
         )}
         {messages.map((m, i) => (
           <div key={i} className={`bubble ${m.role}`}>
-            {m.role === 'assistant' && <div className="who">{god.name}</div>}
-            <div className="body">{m.text}</div>
-            {m.role === 'assistant' && (m.demo
-              ? <div className="steps demo-note"><i className="bi bi-info-circle me-1" />데모 응답 · AI·API 없이 미리 준비한 답이에요 ({m.demoReason})</div>
-              : <Steps steps={m.steps} />)}
+            {m.role === 'assistant' ? (
+              <div className="b-row">
+                <GodAvatar id={god.id} size={34} />
+                <div className="b-main">
+                  <div className="who">{god.name}</div>
+                  <div className="body">{m.text}</div>
+                  {m.demo
+                    ? <div className="steps demo-note"><i className="bi bi-info-circle me-1" />데모 응답 · AI·API 없이 미리 준비한 답이에요 ({m.demoReason})</div>
+                    : <Steps steps={m.steps} />}
+                </div>
+              </div>
+            ) : <div className="body">{m.text}</div>}
           </div>
         ))}
         {chatLoading && (
           <div className="bubble assistant" role="status">
-            <div className="body"><span className="typing" aria-hidden="true"><i /><i /><i /></span><span className="visually-hidden">{god.name}이(가) 생각하는 중</span></div>
+            <div className="b-row">
+              <GodAvatar id={god.id} size={34} />
+              <div className="b-main"><div className="body"><span className="typing" aria-hidden="true"><i /><i /><i /></span><span className="visually-hidden">{god.name}이(가) 생각하는 중</span></div></div>
+            </div>
           </div>
         )}
         {chatError && <div className="alert alert-danger py-2 mb-0">{chatError}</div>}
