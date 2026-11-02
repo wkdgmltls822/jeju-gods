@@ -52,6 +52,10 @@ export default function SiteFooter() {
           <div className="sf-brand sf-in" style={{ '--k': 0 }}>
             <div className="sf-logo serif"><i className="bi bi-moon-stars-fill me-2" /><span>신들의 섬, 제주</span></div>
             <p>1만 8천 신이 깃든 섬의 신화를<br />공공데이터와 AI 이야기꾼으로 다시 만납니다.</p>
+            <a className="sf-qr" href="https://jeju-gods.vercel.app" aria-label="휴대폰으로 열기: 신들의 섬, 제주 QR 코드">
+              <img src="/images/qr.png" alt="신들의 섬, 제주 사이트 주소 QR 코드" width="104" height="104" loading="lazy" />
+              <span><b><i className="bi bi-phone me-1" />휴대폰으로 열기</b><small>카메라로 QR을 스캔하면<br />이 사이트가 열려요</small></span>
+            </a>
           </div>
           <nav className="sf-links" aria-label="바로가기">
             <b className="sf-in" style={{ '--k': 1 }}>바로가기</b>
