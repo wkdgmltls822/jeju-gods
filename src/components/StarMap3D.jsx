@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
-import { AdditiveBlending, BackSide, CanvasTexture, Color, Vector2 } from 'three'
+import { AdditiveBlending, BackSide, Color, Vector2 } from 'three'
+import { glowTexture } from '../lib/glow'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Html, Line, OrbitControls, Sparkles, Stars } from '@react-three/drei'
 import { GODS, EDGES, GOD_COLORS, godById } from '../data/gods'
@@ -8,19 +9,6 @@ import { GODS, EDGES, GOD_COLORS, godById } from '../data/gods'
 const DEPTH = { seolmundae: 0, cheonjiwang: -1.6, daebyeol: 1.4, samseong: -1.0, baekjuddo: 1.6, yeongdeung: -1.4, jacheongbi: 0.8, munjeon: -0.6, jowang: 1.2, chilseong: -1.8 }
 const pos = (g) => [(g.x - 400) / 62, -(g.y - 260) / 62, DEPTH[g.id] ?? 0]
 
-// 부드럽게 번지는 빛 한 장 (가운데는 밝고 가장자리로 갈수록 투명해지는 동그라미)
-const glowTexture = (() => {
-  const c = document.createElement('canvas')
-  c.width = c.height = 128
-  const g = c.getContext('2d')
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64)
-  grad.addColorStop(0, 'rgba(255,255,255,1)')
-  grad.addColorStop(0.25, 'rgba(255,255,255,0.45)')
-  grad.addColorStop(1, 'rgba(255,255,255,0)')
-  g.fillStyle = grad
-  g.fillRect(0, 0, 128, 128)
-  return new CanvasTexture(c)
-})()
 
 function GodStar({ god, selected, today, onSelect }) {
   const core = useRef()
@@ -69,7 +57,7 @@ function GodStar({ god, selected, today, onSelect }) {
 }
 
 // 하늘 전체를 감싸는 그라데이션: 위는 깊은 남색, 가운데는 보랏빛, 지평선 쪽은 바다 같은 청록
-function SkyDome() {
+export function SkyDome() {
   const uniforms = useMemo(() => ({
     top: { value: new Color('#0a1340') }, mid: { value: new Color('#33208f') }, low: { value: new Color('#0f6d8f') },
   }), [])
@@ -89,7 +77,7 @@ const NEBULAE = [
   { p: [4, -8, -40], s: 56, c: '#22d3ee', o: 0.55 }, { p: [-34, -6, -14], s: 40, c: '#3b82f6', o: 0.65 },
   { p: [34, -2, -18], s: 42, c: '#a78bfa', o: 0.6 },
 ]
-function Nebulae() {
+export function Nebulae() {
   const g = useRef()
   useFrame((_, dt) => { g.current.rotation.y += dt * 0.01 })
   return (
@@ -104,7 +92,7 @@ function Nebulae() {
 }
 
 // 은하수: 하늘을 비스듬히 가로지르는 별가루 띠
-function MilkyWay() {
+export function MilkyWay() {
   const { pos, col } = useMemo(() => {
     let seed = 99
     const rand = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296 }

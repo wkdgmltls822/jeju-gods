@@ -13,7 +13,7 @@
 **누구를 위한 것인가** — 제주 신화를 책으로 읽기는 어렵지만, 여행하며 이야기와 장소를 함께 만나고 싶은 사람
 
 **어떤 가치인가**
-- 신들을 밤하늘의 **별자리 지도**로 그려, 별을 눌러 이야기를 만난다. 평면 지도와 함께, 끌어서 돌려 볼 수 있는 **3D 별자리**(Three.js)도 있다.
+- 신들을 밤하늘의 **별자리 지도**로 그려, 별을 눌러 이야기를 만난다. 평면 지도와 함께, 끌어서 돌려 볼 수 있는 **3D 별자리**(Three.js)도 있고, 한라산이 솟은 **3D 제주 지도** 위에 별자리를 띄워 각 신과 이어진 실제 장소로 빛줄기가 내려오게 했다(해안선은 단순화한 지형).
 - 그날의 **날씨**가 오늘의 신을 고른다. (바람 센 날은 영등할망, 구름 낀 날은 설문대할망)
 - 신과 이어지는 **실제 장소**를 보여 주고, 서귀포 관광지가 **얼마나 붐비는지**도 함께 알려 준다.
 - **AI 신**과 대화하면, 신의 말투로 답하면서 날씨·장소·관람객 데이터를 스스로 찾아 근거로 쓴다.
@@ -85,7 +85,7 @@ src/
   router.jsx         메뉴(NAV_ITEMS) + 주소별 페이지
   layouts/           공통 틀 (메뉴·푸터)
   pages/             Home, Myths, Agent, My, NotFound
-  components/        StarMap, StarMap3D(3D), GodArt(신 그림), GodPanel, VisitorChart, WeatherBadge, TodayGod ...
+  components/        StarMap, StarMap3D(3D), JejuMap3D(3D 지도), GodArt(신 그림), GodPanel, VisitorChart, WeatherBadge, TodayGod ...
   store/             Zustand 전역 상태 (닉네임, 날씨, 즐겨찾기, 대화)
   data/gods.js       신 10명의 정보와 날씨 매칭 규칙
   api/client.js      화면 → /api 호출 함수

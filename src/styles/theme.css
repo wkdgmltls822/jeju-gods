@@ -540,3 +540,6 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .god-avatar .god-art-sweepless, .god-avatar .gart-sweep { display: none; }
 .gart-float { animation: gart-floatY 4s ease-in-out infinite alternate; }
 @keyframes gart-floatY { from { transform: translateY(-4px); } to { transform: translateY(5px); } }
+.pin3d-label { display: inline-block; white-space: nowrap; font-size: 12px; color: #06202e; background: rgba(125, 211, 252, .95); padding: .1rem .55rem; border-radius: 999px; box-shadow: 0 0 14px rgba(125, 211, 252, .7); user-select: none; }
+.view-toggle { max-width: 100%; overflow-x: auto; }
+.view-toggle button { white-space: nowrap; }
