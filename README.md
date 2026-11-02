@@ -23,16 +23,18 @@
 | 화면 | 주소 | 설명 |
 |---|---|---|
 | 홈 | `/` | 기획 의도, 오늘 제주 날씨, 날씨로 고른 오늘의 신 |
-| 별자리 | `/myths` | 신 10명의 별자리 지도(평면·3D 전환), 신 소개, 관련 장소, 서귀포 월별 관람객 그래프, 즐겨찾기 |
+| 별자리 | `/myths` | 신 10명의 별자리 지도(평면·3D 별자리·3D 지도 전환), 신 소개, 관련 장소, 서귀포 월별 관람객 그래프, 즐겨찾기. 3D 지도에는 한라산 지형과 주요 건물(공항·타워·등대·민속마을 등) 모형이 있다 |
+| 날씨 | `/weather` | 제주 읍·면 13곳의 기상청 예보를 올린 지역별 날씨 지도(기온·강수·바람 전환, 확대·이동, 시간별 차트). "실제 지도 · 건물" 버튼을 누르면 실제 지도(OpenStreetMap 기반) 위에 같은 날씨 핀과 3D 건물이 나온다 |
 | 신과 대화 | `/agent` | 신을 골라 대화. 답변 아래에 AI가 호출한 도구가 표시됨 |
 | 내 신 기록 | `/my` | 닉네임별 즐겨찾기한 신과 대화 기록 (Supabase) |
+| 소개 영상 | `/film` (홈에서도 재생) | 신 10명을 소개하는 1분 35초 영상. `/film` 은 전체 화면으로 재생되며 Esc 로 나갈 수 있다 |
 
 ## 사용한 공공데이터 API (3개)
 
 | # | API | 쓰는 곳 | 서버 함수 |
 |---|---|---|---|
 | 1 | 한국관광공사 국문 관광정보 서비스 (TourAPI) | 신 소개의 "이어지는 곳", 신 그림 배경에 깔리는 실제 장소 사진(출처 표기: 한국관광공사) | `/api/tour` |
-| 2 | 기상청 단기예보 조회서비스 | 홈 날씨 배지, 오늘의 신 고르기 | `/api/weather` |
+| 2 | 기상청 단기예보 조회서비스 | 홈 날씨 배지, 오늘의 신 고르기, 날씨 화면의 읍·면 13곳 지도 | `/api/weather` |
 | 3 | 제주특별자치도 서귀포시 직영관광지 관람객수 추이 | 별자리 페이지 월별 막대 그래프 | `/api/visitors` |
 
 세 API 모두 공공데이터포털 인증키 하나(`DATA_GO_KR_KEY`)로 호출한다. 키는 서버 함수에서만 쓰이고 브라우저에는 나가지 않는다.
@@ -84,8 +86,8 @@ src/
   main.jsx           Bootstrap + 우리 스타일, 라우터 시작
   router.jsx         메뉴(NAV_ITEMS) + 주소별 페이지
   layouts/           공통 틀 (메뉴·푸터)
-  pages/             Home, Myths, Agent, My, NotFound
-  components/        StarMap, StarMap3D(3D), JejuMap3D(3D 지도), GodArt(신 그림), GodPanel, VisitorChart, WeatherBadge, TodayGod ...
+  pages/             Home, Myths, Weather, Agent, My, Film, NotFound
+  components/        StarMap, StarMap3D(3D), JejuMap3D·JejuBuildings3D(3D 지도), WeatherMap·WeatherRealMap(날씨 지도), GodArt(신 그림), GodPanel, VisitorChart, SideDecor(넓은 화면 양옆 장식) ...
   store/             Zustand 전역 상태 (닉네임, 날씨, 즐겨찾기, 대화)
   data/gods.js       신 10명의 정보와 날씨 매칭 규칙
   api/client.js      화면 → /api 호출 함수
