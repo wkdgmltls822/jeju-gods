@@ -152,7 +152,7 @@ function Sky({ selectedId, todayId, onSelect }) {
 export default function JejuMap3D({ selectedId, todayId, onSelect }) {
   return (
     <div className="starmap3d jejumap3d" role="group" aria-label="제주 3D 지도와 신들의 별자리">
-      <Canvas camera={{ position: [0, 4.6, 10.2], fov: 48 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 4.4, 9.6], fov: 47 }} dpr={[1.5, 2]} gl={{ antialias: true }}>
         <SkyDome />
         <Nebulae />
         <MilkyWay />
@@ -165,7 +165,7 @@ export default function JejuMap3D({ selectedId, todayId, onSelect }) {
         <Island />
         <Buildings3D />
         <Sky selectedId={selectedId} todayId={todayId} onSelect={onSelect} />
-        <OrbitControls target={[0, 1.9, 0]} enablePan={false} autoRotate autoRotateSpeed={0.35} minDistance={5} maxDistance={20} maxPolarAngle={1.45} dampingFactor={0.08} />
+        <OrbitControls target={[0, 1.15, 0]} enablePan={false} autoRotate autoRotateSpeed={0.35} minDistance={5} maxDistance={20} maxPolarAngle={1.45} dampingFactor={0.08} />
       </Canvas>
       <div className="starmap3d-hint"><i className="bi bi-hand-index me-1" />끌어서 돌려 보고, 별이나 핀을 눌러 보세요</div>
     </div>

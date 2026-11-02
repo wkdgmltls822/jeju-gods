@@ -804,3 +804,5 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .title-shimmer.flow-my { background-image: linear-gradient(90deg, #5eead4, #ffffff, #bef264, #7dd3fc, #a7f3d0, #5eead4); }
 .lm3d.bld { gap: .25rem; font-size: 9px; color: #fde8b0; opacity: .9; }
 .lm3d.bld i { color: #ffd166; font-size: 10px; }
+
+.jejumap3d { aspect-ratio: 800 / 600; min-height: 380px; }

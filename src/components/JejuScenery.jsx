@@ -59,27 +59,29 @@ export function Sea() {
             vec3 L = normalize(M - vW);
             vec3 H = normalize(L + V);
             float diff = max(dot(n, L), 0.0);
-            float spec = pow(max(dot(n, H), 0.0), 90.0);
+            float spec = pow(max(dot(n, H), 0.0), 220.0);
             float fres = pow(1.0 - max(dot(n, V), 0.0), 3.0);
             float r = length(vW.xz);
-            vec3 deep = mix(vec3(0.02, 0.2, 0.38), vec3(0.01, 0.08, 0.2), smoothstep(4.0, 24.0, r));
-            vec3 col = deep + vec3(0.05, 0.16, 0.28) * diff * 1.4;
+            vec3 deep = mix(vec3(0.015, 0.14, 0.3), vec3(0.005, 0.05, 0.14), smoothstep(4.0, 24.0, r));
+            vec3 col = deep + vec3(0.04, 0.12, 0.22) * diff * 1.1;
             col += vec3(0.16, 0.3, 0.55) * fres * 0.9;
-            col += vec3(1.0, 0.97, 0.88) * spec * 2.6;
+            col += vec3(1.0, 0.97, 0.88) * spec * 1.5;
             float crest = smoothstep(0.11, 0.2, h);
             float foam = smoothstep(0.17, 0.26, h);
-            col += vec3(0.6, 0.85, 1.0) * crest * 0.55 + vec3(0.9, 0.97, 1.0) * foam * 0.5;
+            col += vec3(0.5, 0.78, 0.95) * crest * 0.16 + vec3(0.85, 0.95, 1.0) * foam * 0.06;
             float trough = smoothstep(-0.08, -0.2, h);
             col -= vec3(0.03, 0.08, 0.12) * trough * 1.6;
             
-            vec2 q = floor(vW.xz * 8.0 + vec2(t * 0.5, -t * 0.35));
-            float hh = hash(q);
-            float tw = step(0.985, hh) * (0.5 + 0.5 * sin(t * 4.0 + hh * 40.0));
+            vec2 g = vW.xz * 26.0 + vec2(t * 0.6, -t * 0.4);
+            vec2 id = floor(g); vec2 f = fract(g) - 0.5;
+            float hh = hash(id);
+            float dot_ = smoothstep(0.16, 0.0, length(f + (vec2(hash(id + 3.1), hash(id + 7.7)) - 0.5) * 0.5));
+            float tw = step(0.975, hh) * dot_ * (0.5 + 0.5 * sin(t * 3.0 + hh * 40.0));
             float cx = vW.x * cos(ang) - vW.z * sin(ang);
             float cz = vW.x * sin(ang) + vW.z * cos(ang);
             float lane = exp(-pow((cx + 5.5 + cz * 0.28) / 1.9, 2.0));
-            col += vec3(0.85, 0.93, 1.0) * tw * (0.35 + lane * 1.2);
-            col += vec3(0.5, 0.65, 0.9) * lane * 0.14;
+            col += vec3(0.85, 0.93, 1.0) * tw * (0.2 + lane * 0.3);
+            col += vec3(0.5, 0.65, 0.9) * lane * 0.1;
             gl_FragColor = vec4(col, 0.92);
           }`} />
     </mesh>

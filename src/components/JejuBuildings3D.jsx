@@ -9,7 +9,7 @@ import { glowTexture } from '../lib/glow'
 // 3D 지도 위의 건물 모형: 도심의 빌딩 숲, 등대, 기와집, 초가, 공항, 경기장, 리조트…
 const at = (pos) => { const [x, z] = toXZ(pos); return [x, Math.max(heightAt(x, z), 0), z] }
 // 이름표는 눈에 띄는 큰 시설에만 (나머지는 모형만 보여 화면이 복잡해지지 않게)
-const LABELED = new Set(['airport', 'tower', 'resort', 'stadium'])
+const LABELED = new Set(['tower']) // 이름표는 가장 눈에 띄는 타워에만
 const WALL ='#d8e2f2', WARM = '#ffd98a'
 
 function Box({ p = [0, 0, 0], s = [0.1, 0.1, 0.1], color = WALL, glow = 0.25 }) {
