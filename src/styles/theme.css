@@ -529,3 +529,12 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .starmap2 .sm-ripple { fill: none; stroke: var(--c); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: vc-ring 2s ease-out infinite; }
 .starmap2 .sm-label { fill: #d7e6f7; font-size: 14px; font-family: 'Noto Serif KR', serif; paint-order: stroke; stroke: rgba(6, 16, 40, .85); stroke-width: 4px; stroke-linejoin: round; }
 .starmap2 .sm-star.active .sm-label { fill: #fff; font-weight: 700; }
+
+/* 신 그림 카드: 더 풍성한 장면용 */
+.gart-rot { animation: gart-rotate 40s linear infinite; }
+.gart-sweep { animation: gart-sweep 7s ease-in-out infinite; }
+@keyframes gart-rotate { to { transform: rotate(360deg); } }
+@keyframes gart-sweep { 0%, 55% { transform: translateX(0); } 100% { transform: translateX(620px); } }
+.god-art-banner { height: 210px; border-bottom: 0;
+  -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
+.god-avatar .god-art-sweepless, .god-avatar .gart-sweep { display: none; }
