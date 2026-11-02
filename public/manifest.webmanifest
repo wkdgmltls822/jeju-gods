@@ -4,6 +4,7 @@
   "description": "1만 8천 신이 깃든 섬, 제주의 신화를 공공데이터와 AI 이야기꾼으로 만나 보세요.",
   "lang": "ko",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#08122e",
   "theme_color": "#08122e",
