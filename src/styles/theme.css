@@ -164,6 +164,21 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 @keyframes pop { 0% { transform: scale(.2) rotate(-40deg); } 60% { transform: scale(1.5) rotate(15deg); } 100% { transform: none; } }
 .moon { filter: blur(1px) drop-shadow(0 0 40px rgba(125, 211, 252, .35)); }
 
+/* 홈 큰 제목: "신들의 섬, 제주" 전체가 하나로 이어지며 색이 계속 바뀐다 */
+.title-shimmer, .title-shimmer .accent {
+  background: linear-gradient(90deg, #7dd3fc, #ffffff, #a78bfa, #f9a8d4, #fde68a, #5eead4, #7dd3fc);
+  background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.title-shimmer .accent { background: none; animation: none; } /* 글자 하나하나가 아니라 제목 전체에 한 번에 그라데이션 */
+.title-shimmer.rise {
+  /* 처음엔 떠오르며 나타나고(rise-in), 그다음 계속 색이 흐른다(title-flow) */
+  animation: rise-in .8s cubic-bezier(.2, .7, .2, 1) forwards, title-flow 7s linear infinite;
+  filter: drop-shadow(0 0 18px rgba(125, 211, 252, .25));
+}
+@keyframes title-flow { to { background-position: 300% 0; } }
+
 /* 움직임이 불편한 사용자는 애니메이션을 끈다 */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
