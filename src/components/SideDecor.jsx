@@ -35,7 +35,7 @@ const Yuchae = () => (
   </svg>
 )
 
-export default function SideDecor() {
+export default function SideDecor({ hasBg = false }) {
   const root = useRef(null)
   useEffect(() => {
     let raf = 0
@@ -49,7 +49,7 @@ export default function SideDecor() {
   }, [])
 
   return (
-    <div className="sd" ref={root} aria-hidden="true">
+    <div className={`sd ${hasBg ? "sd-hasbg" : ""}`} ref={root} aria-hidden="true">
       <div className="sd-col sd-left">
         <svg className="sd-svg sd-par" viewBox="0 0 400 900" preserveAspectRatio="xMidYMid slice">
           <path d={LINE} className="sd-line" pathLength="1" />

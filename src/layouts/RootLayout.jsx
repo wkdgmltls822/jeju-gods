@@ -15,8 +15,9 @@ export default function RootLayout() {
   const bg = BG_THEME[pathname]
   return (
     <>
-      <SideDecor />
       {bg && <PageBackground key={bg} theme={bg} />}
+      {/* 페이지 배경보다 뒤에 두면 가려지므로, 배경 다음(같은 층에서 위)에 그린다 */}
+      <SideDecor hasBg={Boolean(bg)} />
       <nav className="navbar navbar-expand site-nav sticky-top">
         <div className="container">
           <NavLink to="/" className="navbar-brand serif fw-black brand-shimmer">

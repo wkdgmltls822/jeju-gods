@@ -94,3 +94,4 @@
 .sd-tewak i { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffb170, #ff7a1a 62%, #c2410c); box-shadow: 0 0 18px rgba(255, 140, 50, .45); }
 .sd-tewak b { position: absolute; left: 50%; top: 82%; width: 22px; height: 26px; translate: -50% 0; border: 1px solid rgba(255, 200, 150, .55); border-top: 0; border-radius: 0 0 50% 50%; background: repeating-linear-gradient(45deg, transparent 0 4px, rgba(255, 200, 150, .25) 4px 5px); }
 @keyframes sd-bobwave { 50% { translate: 6px -7px; rotate: 8deg; } }
+.sd-hasbg .sd-moon { display: none; } /* 배경이 자기 달을 가진 화면(별자리·신과 대화·내 신 기록)에서는 달이 겹치지 않게 */
