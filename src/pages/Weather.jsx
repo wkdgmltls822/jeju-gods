@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import CountUp from '../components/CountUp'
 import Reveal from '../components/Reveal'
+import { Chars, Words } from '../components/AnimatedText'
+import { godTimeline } from '../lib/godTimeline'
 import GodBanner from '../components/GodBanner'
 import { ErrorNote, Loading } from '../components/Status'
 import { GOD_COLORS, pickGodForWeather } from '../data/gods'
 import { useAppStore } from '../store/useAppStore'
 import '../styles/weather.css'
+import '../styles/todaygod.css'
 
 const SKY_ICON = { 맑음: 'sun', 구름많음: 'cloud-sun', 흐림: 'clouds' }
 const hourOf = (t) => Number(t.slice(0, 2))
@@ -84,6 +87,7 @@ export default function Weather() {
 
   const { god, reason } = pickGodForWeather(weather)
   const kind = kindOf(weather)
+  const t = godTimeline({ name: god.name, reason })
   const stats = [
     { icon: 'wind', label: '바람', value: `${weather.wind}m/s`, bar: Math.min(100, (weather.wind / 14) * 100) },
     { icon: 'droplet', label: '강수확률', value: `${weather.rainChance}%`, bar: weather.rainChance },
@@ -132,12 +136,12 @@ export default function Weather() {
       <div className="wx-god-title"><i className="bi bi-stars me-1" />오늘 날씨가 부른 신<span className="wx-god-line" /></div>
       <Reveal><section className="today-card wx-godcard" style={{ '--c': GOD_COLORS[god.id] }}>
         <div className="today-art"><GodBanner key={god.id} god={god} /></div>
-        <div className="today-body">
-          <div className="today-tale"><i className="bi bi-book me-1" />{god.tale}</div>
-          <h2 className="today-name serif">{god.name}</h2>
-          <p className="today-role">{god.role}</p>
-          <p className="today-reason"><i className="bi bi-quote" />{reason}</p>
-          <div className="today-actions">
+        <div key={god.id} className="today-body">
+          <div className="today-tale tg-pop" style={{ '--d': `${t.tale}s` }}><i className="bi bi-book me-1" />{god.tale}</div>
+          <h2 className="today-name serif"><Chars text={god.name} base={t.nameStart} /></h2>
+          <p className="today-role tg-pop" style={{ '--d': `${t.role.toFixed(2)}s` }}>{god.role}</p>
+          <p className="today-reason tg-pop" style={{ '--d': `${t.reasonPop.toFixed(2)}s` }}><i className="bi bi-quote" /><Words text={reason} base={t.reasonWords} /></p>
+          <div className="today-actions tg-pop" style={{ '--d': `${(t.reasonWords + reason.split(' ').length * 0.05 + 0.2).toFixed(2)}s` }}>
             <Link to="/myths" className="btn btn-yuchae px-3">별자리에서 만나기</Link>
             <Link to="/agent" className="btn btn-hanji px-3" onClick={() => setChatGod(god.id)}>
               <i className="bi bi-chat-quote me-1" />이 신과 대화

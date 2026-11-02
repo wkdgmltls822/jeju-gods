@@ -1,0 +1,29 @@
+/* 오늘의 신 카드 글 움직임 (홈, 날씨 화면 공통). 카드를 감싼 Reveal 이 .in 이 되면 시작한다. */
+.tg-pop, .tg-char, .tg-word { opacity: 0; }
+.tg-word { display: inline-block; margin-right: .3em; }
+.tg-char { display: inline-block; }
+
+.reveal.in .tg-pop { animation: tg-pop .75s cubic-bezier(.2, .8, .2, 1) var(--d, 0s) both; }
+.reveal.in .tg-word { animation: tg-word .6s ease-out var(--d, 0s) both; }
+.reveal.in .tg-char { animation: tg-char .9s cubic-bezier(.2, .9, .3, 1.35) var(--d, 0s) both, tg-shine 6s linear calc(var(--d, 0s) + 1.4s) infinite; }
+@keyframes tg-pop { from { opacity: 0; translate: 0 22px; scale: .94; filter: blur(5px); } to { opacity: 1; translate: 0 0; scale: 1; filter: blur(0); } }
+@keyframes tg-word { from { opacity: 0; translate: 0 10px; filter: blur(4px); } to { opacity: 1; translate: 0 0; filter: blur(0); } }
+@keyframes tg-char { 0% { opacity: 0; translate: 0 34px; rotate: 8deg; scale: .6; filter: blur(8px); } 60% { opacity: 1; translate: 0 -6px; rotate: -2deg; scale: 1.08; filter: blur(0); } 100% { opacity: 1; translate: 0 0; rotate: 0deg; scale: 1; } }
+@keyframes tg-shine { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+
+/* 이름: 글자마다 흰색에서 신의 색으로 번쩍이는 빛이 흐른다 */
+.today-name { background: none; -webkit-text-fill-color: initial; color: inherit; filter: none; }
+.today-name .tg-char { color: transparent; -webkit-background-clip: text; background-clip: text; background-size: 260% 100%; background-position: 120% 0;
+  background-image: linear-gradient(100deg, #fff 0%, #fff 38%, var(--c) 52%, #fff 66%, #fff 100%); filter: drop-shadow(0 4px 18px rgba(0, 0, 0, .5)); }
+.today-role.tg-pop { text-shadow: 0 0 18px color-mix(in srgb, var(--c) 45%, transparent); }
+.today-reason .bi { display: inline-block; animation: gart-pulse 2.6s ease-in-out infinite; }
+.today-reason.tg-pop { box-shadow: 0 10px 30px -18px var(--c); }
+.today-actions .btn { transition: transform .2s, box-shadow .2s, background .2s; }
+
+/* 사진 쪽: 천천히 다가가는 카메라, 배지에 흐르는 빛 */
+.today-art { overflow: hidden; }
+.today-art .god-banner { animation: tg-kb 18s ease-in-out infinite alternate; transform-origin: 40% 50%; }
+@keyframes tg-kb { from { transform: scale(1); } to { transform: scale(1.09) translate(-1.5%, -1%); } }
+.today-badge { overflow: hidden; }
+.today-badge::after { content: ''; position: absolute; top: 0; bottom: 0; width: 45%; left: -70%; transform: skewX(-20deg); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .5), transparent); animation: tg-badge 5.5s ease-in-out infinite; }
+@keyframes tg-badge { 0%, 55% { left: -70%; } 100% { left: 140%; } }
