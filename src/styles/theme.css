@@ -134,6 +134,15 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 
 .demo-note { color: var(--ember); }
 
+/* 홈 동작 체크 */
+.health { max-width: 720px; margin-top: 1.5rem; padding: 1rem 1.25rem; border: 1px dashed var(--line); border-radius: 1rem; }
+.health-list { display: flex; flex-wrap: wrap; gap: .4rem .9rem; font-size: .85rem; }
+.health-item.ok .bi { color: #5ce08a; }
+.health-item.warn .bi { color: var(--yuchae); }
+.health-item.fail .bi { color: var(--ember); }
+.health-item.pending { color: var(--hanji-dim); }
+.health-note { color: var(--hanji-dim); }
+
 /* 공용 상태 표시 · 메뉴 닉네임 */
 .status-error { color: var(--ember); }
 .nick { color: var(--yuchae); }

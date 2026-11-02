@@ -19,6 +19,7 @@ export async function post(path, body) {
 }
 
 export const askAgent = (message, history, godId) => post('/api/agent', { message, history, godId })
+export const ping = () => get('/api/hello') // 동작 체크용
 export const fetchVisitors = () => get('/api/visitors')
 export const fetchWeather = (place = '제주시') => get(`/api/weather?place=${encodeURIComponent(place)}`)
 export const fetchPlaces = (keyword) => get(`/api/tour?keyword=${encodeURIComponent(keyword)}`)
