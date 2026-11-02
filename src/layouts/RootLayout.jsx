@@ -9,7 +9,7 @@ export default function RootLayout() {
     <>
       <nav className="navbar navbar-expand site-nav sticky-top">
         <div className="container">
-          <NavLink to="/" className="navbar-brand serif fw-black accent">
+          <NavLink to="/" className="navbar-brand serif fw-black brand-shimmer">
             <i className="bi bi-moon-stars-fill me-2" />신들의 섬, 제주
           </NavLink>
           <ul className="navbar-nav ms-auto gap-1">
