@@ -50,6 +50,7 @@ export default function StarMap({ selectedId, todayId, onSelect }) {
         return (
           <g
             key={g.id} className={`star ${active ? 'active' : ''}`} transform={`translate(${g.x} ${g.y})`}
+            style={{ '--d': `${0.3 + i * 0.12}s` }} /* 별이 하나씩 차례로 켜진다 */
             role="button" tabIndex={0} aria-label={g.name} aria-pressed={active}
             onClick={() => onSelect(g.id)}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(g.id) } }}

@@ -110,9 +110,63 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .starmap .edge.lit { stroke-dasharray: 6 6; filter: drop-shadow(0 0 3px var(--yuchae)); animation: flow 1.2s linear infinite; }
 @keyframes flow { to { stroke-dashoffset: -24; } }
 
+/* ── 사이트 전체 움직임 ── */
+@keyframes rise-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* 페이지가 바뀔 때 떠오르며 나타남 */
+.page-enter { animation: rise-in .5s ease-out both; }
+
+/* 홈 히어로: 위에서부터 차례로 올라옴 (각 요소의 animationDelay 로 순서를 줌) */
+.rise { opacity: 0; animation: rise-in .8s cubic-bezier(.2, .7, .2, 1) forwards; }
+
+/* 스크롤해서 화면에 들어오면 나타남 (Reveal 컴포넌트) */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .7, .2, 1); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* 별자리: 별이 하나씩 켜지고, 신 소개 패널은 새로 열릴 때 미끄러져 들어옴 */
+.starmap .star { animation: fade-in .9s ease-out both; animation-delay: var(--d, 0s); }
+.starmap .edge { animation: fade-in 1.4s ease-out both .5s; }
+.starmap .edge.lit { animation: flow 1.2s linear infinite; }
+.god-panel { animation: panel-in .45s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes panel-in { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+
+/* 관람객 그래프: 막대가 왼쪽에서 자람 */
+.bar-fill { transform-origin: left center; animation: bar-grow .9s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* 대화: 말풍선이 튀어나오고, 생각하는 중에는 점 세 개가 통통 튄다 */
+.bubble { animation: bubble-in .35s cubic-bezier(.2, .9, .3, 1.2) both; transform-origin: bottom left; }
+.bubble.user { transform-origin: bottom right; }
+@keyframes bubble-in { from { opacity: 0; transform: translateY(10px) scale(.94); } to { opacity: 1; transform: none; } }
+.typing { display: inline-flex; gap: .3rem; align-items: center; height: 1.2rem; }
+.typing i { width: .45rem; height: .45rem; border-radius: 50%; background: var(--sea); animation: bounce 1s ease-in-out infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; }
+.typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-.4rem); opacity: 1; } }
+
+/* 내 신 기록: 항목이 차례로 나타남 */
+.log-list li { animation: rise-in .45s ease-out both; animation-delay: calc(var(--i, 0) * .05s); }
+.fav-chip { animation: fade-in .5s ease-out both; }
+
+/* 버튼·메뉴·카드: 살짝 떠오르며 빛남, 즐겨찾기는 별이 튐 */
+.btn { transition: transform .18s ease, box-shadow .25s ease, filter .2s ease, background-color .2s, color .2s; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0) scale(.97); }
+.btn-yuchae:hover { box-shadow: 0 8px 26px -8px var(--yuchae); }
+.btn-hanji:hover { box-shadow: 0 8px 22px -10px var(--hanji); }
+.site-nav .nav-link { transition: background-color .25s ease, color .2s ease, transform .2s ease; }
+.site-nav .nav-link:hover { transform: translateY(-1px); }
+.today-god { transition: transform .3s ease, box-shadow .3s ease; }
+.today-god:hover { transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(125, 211, 252, .18), 0 16px 48px -12px rgba(96, 165, 250, .5); }
+.fav-pop { display: inline-block; animation: pop .6s cubic-bezier(.2, 1.4, .4, 1); }
+@keyframes pop { 0% { transform: scale(.2) rotate(-40deg); } 60% { transform: scale(1.5) rotate(15deg); } 100% { transform: none; } }
+.moon { filter: blur(1px) drop-shadow(0 0 40px rgba(125, 211, 252, .35)); }
+
 /* 움직임이 불편한 사용자는 애니메이션을 끈다 */
 @media (prefers-reduced-motion: reduce) {
-  .starmap *, .sky-bg *, .moon, .aurora, .hero-title .accent { animation: none !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .rise, .reveal { opacity: 1 !important; transform: none !important; }
   .bg-star { opacity: .5; }
   .shooting-star { display: none; }
 }

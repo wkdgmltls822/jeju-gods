@@ -11,7 +11,7 @@ export default function FavoriteButton({ godId }) {
   const on = favorites.includes(godId)
   return (
     <button type="button" className={`btn btn-sm ${on ? 'btn-yuchae' : 'btn-hanji'}`} onClick={() => toggle(godId)} aria-pressed={on}>
-      <i className={`bi bi-star${on ? '-fill' : ''} me-1`} />{on ? '즐겨찾기됨' : '즐겨찾기'}
+      <i key={String(on)} className={`bi bi-star${on ? '-fill' : ''} me-1 ${on ? 'fav-pop' : ''}`} />{on ? '즐겨찾기됨' : '즐겨찾기'}
     </button>
   )
 }

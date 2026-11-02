@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import StarMap from '../components/StarMap'
 import GodPanel from '../components/GodPanel'
 import VisitorChart from '../components/VisitorChart'
+import Reveal from '../components/Reveal'
 import PageHeader from '../components/PageHeader'
 import { godById, pickGodForWeather } from '../data/gods'
 import { useAppStore } from '../store/useAppStore'
@@ -23,7 +24,7 @@ export default function Myths() {
         <div className="col-lg-7"><StarMap selectedId={selected.id} todayId={today.id} onSelect={setSelectedId} /></div>
         <div className="col-lg-5"><GodPanel key={selected.id} god={selected} /></div>
       </div>
-      <div className="mt-4"><VisitorChart /></div>
+      <Reveal className="mt-4"><VisitorChart /></Reveal>
     </>
   )
 }

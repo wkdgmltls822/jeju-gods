@@ -1,9 +1,10 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { NAV_ITEMS } from '../router'
 import { useAppStore } from '../store/useAppStore'
 
 export default function RootLayout() {
   const nickname = useAppStore((s) => s.nickname)
+  const { pathname } = useLocation()
   return (
     <>
       <nav className="navbar navbar-expand site-nav sticky-top">
@@ -29,7 +30,8 @@ export default function RootLayout() {
         </div>
       </nav>
       <main className="container py-5">
-        <Outlet />
+        {/* 주소가 바뀔 때마다 key 가 달라져서 페이지가 새로 떠오르며 나타난다 */}
+        <div key={pathname} className="page-enter"><Outlet /></div>
       </main>
       <footer className="container py-4 text-center text-secondary small">
         제주대 청년도약 부트캠프 BOOT UP · 제주 신화·설화 IP

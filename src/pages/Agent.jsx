@@ -79,7 +79,11 @@ export default function Agent() {
               : <Steps steps={m.steps} />)}
           </div>
         ))}
-        {chatLoading && <div className="bubble assistant"><div className="body text-secondary">{god.name}이(가) 생각하는 중…</div></div>}
+        {chatLoading && (
+          <div className="bubble assistant" role="status">
+            <div className="body"><span className="typing" aria-hidden="true"><i /><i /><i /></span><span className="visually-hidden">{god.name}이(가) 생각하는 중</span></div>
+          </div>
+        )}
         {chatError && <div className="alert alert-danger py-2 mb-0">{chatError}</div>}
         <div ref={bottom} />
       </div>

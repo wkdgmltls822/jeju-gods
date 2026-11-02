@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchVisitors } from '../api/client'
 import { ErrorNote, Loading } from './Status'
+import CountUp from './CountUp'
 
 // 서귀포 직영관광지 월별 관람객 — "사람들이 이 신의 땅을 얼마나 찾는지" 막대로 보여줍니다
 export default function VisitorChart() {
@@ -33,7 +34,7 @@ export default function VisitorChart() {
           <li key={name} className="bar-row">
             <span className="bar-name">{name.replace('_', ' · ')}</span>
             <span className="bar-track"><span className="bar-fill" style={{ width: `${(n / max) * 100}%` }} /></span>
-            <span className="bar-num">{n.toLocaleString()}명</span>
+            <span className="bar-num"><CountUp value={n} />명</span>
           </li>
         ))}
       </ul>

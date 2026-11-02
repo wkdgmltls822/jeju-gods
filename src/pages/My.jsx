@@ -46,8 +46,8 @@ export default function My() {
         <Empty>아직 없어요. <Link to="/agent">신과 대화</Link>를 해 보세요.</Empty>
       ) : (
         <ul className="list-unstyled log-list">
-          {logs.map((l) => (
-            <li key={l.id}>
+          {logs.map((l, i) => (
+            <li key={l.id} style={{ '--i': Math.min(i, 12) }}>
               <span className="text-secondary small">{fmt(l.created_at)} · {godById(l.god_id)?.name ?? l.god_id} · {l.role === 'user' ? '나' : '신'}</span>
               <div>{l.text}</div>
             </li>
