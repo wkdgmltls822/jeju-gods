@@ -1,0 +1,37 @@
+/* 제주 신들 소개 영상(/film) */
+.film { position: fixed; inset: 0; overflow: hidden; background: #050a1f; color: #fff; font-family: 'Noto Sans KR', sans-serif; }
+.film-scene { position: absolute; inset: 0; animation: film-in .9s ease-out both; }
+.film .film-bg { position: absolute; inset: 0; animation: film-kb 8.2s ease-out both; transform-origin: 40% 50%; }
+.film .film-bg .god-art, .film .film-bg .gb-photo { position: absolute; inset: 0; width: 100%; height: 100%; }
+.film .gb-credit { left: auto; right: 1.4rem; bottom: 1.1rem; font-size: .85rem; }
+.film-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5, 10, 31, .92) 0%, rgba(5, 10, 31, .68) 38%, rgba(5, 10, 31, .1) 72%), linear-gradient(0deg, rgba(5, 10, 31, .75), transparent 45%); }
+.film-count { position: absolute; left: 3.2rem; top: 2.2rem; font-size: 1.1rem; letter-spacing: .12em; color: #bfe6ff; }
+.film-count b { font: 900 2rem 'Noto Serif KR', serif; color: #fff; margin-right: .2rem; }
+.film-mini { position: absolute; right: 2.6rem; top: 2rem; width: 230px; opacity: .9; filter: drop-shadow(0 0 10px rgba(125, 211, 252, .35)); }
+.film-mini-on { animation: gart-pulse 1.4s ease-in-out infinite; }
+.film-text { position: absolute; left: 3.2rem; bottom: 3.4rem; width: min(720px, 62vw); }
+.film-tale { display: inline-block; font-size: 1.15rem; letter-spacing: .06em; color: var(--c); padding: .25rem 1rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--c) 60%, transparent); background: rgba(5, 10, 31, .5); opacity: 0; animation: film-rise .8s ease-out both; }
+.film-name { font: 900 5.6rem/1.05 'Noto Serif KR', serif; margin: .7rem 0 .2rem; letter-spacing: -.03em; opacity: 0; animation: film-rise 1s ease-out both;
+  background: linear-gradient(90deg, #fff 35%, var(--c)); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; filter: drop-shadow(0 4px 18px rgba(0, 0, 0, .55)); }
+.film-role { font: 600 1.7rem 'Noto Serif KR', serif; color: var(--c); margin: 0 0 1.1rem; opacity: 0; animation: film-rise .8s ease-out both; text-shadow: 0 2px 10px rgba(0, 0, 0, .7); }
+.film-line { font-size: 1.55rem; line-height: 1.7; margin: 0 0 .55rem; max-width: 36rem; opacity: 0; animation: film-rise .9s ease-out both; text-shadow: 0 2px 12px rgba(0, 0, 0, .85); }
+.film-place { display: inline-block; margin-top: .7rem; font-size: 1.2rem; color: #06202e; background: color-mix(in srgb, var(--c) 85%, #fff); padding: .3rem 1.1rem; border-radius: 999px; opacity: 0; animation: film-rise .8s ease-out both; box-shadow: 0 0 22px color-mix(in srgb, var(--c) 60%, transparent); }
+.film-intro, .film-outro { display: grid; place-items: center; text-align: center; background: radial-gradient(circle at 30% 20%, #33208f, #0a1340 60%, #050a1f); }
+.film-intro .sky-bg, .film-outro .sky-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.film-eyebrow { letter-spacing: .5em; color: #7dd3fc; font-size: 1.2rem; animation: film-rise 1s .2s ease-out both; opacity: 0; }
+.film-title { font: 900 7rem/1.1 'Noto Serif KR', serif; margin: .4rem 0; letter-spacing: -.03em; opacity: 0; animation: film-rise 1.2s .5s ease-out both, title-flow 8s linear infinite;
+  background: linear-gradient(90deg, #7dd3fc, #fff, #a78bfa, #f9a8d4, #fde68a, #5eead4, #7dd3fc); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+.film-title.small { font-size: 4.2rem; }
+.film-sub { font: 500 2rem/1.7 'Noto Serif KR', serif; color: #d7e6f7; opacity: 0; animation: film-rise 1.2s 1.6s ease-out both; }
+.film-intro-text, .film-outro-text { position: relative; z-index: 1; }
+.film-outro-map { position: absolute; left: 50%; top: 47%; width: 920px; transform: translate(-50%, -50%); opacity: .95; }
+.film-outro-star { opacity: 0; animation: film-rise .8s ease-out both; }
+.film-outro-label { fill: #e9f2ff; font-size: 26px; font-family: 'Noto Serif KR', serif; paint-order: stroke; stroke: #050a1f; stroke-width: 6px; }
+.film-outro-text { position: absolute; left: 0; right: 0; bottom: 3rem; }
+.film-outro-text .film-title { animation-delay: 2.4s, 0s; }
+.film-outro-text .film-sub { font-size: 1.6rem; animation-delay: 3.2s; margin: 0; }
+.film-start { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1.5rem; background: radial-gradient(circle at 30% 20%, #33208f, #0a1340 60%, #050a1f); }
+@keyframes film-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes film-rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+@keyframes film-kb { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.14) translate(-1.5%, -1%); } }
+body:has(.film) { overflow: hidden; }
