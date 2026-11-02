@@ -74,7 +74,9 @@ export default function Agent() {
           <div key={i} className={`bubble ${m.role}`}>
             {m.role === 'assistant' && <div className="who">{god.name}</div>}
             <div className="body">{m.text}</div>
-            {m.role === 'assistant' && <Steps steps={m.steps} />}
+            {m.role === 'assistant' && (m.demo
+              ? <div className="steps demo-note"><i className="bi bi-info-circle me-1" />데모 응답 · AI·API 없이 미리 준비한 답이에요 ({m.demoReason})</div>
+              : <Steps steps={m.steps} />)}
           </div>
         ))}
         {chatLoading && <div className="bubble assistant"><div className="body text-secondary">{god.name}이(가) 생각하는 중…</div></div>}

@@ -2,6 +2,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { searchTour } from '../server/tour.js'
 import { getWeather } from '../server/weather.js'
 import { getVisitors } from '../server/visitors.js'
+import { dummyReply } from '../server/dummyChat.js'
 import { GODS, godById } from '../src/data/gods.js'
 
 const CLAUDE_MODEL = 'claude-sonnet-5-5'
@@ -145,19 +146,26 @@ async function runGemini({ god, message, history, steps }) {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' })
-  const useClaude = Boolean(process.env.ANTHROPIC_API_KEY)
-  if (!useClaude && !process.env.GEMINI_API_KEY) {
-    return res.status(500).json({ error: 'AI 키가 없어요. .env.local 에 ANTHROPIC_API_KEY (또는 임시로 GEMINI_API_KEY)를 넣어 주세요' })
-  }
   const { message, history = [], godId = 'seolmundae' } = req.body ?? {}
   if (!message?.trim()) return res.status(400).json({ error: 'message 가 필요해요' })
 
   const god = godById(godId) ?? godById('seolmundae')
   const steps = [] // 화면에 "에이전트가 무엇을 했는지" 보여주기용
+
+  // AI 를 쓸 수 없으면(키 없음·한도 초과·연결 오류) API 연동 없는 "데모 채팅"으로 대신 답한다.
+  // 응답에 provider: 'demo' 와 이유를 실어서, 화면이 데모 응답임을 분명히 표시한다.
+  const demo = (reason) => res.status(200).json({ answer: dummyReply({ god, message }), steps: [], provider: 'demo', demoReason: reason })
+
+  const useClaude = Boolean(process.env.ANTHROPIC_API_KEY)
+  if (process.env.AI_DEMO === '1') return demo('데모 모드로 실행 중이에요')
+  if (!useClaude && !process.env.GEMINI_API_KEY) return demo('AI 키가 설정되지 않았어요')
+
   try {
     const answer = await (useClaude ? runClaude : runGemini)({ god, message, history, steps })
     res.status(200).json({ answer: answer ?? '이야기가 길어졌어요. 한 번만 더 물어봐 주세요.', steps, provider: useClaude ? 'claude' : 'gemini' })
   } catch (e) {
-    res.status(500).json({ error: e.message })
+    console.error('agent error:', e.message)
+    const msg = String(e.message)
+    demo(/429|quota|rate/i.test(msg) ? 'AI 사용 한도를 넘었어요' : /401|403|api key/i.test(msg) ? 'AI 키가 올바르지 않아요' : 'AI 연결에 문제가 있어요')
   }
 }
