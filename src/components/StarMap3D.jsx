@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
 import { AdditiveBlending, BackSide, Color, Vector2 } from 'three'
-import { glowTexture } from '../lib/glow'
+import { flareTexture, glowTexture } from '../lib/glow'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Html, Line, OrbitControls, Sparkles, Stars } from '@react-three/drei'
 import { GODS, EDGES, GOD_COLORS, godById } from '../data/gods'
@@ -14,6 +14,8 @@ function GodStar({ god, selected, today, onSelect }) {
   const core = useRef()
   const halo = useRef()
   const ring = useRef()
+  const flare = useRef()
+  const ripple = useRef()
   const [hover, setHover] = useState(false)
   const color = GOD_COLORS[god.id]
   const base = selected ? 0.3 : 0.2
@@ -24,6 +26,13 @@ function GodStar({ god, selected, today, onSelect }) {
     core.current.scale.lerp({ x: k, y: k, z: k }, Math.min(1, dt * 8))
     halo.current.scale.setScalar(k * (7 + Math.sin(t * 1.6) * 1))
     if (ring.current) ring.current.rotation.z += dt * 0.8
+    flare.current.scale.setScalar(k * (selected ? 15 : 11) * (1 + Math.sin(t * 2.4) * 0.08))
+    flare.current.material.rotation = t * 0.12
+    if (ripple.current) {
+      const p = (clock.elapsedTime * 0.55) % 1
+      ripple.current.scale.setScalar(0.5 + p * 2.6)
+      ripple.current.material.opacity = (1 - p) * 0.6
+    }
   })
 
   return (
@@ -31,6 +40,15 @@ function GodStar({ god, selected, today, onSelect }) {
       <sprite ref={halo}>
         <spriteMaterial map={glowTexture} color={color} transparent opacity={selected ? 0.95 : 0.7} depthWrite={false} blending={AdditiveBlending} />
       </sprite>
+      <sprite ref={flare}>
+        <spriteMaterial map={flareTexture} color={selected ? '#ffffff' : color} transparent opacity={selected ? 0.95 : 0.6} depthWrite={false} blending={AdditiveBlending} />
+      </sprite>
+      {selected && (
+        <mesh ref={ripple} rotation={[Math.PI / 2.2, 0, 0]}>
+          <ringGeometry args={[0.55, 0.6, 64]} />
+          <meshBasicMaterial color={color} transparent opacity={0.5} depthWrite={false} side={2} />
+        </mesh>
+      )}
       <mesh ref={core}>
         <sphereGeometry args={[1, 32, 32]} />
         <meshBasicMaterial color={selected ? '#ffffff' : color} />
@@ -151,13 +169,59 @@ function Island() {
   )
 }
 
+// 선을 따라 천천히 흘러가는 빛알갱이
+function Flow({ a, b, lit, offset }) {
+  const g = useRef()
+  const p0 = pos(godById(a)), p1 = pos(godById(b))
+  const color = GOD_COLORS[lit ? a : b]
+  useFrame(({ clock }) => {
+    const t = (clock.elapsedTime * (lit ? 0.4 : 0.2) + offset) % 1
+    g.current.position.set(p0[0] + (p1[0] - p0[0]) * t, p0[1] + (p1[1] - p0[1]) * t, p0[2] + (p1[2] - p0[2]) * t)
+    g.current.children[0].material.opacity = Math.sin(Math.PI * t) * (lit ? 1 : 0.75)
+  })
+  return (
+    <group ref={g}>
+      <sprite scale={lit ? 0.6 : 0.4}>
+        <spriteMaterial map={glowTexture} color={color} transparent opacity={0} depthWrite={false} blending={AdditiveBlending} />
+      </sprite>
+    </group>
+  )
+}
+
+// 별자리 둘레를 천천히 도는 얇은 천구 고리
+function Rings() {
+  const g = useRef()
+  useFrame((_, dt) => { g.current.rotation.y += dt * 0.03 })
+  return (
+    <group ref={g} rotation={[0.45, 0, 0.2]}>
+      {[6.6, 8.2, 9.8].map((r, i) => (
+        <mesh key={r} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[r, 0.008, 6, 180]} />
+          <meshBasicMaterial color={i === 1 ? '#c4b5fd' : '#bfe6ff'} transparent opacity={0.2} depthWrite={false} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
 function Constellation({ selectedId, todayId, onSelect }) {
-  const lines = useMemo(() => EDGES.map(([a, b]) => ({ key: a + b, a, b, pts: [pos(godById(a)), pos(godById(b))] })), [])
+  const lines = useMemo(() => EDGES.map(([a, b], i) => ({
+    key: a + b, a, b, i, pts: [pos(godById(a)), pos(godById(b))],
+    cols: [new Color(GOD_COLORS[a]).toArray(), new Color(GOD_COLORS[b]).toArray()],
+    lit: [new Color(GOD_COLORS[a]).lerp(new Color('#fff'), 0.6).toArray(), new Color(GOD_COLORS[b]).lerp(new Color('#fff'), 0.6).toArray()],
+  })), [])
   return (
     <>
+      <Rings />
       {lines.map((l) => {
         const lit = selectedId === l.a || selectedId === l.b
-        return <Line key={l.key} points={l.pts} color={lit ? '#7dd3fc' : '#60a5fa'} lineWidth={lit ? 2 : 1} transparent opacity={lit ? 0.95 : 0.35} />
+        return (
+          <group key={l.key}>
+            <Line points={l.pts} vertexColors={lit ? l.lit : l.cols} lineWidth={lit ? 2.6 : 1.4} transparent opacity={lit ? 1 : 0.6} />
+            <Flow a={l.a} b={l.b} lit={lit} offset={(l.i * 0.17) % 1} />
+            <Flow a={l.b} b={l.a} lit={lit} offset={(l.i * 0.17 + 0.5) % 1} />
+          </group>
+        )
       })}
       {GODS.map((g) => (
         <GodStar key={g.id} god={g} selected={g.id === selectedId} today={g.id === todayId} onSelect={onSelect} />

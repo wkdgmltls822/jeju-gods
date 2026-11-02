@@ -630,3 +630,7 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .gb-credit { position: absolute; left: .6rem; bottom: .55rem; z-index: 2; max-width: 80%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   font-size: .64rem; color: #e6f2ff; padding: .1rem .6rem; border-radius: 999px; background: rgba(6, 16, 40, .62); backdrop-filter: blur(4px); animation: fade-in .8s ease both; }
 .today-art .god-banner { position: absolute; inset: 0; }
+
+/* 3D 별 이름표 */
+.star3d-label { padding: .08rem .55rem; border-radius: 999px; background: rgba(6, 16, 40, .5); border: 1px solid rgba(160, 200, 255, .22); backdrop-filter: blur(3px); }
+.star3d-label.on { background: rgba(125, 211, 252, .22); border-color: rgba(125, 211, 252, .7); box-shadow: 0 0 14px rgba(125, 211, 252, .55); }
