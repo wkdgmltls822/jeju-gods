@@ -277,11 +277,42 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 
 /* 관람객 막대 */
 .visitor-chart { background: var(--basalt-2); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; }
-.bar-row { display: grid; grid-template-columns: 9.5rem 1fr 5.5rem; align-items: center; gap: .6rem; padding: .3rem 0; font-size: .9rem; }
-.bar-track { background: var(--basalt); border-radius: 999px; height: .7rem; overflow: hidden; }
-.bar-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--sea), var(--yuchae)); border-radius: 999px; transition: width .25s; }
+.bar-row { display: grid; grid-template-columns: 10.5rem 1fr 7rem; align-items: center; gap: .6rem; padding: .35rem 0; font-size: .9rem; }
+.bar-name { display: flex; align-items: center; gap: .5rem; }
+.bar-rank { display: inline-grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; font-size: .72rem; flex: none;
+  background: color-mix(in srgb, var(--c) 22%, transparent); color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); }
+.bar-track { background: var(--basalt); border-radius: 999px; height: .8rem; overflow: hidden; }
+.bar-fill { display: block; height: 100%; border-radius: 999px; transition: width .25s;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--c) 45%, #0b1b2e), var(--c)); box-shadow: 0 0 12px -1px var(--c); }
 .bar-num { text-align: right; color: var(--hanji-dim); }
-@media (max-width: 575px) { .bar-row { grid-template-columns: 6.5rem 1fr 4.6rem; font-size: .8rem; } }
+.bar-num small { margin-left: .35rem; color: var(--c); opacity: .85; }
+@media (max-width: 575px) { .bar-row { grid-template-columns: 7.6rem 1fr 5.6rem; font-size: .78rem; gap: .4rem; } }
+
+/* 관람객 그래프 머리말, 별빛 추이선 */
+.vc-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: .75rem; margin-bottom: .5rem; }
+.vc-month { font-family: 'Noto Serif KR', serif; color: var(--yuchae); font-weight: 700; }
+.vc-total { text-align: right; }
+.vc-total-num { font-family: 'Noto Serif KR', serif; font-size: 2rem; font-weight: 900; line-height: 1.1;
+  background: linear-gradient(90deg, #7dd3fc, #fff, #f9a8d4); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.vc-total-num small { font-size: .9rem; margin-left: .2rem; color: var(--hanji-dim); -webkit-text-fill-color: var(--hanji-dim); }
+.vc-delta { font-size: .8rem; display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; }
+.vc-delta .up { color: #5eead4; } .vc-delta .down { color: var(--ember); }
+.vc-peak { color: #fde68a; }
+.vc-line { width: 100%; height: auto; display: block; background: radial-gradient(circle at 50% 0, #14304f, var(--basalt) 80%);
+  border: 1px solid var(--line); border-radius: .8rem; }
+.vc-grid { stroke: var(--line); stroke-dasharray: 3 5; }
+.vc-path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: vc-draw 1.6s ease-out .2s forwards; filter: drop-shadow(0 0 6px rgba(125, 211, 252, .6)); }
+.vc-area { animation: fade-in 1.4s ease-out .6s both; }
+.vc-guide { stroke: var(--yuchae); stroke-opacity: .5; stroke-dasharray: 3 4; transition: all .25s; }
+.vc-dot { cursor: pointer; outline: none; }
+.vc-core { fill: #fff; transition: r .2s; }
+.vc-dot:hover .vc-core, .vc-dot:focus-visible .vc-core { fill: var(--yuchae); }
+.vc-dot.on .vc-core { fill: var(--yuchae); filter: drop-shadow(0 0 6px #7dd3fc); }
+.vc-ring { fill: none; stroke: var(--yuchae); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: vc-ring 1.8s ease-out infinite; }
+.vc-tick { fill: var(--hanji-dim); font-size: 11px; }
+.vc-hint { font-size: .75rem; color: var(--hanji-dim); margin: .4rem 0 .6rem; text-align: center; }
+@keyframes vc-draw { to { stroke-dashoffset: 0; } }
+@keyframes vc-ring { from { transform: scale(.6); opacity: 1; } to { transform: scale(1.8); opacity: 0; } }
 
 .demo-note { color: var(--ember); }
 
