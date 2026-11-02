@@ -35,3 +35,10 @@
 @keyframes film-rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
 @keyframes film-kb { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.14) translate(-1.5%, -1%); } }
 body:has(.film) { overflow: hidden; }
+
+/* 사이트에서 연 소개 영상: 언제든 나갈 수 있는 버튼 (녹화본에는 나오지 않음) */
+.film-exit { position: fixed; right: 1rem; top: 1rem; z-index: 50; display: inline-flex; align-items: center; padding: .5rem 1rem; border-radius: 999px; color: #fff; text-decoration: none; font-size: .95rem; background: rgba(6, 16, 40, .72); border: 1px solid rgba(255, 255, 255, .3); backdrop-filter: blur(6px); transition: background .2s, transform .2s; }
+.film-exit:hover { background: rgba(6, 16, 40, .92); transform: translateY(-1px); color: #fff; }
+.film-exit small { margin-left: .6rem; padding: .05rem .4rem; border-radius: .35rem; border: 1px solid rgba(255, 255, 255, .35); font-size: .7rem; opacity: .75; }
+.film-back { position: relative; z-index: 2; }
+@media (max-width: 575px) { .film-exit small { display: none; } }

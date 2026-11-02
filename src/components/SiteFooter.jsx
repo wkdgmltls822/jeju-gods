@@ -29,7 +29,7 @@ export default function SiteFooter() {
   // 바로가기: 홈 · 별자리 · 날씨 · 신과 대화 · 내 신 기록 · 소개 영상
   const links = [
     ...NAV_ITEMS.map((n) => ({ key: n.to, to: n.to, icon: n.icon, label: n.label, color: n.color ?? '#7dd3fc' })),
-    { key: 'film', href: '/film?auto', icon: 'camera-video', label: '소개 영상', color: '#fdba74' },
+    { key: 'film', href: '/film?auto&exit', icon: 'camera-video', label: '소개 영상', color: '#fdba74' },
   ]
 
   return (

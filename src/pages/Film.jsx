@@ -47,6 +47,8 @@ function GodScene({ god, index }) {
 
 export default function Film() {
   const [run, setRun] = useState(() => new URLSearchParams(window.location.search).has('auto'))
+  // 사이트에서 연 경우(?exit)에는 나갈 길을 보여 준다. 녹화할 때는 이 표시가 영상에 찍히지 않게 ?exit 없이 연다.
+  const exit = new URLSearchParams(window.location.search).has('exit')
   const [i, setI] = useState(-1) // -1: 시작 장면, 0~9: 신, 10: 마무리
 
   useEffect(() => {
@@ -63,8 +65,16 @@ export default function Film() {
     return () => clearTimeout(timer)
   }, [run])
 
+  useEffect(() => {
+    if (!exit) return undefined
+    const onKey = (e) => { if (e.key === 'Escape') window.location.href = '/' }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [exit])
+
   return (
     <div className="film">
+      {exit && <a href="/" className="film-exit"><i className="bi bi-x-lg me-2" />사이트로 돌아가기<small>Esc</small></a>}
       {!run && (
         <div className="film-start">
           <h1 className="film-title">제주도의 신들</h1>
@@ -98,6 +108,7 @@ export default function Film() {
           <div className="film-outro-text">
             <h1 className="film-title small">신들의 섬, 제주</h1>
             <p className="film-sub">jeju-gods.vercel.app</p>
+            {exit && <a href="/" className="btn btn-yuchae btn-lg px-5 mt-3 film-back"><i className="bi bi-house-heart me-2" />사이트 둘러보기</a>}
           </div>
         </div>
       )}
