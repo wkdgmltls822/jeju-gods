@@ -132,7 +132,7 @@
 .wm-bld em { display: none; font-style: normal; font-size: .62rem; white-space: nowrap; padding: .05rem .35rem; border-radius: 999px; background: rgba(6, 18, 36, .75); }
 .wm-bld.show em { display: inline; }
 .wm-loadmap { display: grid; place-items: center; }
-.wr { position: relative; border-radius: 1.1rem; overflow: hidden; min-height: 360px; aspect-ratio: 800 / 520; background: #0a2745; border: 1px solid var(--line); }
+.wr { position: relative; border-radius: 1.1rem; overflow: hidden; min-height: 420px; aspect-ratio: 800 / 600; background: #0a2745; border: 1px solid var(--line); }
 .wr .wr-box { position: absolute; inset: 0; width: 100%; height: 100%; }
 .wr-bad { display: grid; place-items: center; padding: 1rem; text-align: center; color: var(--hanji-dim); }
 .wr-hint { position: absolute; left: .6rem; bottom: .55rem; z-index: 5; font-size: .7rem; color: #e9f3ff; padding: .12rem .6rem; border-radius: 999px; background: rgba(6, 18, 36, .75); pointer-events: none; }
