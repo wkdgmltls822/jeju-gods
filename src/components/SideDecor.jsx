@@ -7,6 +7,11 @@ import '../styles/sidedecor.css'
 const STARS = [[150, 40, 2.4], [96, 120, 3.2], [188, 205, 2.2], [120, 300, 3.6], [212, 372, 2.6], [150, 470, 3.2], [82, 548, 2.2], [176, 640, 3], [128, 730, 2.4]]
 const LINE = STARS.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ')
 const DOTS = [[40, 90], [250, 160], [60, 420], [262, 590], [30, 700], [230, 810]]
+// 떠오르는 감귤·빛방울 위치(%)와 속도
+const CITRUS = [[14, 0], [34, 4], [8, 9], [26, 13], [42, 6]]
+const ORBS = [[6, 0], [18, 3], [30, 7], [12, 11], [38, 2], [24, 14], [46, 9], [3, 5]]
+const STARS2 = [[330, 90, 2.2], [372, 190, 3], [318, 280, 2.2], [360, 380, 2.8], [330, 470, 2.2]]
+const LINE2 = STARS2.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ')
 const RIDGE = 'M0 120 L40 96 L78 108 L122 60 L150 78 L186 22 L214 70 L250 52 L300 100 L300 130 Z'
 
 export default function SideDecor() {
@@ -25,9 +30,10 @@ export default function SideDecor() {
   return (
     <div className="sd" ref={root} aria-hidden="true">
       <div className="sd-col sd-left">
-        <svg className="sd-svg sd-par" viewBox="0 0 300 900" preserveAspectRatio="xMidYMid slice">
+        <svg className="sd-svg sd-par" viewBox="0 0 400 900" preserveAspectRatio="xMidYMid slice">
           <path d={LINE} className="sd-line" pathLength="1" />
-          {STARS.map(([x, y, r], i) => (
+          <path d={LINE2} className="sd-line l2" pathLength="1" />
+          {[...STARS, ...STARS2].map(([x, y, r], i) => (
             <g key={i} style={{ '--d': `${i * 0.45}s` }}>
               <circle cx={x} cy={y} r={r * 4.5} className="sd-halo" />
               <circle cx={x} cy={y} r={r} className="sd-star" />
@@ -35,6 +41,8 @@ export default function SideDecor() {
           ))}
           {DOTS.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.6" className="sd-dust" style={{ '--d': `${i * 0.7}s` }} />)}
         </svg>
+        {CITRUS.map(([x, d], i) => <span key={i} className="sd-citrus" style={{ left: `${x}%`, "--d": `${d * -2}s`, "--t": `${22 + (i % 3) * 6}s` }}><i /></span>)}
+        {ORBS.map(([x, d], i) => <span key={i} className="sd-orb" style={{ left: `${x * 2}%`, "--d": `${d * -2.5}s`, "--t": `${16 + (i % 4) * 5}s`, "--s": `${6 + (i % 3) * 4}px` }} />)}
         <p className="sd-vert sd-par2 serif">1만 8천 신이 깃든 섬</p>
         <svg className="sd-ridge" viewBox="0 0 300 130" preserveAspectRatio="none">
           <defs><linearGradient id="sd-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5eead4" stopOpacity=".28" /><stop offset="1" stopColor="#5eead4" stopOpacity="0" /></linearGradient></defs>
@@ -53,8 +61,12 @@ export default function SideDecor() {
             </span>
           ))}
         </div>
+        <span className="sd-moon" />
+        <div className="sd-clouds"><i /><i /><i /></div>
+        <div className="sd-dial sd-par2"><i className="d1" /><i className="d2" /><i className="d3" /></div>
+        {ORBS.slice(0, 6).map(([x, d], i) => <span key={`r${i}`} className="sd-orb r" style={{ right: `${x * 2 + 4}%`, "--d": `${d * -2.5 - 3}s`, "--t": `${18 + (i % 3) * 5}s`, "--s": `${6 + (i % 3) * 4}px` }} />)}
         <p className="sd-vert sd-par2 serif">공공데이터 × AI 에이전트</p>
-        <div className="sd-meteors"><i /><i /><i /></div>
+        <div className="sd-meteors"><i /><i /><i /><i /><i /></div>
         <svg className="sd-waves" viewBox="0 0 300 120" preserveAspectRatio="none">
           {[0, 1, 2].map((i) => (
             <path key={i} className={`sd-wave w${i}`} d={`M0 ${60 + i * 16} ` + Array.from({ length: 6 }, (_, k) => `Q${k * 100 + 25} ${48 + i * 16} ${k * 100 + 50} ${60 + i * 16} T${k * 100 + 100} ${60 + i * 16}`).join(' ')} />

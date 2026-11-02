@@ -2,7 +2,7 @@
 .sd { display: none; }
 @media (min-width: 1400px) {
   .sd { display: block; position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; --sy: 0; }
-  .sd-col { position: absolute; top: 0; bottom: 0; width: min(24vw, 440px); }
+  .sd-col { position: absolute; top: 0; bottom: 0; width: min(32vw, 620px); }
   .sd-left { left: 0; mask-image: linear-gradient(90deg, #000 40%, transparent); }
   .sd-right { right: 0; mask-image: linear-gradient(270deg, #000 40%, transparent); }
 }
@@ -18,7 +18,7 @@
 .sd-halo { fill: #9ec5ff; opacity: .18; animation: sd-twinkle 3.2s var(--d, 0s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 .sd-dust { fill: #cfe8ff; opacity: .5; animation: sd-twinkle 4.4s var(--d, 0s) ease-in-out infinite; }
 @keyframes sd-twinkle { 0%, 100% { opacity: .35; scale: .85; } 50% { opacity: 1; scale: 1.25; } }
-.sd-vert { position: absolute; top: 50%; writing-mode: vertical-rl; margin: 0; font-size: 1.05rem; letter-spacing: .5em; color: rgba(214, 228, 255, .32); }
+.sd-vert { position: absolute; top: 50%; writing-mode: vertical-rl; margin: 0; font-size: 1.05rem; letter-spacing: .5em; text-orientation: upright; color: rgba(214, 228, 255, .4); }
 .sd-left .sd-vert { left: 2.2rem; translate: 0 -50%; }
 .sd-right .sd-vert { right: 2.2rem; translate: 0 -50%; }
 .sd-ridge { position: absolute; left: 0; bottom: 0; width: 100%; height: 22vh; }
@@ -48,3 +48,24 @@
 .sd-wave.w1 { opacity: .3; animation-delay: -2s; stroke: #a5b4fc; }
 .sd-wave.w2 { opacity: .2; animation-delay: -4s; stroke: #5eead4; }
 @keyframes sd-sway { 50% { translate: -40px 0; } }
+
+/* ───── 더 채우기: 두 번째 별자리, 떠오르는 감귤·빛방울, 달, 구름, 해시계 ───── */
+.sd-line.l2 { stroke: #c4b5fd; animation-delay: 1.4s, 5.4s; }
+.sd-citrus { position: absolute; bottom: -40px; width: 22px; height: 22px; animation: sd-rise var(--t) var(--d) linear infinite; }
+.sd-citrus i { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffd98a, #ff9f43 65%, #e8731a); box-shadow: 0 0 16px rgba(255, 159, 67, .45); animation: sd-bob 3.4s ease-in-out infinite; }
+.sd-citrus i::after { content: ''; position: absolute; left: 9px; top: -6px; width: 9px; height: 6px; border-radius: 0 100% 0 100%; background: #4ade80; rotate: -20deg; }
+@keyframes sd-rise { from { translate: 0 0; opacity: 0; } 8% { opacity: .85; } 90% { opacity: .7; } to { translate: 40px -110vh; opacity: 0; } }
+@keyframes sd-bob { 50% { translate: 8px -6px; rotate: 20deg; } }
+.sd-orb { position: absolute; bottom: -20px; width: var(--s); height: var(--s); border-radius: 50%; background: radial-gradient(circle, rgba(190, 225, 255, .9), rgba(125, 180, 255, .15) 70%); animation: sd-rise var(--t) var(--d) linear infinite; }
+.sd-orb.r { background: radial-gradient(circle, rgba(220, 200, 255, .9), rgba(170, 140, 255, .15) 70%); }
+.sd-moon { position: absolute; right: 22%; top: 48vh; width: 74px; height: 74px; border-radius: 50%; box-shadow: inset -22px 6px 0 0 #fff2c4; rotate: -18deg; filter: drop-shadow(0 0 18px rgba(255, 233, 160, .55)); animation: sd-moon 8s ease-in-out infinite; opacity: .85; }
+@keyframes sd-moon { 50% { translate: 0 -14px; } }
+.sd-clouds i { position: absolute; height: 46px; border-radius: 50px; background: radial-gradient(ellipse, rgba(170, 195, 255, .2), transparent 70%); filter: blur(3px); animation: sd-cloud 38s linear infinite; }
+.sd-clouds i:nth-child(1) { top: 30vh; width: 240px; right: -20%; }
+.sd-clouds i:nth-child(2) { top: 62vh; width: 300px; right: -40%; animation-duration: 52s; animation-delay: -20s; }
+.sd-clouds i:nth-child(3) { top: 78vh; width: 200px; right: -10%; animation-duration: 44s; animation-delay: -9s; }
+@keyframes sd-cloud { to { translate: -140vw 0; } }
+.sd-dial { position: absolute; right: -90px; bottom: 16vh; width: 280px; height: 280px; opacity: .8; }
+.sd-dial i { position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgba(125, 211, 252, .3); animation: sd-spin 80s linear infinite; }
+.sd-dial i.d2 { inset: 34px; border-style: solid; border-color: rgba(196, 181, 253, .22); animation-direction: reverse; }
+.sd-dial i.d3 { inset: 78px; border: 0; background: repeating-conic-gradient(rgba(143, 180, 255, .35) 0 1deg, transparent 1deg 15deg); mask-image: radial-gradient(circle, transparent 55%, #000 56%); }
