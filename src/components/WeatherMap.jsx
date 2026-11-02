@@ -1,8 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { COAST } from '../lib/jeju'
+import { BUILDINGS, CITIES, cityBlocks } from '../lib/buildings'
 import { fetchWeather } from '../api/client'
 import { ErrorNote, Loading } from './Status'
 import '../styles/wxmap.css'
+
+const WeatherRealMap = lazy(() => import('./WeatherRealMap'))
 
 // 지역별 날씨 지도 (평면): 읍·면 13곳의 예보를 올리고, 확대·이동하며 기온/강수/바람을 바꿔 가며 볼 수 있다.
 const B = { w: 126.10, e: 127.02, n: 33.60, s: 33.08 }
@@ -30,6 +33,7 @@ const LAND = (() => {
   for (let i = 0; i < n; i++) { const p = PTS[i], m = mid(p, PTS[(i + 1) % n]); d += ` Q${p[0].toFixed(1)} ${p[1].toFixed(1)} ${m[0].toFixed(1)} ${m[1].toFixed(1)}` }
   return d + 'Z'
 })()
+const CITY_RECTS = CITIES.flatMap((c) => cityBlocks(c).map(([lng, lat, sz]) => ({ x: px(lng), y: py(lat), w: 2.2 + sz * 2.6 })))
 const HALLA = [px(126.533), py(33.362)]
 
 const hourOf = (t) => Number(t.slice(0, 2))
@@ -82,6 +86,7 @@ export default function WeatherMap({ patch = null }) {
   const [sel, setSel] = useState('제주시')
   const [playing, setPlaying] = useState(false)
   const [mode, setMode] = useState('temp')
+  const [real, setReal] = useState(false)
   const [view, setView] = useState({ k: 1, x: 0, y: 0 })
   const mapRef = useRef(null)
   const drag = useRef(null)
@@ -190,8 +195,14 @@ export default function WeatherMap({ patch = null }) {
             <i className={`bi bi-${m.icon} me-1`} />{m.label}
           </button>
         ))}
+        <button type="button" className={`wm-real ${real ? 'on' : ''}`} onClick={() => setReal(!real)} aria-pressed={real}><i className={`bi bi-${real ? 'palette' : 'buildings'} me-1`} />{real ? '그림 지도' : '실제 지도 · 건물'}</button>
       </div>
       <div className="wm-body">
+        {real ? (
+          <Suspense fallback={<div className="wm-map wm-loadmap"><Loading text="실제 지도 불러오는 중…" /></div>}>
+            <WeatherRealMap rows={rows} regions={REGIONS} sel={cur.name} onSelect={setSel} modeOf={(h) => modeOf(mode, h)} iconOf={iconOf} />
+          </Suspense>
+        ) : (
         <div className={`wm-map ${view.k > 1 ? 'zoomed' : ''}`} ref={mapRef} style={{ aspectRatio: `${W} / ${H}` }}
           onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onDoubleClick={(e) => { if (!e.target.closest('.wm-pin') && !e.target.closest('.wm-ctl')) zoomBy(1.6) }}>
           <div className="wm-zoom" style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.k})`, '--k': view.k }}>
@@ -209,6 +220,9 @@ export default function WeatherMap({ patch = null }) {
               <g clipPath="url(#wm-clip)" filter="url(#wm-blur)" className="wm-heat">
                 {rows.map((r) => <circle key={r.name} cx={px(r.pos[0])} cy={py(r.pos[1])} r="62" fill={modeOf(mode, r.h).color} />)}
               </g>
+              <g className="wm-city" aria-hidden="true">
+                {CITY_RECTS.map((c, i) => <rect key={i} x={c.x} y={c.y} width={c.w} height={c.w * 0.8} rx="0.6" />)}
+              </g>
               {ISLETS.map(([lng, lat, r], i) => <ellipse key={i} cx={px(lng)} cy={py(lat)} rx={r} ry={r * 0.7} className="wm-islet" />)}
               {[[74, 40], [56, 30], [38, 20], [20, 11]].map(([rx, ry], i) => <ellipse key={i} cx={HALLA[0]} cy={HALLA[1]} rx={rx} ry={ry} className="wm-contour" />)}
               <path d={`M${HALLA[0] - 8} ${HALLA[1] + 5} L${HALLA[0]} ${HALLA[1] - 8} L${HALLA[0] + 8} ${HALLA[1] + 5}Z`} className="wm-peak" />
@@ -216,6 +230,11 @@ export default function WeatherMap({ patch = null }) {
               <text x={px(126.265) + 12} y={py(33.115) + 4} className="wm-name small">마라도</text>
             </svg>
             {mode === 'wind' && windy.h.wind >= 3 && <div className="wm-windlines" aria-hidden="true">{Array.from({ length: 5 }, (_, i) => <i key={i} style={{ top: `${18 + i * 16}%`, animationDelay: `${i * 0.7}s`, animationDuration: `${Math.max(2.2, 5.5 - windy.h.wind * 0.3)}s` }} />)}</div>}
+            {BUILDINGS.map((b) => (
+              <span key={b.name} className={`wm-bld ${b.kind} ${compact ? '' : 'show'}`} style={{ left: `${(px(b.pos[0]) / W) * 100}%`, top: `${(py(b.pos[1]) / H) * 100}%` }} title={b.name}>
+                <i className={`bi bi-${b.icon}`} /><em>{b.name}</em>
+              </span>
+            ))}
             {rows.map((r, i) => {
               const m = modeOf(mode, r.h)
               const on = r.name === cur.name
@@ -242,6 +261,7 @@ export default function WeatherMap({ patch = null }) {
           </div>
           <span className="wm-hint"><i className="bi bi-hand-index me-1" />{view.k > 1 ? '끌어서 이동 · 두 번 누르면 더 확대' : '두 번 누르거나 + 로 확대'}</span>
         </div>
+        )}
 
         <div className="wm-side">
           <div className="wm-card" style={{ '--tc': tempColor(cur.h.temp) }} key={cur.name}>

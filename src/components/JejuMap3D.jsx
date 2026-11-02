@@ -7,6 +7,7 @@ import { COAST_XZ, LANDMARKS, PINS, ROADS, heightAt, toXZ } from '../lib/jeju'
 import { MilkyWay, Nebulae, SkyDome } from './StarMap3D'
 import { glowTexture } from '../lib/glow'
 import Scenery, { Sea } from './JejuScenery'
+import Buildings3D from './JejuBuildings3D'
 
 // 별자리(2D 좌표 800×520)를 제주섬 위 하늘로 옮긴다. 별 높이는 신마다 조금씩 다르게.
 const SKY_Y = 3.4
@@ -162,6 +163,7 @@ export default function JejuMap3D({ selectedId, todayId, onSelect }) {
         <hemisphereLight args={['#9fc4ff', '#1b3a2c', 0.5]} />
         <Scenery />
         <Island />
+        <Buildings3D />
         <Sky selectedId={selectedId} todayId={todayId} onSelect={onSelect} />
         <OrbitControls target={[0, 1.9, 0]} enablePan={false} autoRotate autoRotateSpeed={0.35} minDistance={5} maxDistance={20} maxPolarAngle={1.45} dampingFactor={0.08} />
       </Canvas>

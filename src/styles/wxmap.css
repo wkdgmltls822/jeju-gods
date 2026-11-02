@@ -121,3 +121,30 @@
 .wm-dirarrow { display: inline-block; margin-left: .35rem; color: #c4b5fd; }
 .wm-legend b { margin-right: .3rem; }
 @media (max-width: 860px) { .wm-pin.compact .wm-bubble b { font-size: .7rem; } }
+
+/* ───── 건물: 그림 지도의 시설 표시·도심 네모, 실제 지도 모드 ───── */
+.wm-real { margin-left: .6rem; padding: .3rem .95rem; border-radius: 999px; border: 1px solid rgba(255, 209, 102, .5); background: rgba(255, 209, 102, .12); color: #ffe7a8; font-size: .85rem; cursor: pointer; transition: background .2s, transform .2s; }
+.wm-real:hover { background: rgba(255, 209, 102, .26); transform: translateY(-1px); }
+.wm-real.on { background: #ffd166; color: #3b2b00; font-weight: 700; }
+.wm-city rect { fill: #e9efe0; opacity: calc((var(--k, 1) - 1) * 0.35); }
+.wm-bld { position: absolute; z-index: 2; transform: translate(-50%, -50%) scale(calc(1 / var(--k, 1))); display: inline-flex; align-items: center; gap: .2rem; pointer-events: none; color: #ffe7a8; filter: drop-shadow(0 1px 3px #06101c); }
+.wm-bld i { font-size: .8rem; }
+.wm-bld em { display: none; font-style: normal; font-size: .62rem; white-space: nowrap; padding: .05rem .35rem; border-radius: 999px; background: rgba(6, 18, 36, .75); }
+.wm-bld.show em { display: inline; }
+.wm-loadmap { display: grid; place-items: center; }
+.wr { position: relative; border-radius: 1.1rem; overflow: hidden; min-height: 360px; aspect-ratio: 800 / 520; background: #0a2745; border: 1px solid var(--line); }
+.wr .wr-box { position: absolute; inset: 0; width: 100%; height: 100%; }
+.wr-bad { display: grid; place-items: center; padding: 1rem; text-align: center; color: var(--hanji-dim); }
+.wr-hint { position: absolute; left: .6rem; bottom: .55rem; z-index: 5; font-size: .7rem; color: #e9f3ff; padding: .12rem .6rem; border-radius: 999px; background: rgba(6, 18, 36, .75); pointer-events: none; }
+.wr-mk { z-index: 1; }
+.wr-mk:has(.wr-pin) { z-index: 3; }
+.wr-pin { display: inline-flex; flex-direction: column; align-items: center; gap: 0; border: 0; background: transparent; padding: 0; cursor: pointer; color: #fff; }
+.wr-pin > i, .wr-pin > b { display: inline-block; }
+.wr-pin { background: rgba(6, 18, 36, .88); border: 2px solid var(--tc); border-radius: .8rem; padding: .1rem .5rem .15rem; box-shadow: 0 3px 10px rgba(0, 0, 0, .35); transition: transform .2s; }
+.wr-pin i { color: var(--tc); font-size: .85rem; }
+.wr-pin b { font-size: .85rem; line-height: 1; }
+.wr-pin span { font-size: .6rem; color: #cfe0f5; }
+.wr-pin.on { transform: scale(1.18); background: rgba(6, 18, 36, .96); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tc) 35%, transparent), 0 4px 14px rgba(0, 0, 0, .5); }
+.wr-bld { display: inline-flex; align-items: center; gap: .2rem; padding: .08rem .4rem; border-radius: 999px; background: rgba(60, 40, 0, .78); color: #ffe7a8; font-size: .62rem; border: 1px solid rgba(255, 209, 102, .5); pointer-events: none; }
+.wr-bld em { font-style: normal; display: none; }
+.maplibregl-map:hover .wr-bld em { display: inline; }

@@ -802,3 +802,5 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .title-shimmer.flow-myths { background-image: linear-gradient(90deg, #c4b5fd, #ffffff, #7dd3fc, #f0abfc, #a5b4fc, #c4b5fd); }
 .title-shimmer.flow-agent { background-image: linear-gradient(90deg, #f9a8d4, #ffffff, #fde68a, #fda4af, #f0abfc, #f9a8d4); }
 .title-shimmer.flow-my { background-image: linear-gradient(90deg, #5eead4, #ffffff, #bef264, #7dd3fc, #a7f3d0, #5eead4); }
+.lm3d.bld { gap: .25rem; font-size: 9px; color: #fde8b0; opacity: .9; }
+.lm3d.bld i { color: #ffd166; font-size: 10px; }
