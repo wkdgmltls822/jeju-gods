@@ -123,6 +123,7 @@ async function runGemini({ god, message, history, steps }) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: systemPrompt(god) }] },
         tools: [{ functionDeclarations: TOOLS }],
+        generationConfig: { maxOutputTokens: 2048 }, // 답 길이 상한 (Gemini 는 생각에도 토큰을 써서 넉넉하게)
         contents,
       }),
     })
@@ -144,10 +145,36 @@ async function runGemini({ god, message, history, steps }) {
   return null
 }
 
+// ── 남용 방지 ────────────────────────────────────────────
+// 강사가 준 Claude 키는 수업 전체가 같이 쓰는 한도라서, 공개 주소로 마구 부르지 못하게 막는다.
+const MAX_MESSAGE = 300        // 질문 길이
+const MAX_HISTORY = 10         // 보내는 대화 기록 개수
+const MAX_HISTORY_CHARS = 1000 // 기록 한 개의 길이
+const RATE_PER_MIN = 8         // 같은 주소에서 1분에 보낼 수 있는 질문 수
+const hits = new Map()         // 주소 → 최근 요청 시각들 (서버 함수 한 대의 메모리 안에서만 세므로 완벽하진 않다)
+
+function tooManyRequests(req) {
+  const ip = String(req.headers?.['x-forwarded-for'] ?? req.socket?.remoteAddress ?? 'unknown').split(',')[0].trim()
+  const now = Date.now()
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < 60_000)
+  recent.push(now)
+  hits.set(ip, recent)
+  if (hits.size > 5000) hits.clear() // 메모리가 계속 커지지 않게
+  return recent.length > RATE_PER_MIN
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' })
-  const { message, history = [], godId = 'seolmundae' } = req.body ?? {}
-  if (!message?.trim()) return res.status(400).json({ error: 'message 가 필요해요' })
+  // 공개 주소라서 누구나 이 함수를 부를 수 있다 → 들어온 값을 믿지 말고 길이·모양을 제한한다
+  const { message: rawMessage, history: rawHistory, godId = 'seolmundae' } = req.body ?? {}
+  const message = typeof rawMessage === 'string' ? rawMessage.trim() : ''
+  if (!message) return res.status(400).json({ error: 'message 가 필요해요' })
+  if (message.length > MAX_MESSAGE) return res.status(400).json({ error: `질문은 ${MAX_MESSAGE}자 이내로 써 주세요` })
+  const history = (Array.isArray(rawHistory) ? rawHistory : [])
+    .filter((h) => h && (h.role === 'user' || h.role === 'assistant') && typeof h.content === 'string')
+    .slice(-MAX_HISTORY)
+    .map((h) => ({ role: h.role, content: h.content.slice(0, MAX_HISTORY_CHARS) }))
+  while (history[0]?.role === 'assistant') history.shift() // 대화는 사용자 말로 시작해야 한다
 
   const god = godById(godId) ?? godById('seolmundae')
   const steps = [] // 화면에 "에이전트가 무엇을 했는지" 보여주기용
@@ -155,6 +182,8 @@ export default async function handler(req, res) {
   // AI 를 쓸 수 없으면(키 없음·한도 초과·연결 오류) API 연동 없는 "데모 채팅"으로 대신 답한다.
   // 응답에 provider: 'demo' 와 이유를 실어서, 화면이 데모 응답임을 분명히 표시한다.
   const demo = (reason) => res.status(200).json({ answer: dummyReply({ god, message }), steps: [], provider: 'demo', demoReason: reason })
+
+  if (tooManyRequests(req)) return demo('요청이 너무 많아요. 잠시 뒤에 다시 물어봐 주세요')
 
   const useClaude = Boolean(process.env.ANTHROPIC_API_KEY)
   if (process.env.AI_DEMO === '1') return demo('데모 모드로 실행 중이에요')

@@ -4,6 +4,8 @@ const URL_BASE = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getV
 // 기상청 격자 좌표
 const GRID = { 제주시: { nx: 52, ny: 38 }, 서귀포시: { nx: 52, ny: 33 } }
 
+export const PLACES = Object.keys(GRID)
+
 const SKY = { 1: '맑음', 3: '구름많음', 4: '흐림' }
 const PTY = { 0: '없음', 1: '비', 2: '비/눈', 3: '눈', 4: '소나기' }
 
