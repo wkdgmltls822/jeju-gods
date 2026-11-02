@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import CountUp from '../components/CountUp'
+import Reveal from '../components/Reveal'
 import GodBanner from '../components/GodBanner'
 import { ErrorNote, Loading } from '../components/Status'
 import { GOD_COLORS, pickGodForWeather } from '../data/gods'
 import { useAppStore } from '../store/useAppStore'
+import '../styles/weather.css'
 
 const SKY_ICON = { 맑음: 'sun', 구름많음: 'cloud-sun', 흐림: 'clouds' }
 const hourOf = (t) => Number(t.slice(0, 2))
@@ -54,9 +57,9 @@ function Hours({ forecast }) {
         <path d={line} fill="none" stroke="#7dd3fc" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
       </svg>
       {forecast.map((h, i) => (
-        <div key={h.date + h.time} className={`wx-hour ${i === 0 ? 'now' : ''}`}>
+        <div key={h.date + h.time} className={`wx-hour ${i === 0 ? 'now' : ''}`} style={{ '--i': i }}>
           <span className="wx-h-time">{i === 0 ? '지금' : `${hourOf(h.time)}시`}</span>
-          <i className={`bi bi-${iconOf(h)}`} />
+          <i className={`bi bi-${iconOf(h)} wx-ic ic-${iconOf(h)}`} />
           <div className="wx-h-plot"><b style={{ top: `${y(h.temp)}%` }}><em>{h.temp}°</em></b></div>
           <div className="wx-h-rain" title={`강수확률 ${h.rainChance}%`}><i style={{ height: `${Math.max(h.rainChance, 4)}%` }} /></div>
           <small>{h.rainChance}%</small>
@@ -99,13 +102,18 @@ export default function Weather() {
           {kind !== 'rain' && <span className="wx-cloud c1" />}
           {(kind === 'cloud' || kind === 'rain') && <><span className="wx-cloud c2" /><span className="wx-cloud c3" /></>}
           {kind === 'rain' && <span className="wx-drops" />}
+          {kind === 'rain' && <span className="wx-flash" />}
+          {kind === 'rain' && Array.from({ length: 7 }, (_, i) => <span key={i} className="wx-splash" style={{ left: `${8 + i * 13}%`, animationDelay: `${(i * 0.37) % 1.4}s` }} />)}
+          {kind === 'sun' && <span className="wx-rays" />}
+          {kind === 'night' && <><span className="wx-meteor" /><span className="wx-meteor m2" /></>}
+          {weather.wind >= 4 && <span className="wx-wind">{Array.from({ length: 6 }, (_, i) => <i key={i} style={{ top: `${14 + i * 14}%`, animationDelay: `${i * 0.55}s`, animationDuration: `${3.2 - Math.min(weather.wind, 10) * 0.12 + (i % 3) * 0.4}s` }} />)}</span>}
           {kind === 'night' && Array.from({ length: 14 }, (_, i) => <span key={i} className="wx-star" style={{ left: `${(i * 37) % 100}%`, top: `${(i * 23) % 60}%`, animationDelay: `${(i % 5) * 0.5}s` }} />)}
         </div>
         <div className="wx-main">
           <i className={`bi bi-${iconOf(weather)} wx-icon`} />
           <div>
             <div className="wx-place"><i className="bi bi-geo-alt-fill me-1" />제주시 · {hourOf(weather.time)}시 기준</div>
-            <div className="wx-temp">{weather.temp}<sup>°C</sup></div>
+            <div className="wx-temp"><CountUp value={weather.temp} duration={1100} /><sup>°C</sup></div>
             <div className="wx-sky">{sentence(weather)}</div>
           </div>
         </div>
@@ -119,10 +127,10 @@ export default function Weather() {
         </div>
       </section>
 
-      {forecast.length > 1 && <Hours forecast={forecast} />}
+      {forecast.length > 1 && <Reveal><Hours forecast={forecast} /></Reveal>}
 
-      <div className="wx-god-title"><i className="bi bi-stars me-1" />오늘 날씨가 부른 신</div>
-      <section className="today-card" style={{ '--c': GOD_COLORS[god.id] }}>
+      <div className="wx-god-title"><i className="bi bi-stars me-1" />오늘 날씨가 부른 신<span className="wx-god-line" /></div>
+      <Reveal><section className="today-card wx-godcard" style={{ '--c': GOD_COLORS[god.id] }}>
         <div className="today-art"><GodBanner key={god.id} god={god} /></div>
         <div className="today-body">
           <div className="today-tale"><i className="bi bi-book me-1" />{god.tale}</div>
@@ -136,7 +144,7 @@ export default function Weather() {
             </Link>
           </div>
         </div>
-      </section>
+      </section></Reveal>
     </>
   )
 }
