@@ -387,3 +387,34 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .log-meta { font-size: .72rem; color: var(--hanji-dim); margin: 0 .4rem .15rem; }
 .log-text { padding: .55rem .85rem; border-radius: 1rem; line-height: 1.7; background: var(--basalt-2); border: 1px solid var(--line); border-top-left-radius: .25rem; }
 .log-feed li.me .log-text { background: rgba(125, 211, 252, .14); border-color: rgba(125, 211, 252, .35); border-top-left-radius: 1rem; border-top-right-radius: .25rem; }
+
+/* 홈 밖 화면 배경 (PageBackground) */
+.page-main { position: relative; z-index: 1; }
+.site-nav { z-index: 1030; }
+.pbg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; animation: fade-in 1s ease-out both;
+  background: linear-gradient(180deg, #08162a 0%, #0d2440 55%, #123457 100%); }
+.pbg-stars { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pbg-stars .bg-star { stroke: #cfe8ff; stroke-width: 1; stroke-opacity: .5; }
+.pbg-aurora { position: absolute; width: 90vw; height: 50vh; filter: blur(60px); opacity: .7; border-radius: 50%; }
+.pbg-aurora.a1 { left: -20vw; top: 2vh; background: var(--ac1); animation: pbg-drift 18s ease-in-out infinite alternate; }
+.pbg-aurora.a2 { right: -25vw; top: 22vh; background: var(--ac2); animation: pbg-drift 24s ease-in-out infinite alternate-reverse; }
+@keyframes pbg-drift { from { transform: translate(-6vw, 0) scale(1); } to { transform: translate(8vw, 4vh) scale(1.15); } }
+.pbg-deco { position: absolute; }
+.pbg-land { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 26vh; min-height: 140px; }
+.pbg-land .far { fill: #0c2a48; opacity: .75; }
+.pbg-land .near { fill: #081d33; }
+.pbg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(5, 12, 24, .55) 100%); }
+/* 별자리: 푸른빛과 보랏빛 오로라, 오른쪽 위의 은하수 빛 */
+.pbg-myths { --ac1: radial-gradient(closest-side, rgba(96, 165, 250, .5), transparent); --ac2: radial-gradient(closest-side, rgba(167, 139, 250, .42), transparent); }
+.pbg-myths .pbg-deco { right: 8vw; top: 8vh; width: 38vw; height: 38vw; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(125, 211, 252, .16), transparent); animation: pbg-breathe 7s ease-in-out infinite; }
+/* 신과 대화: 청록과 분홍빛, 달 */
+.pbg-agent { --ac1: radial-gradient(closest-side, rgba(94, 234, 212, .38), transparent); --ac2: radial-gradient(closest-side, rgba(249, 168, 212, .34), transparent); }
+.pbg-agent .pbg-deco { right: 10vw; top: 9vh; width: 90px; height: 90px; border-radius: 50%; background: #fdf6d8;
+  box-shadow: 0 0 40px 12px rgba(253, 246, 216, .35), 0 0 120px 40px rgba(253, 246, 216, .15); animation: pbg-breathe 6s ease-in-out infinite; }
+.pbg-agent .pbg-deco::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #0a1c33; transform: translate(26%, -10%) scale(.88); }
+/* 내 신 기록: 새벽 노을빛이 지평선에서 번짐 */
+.pbg-my { --ac1: radial-gradient(closest-side, rgba(253, 186, 116, .3), transparent); --ac2: radial-gradient(closest-side, rgba(167, 139, 250, .4), transparent); }
+.pbg-my .pbg-deco { left: 0; right: 0; bottom: 0; height: 45vh;
+  background: linear-gradient(180deg, transparent, rgba(253, 186, 116, .14) 70%, rgba(249, 168, 212, .18)); animation: pbg-breathe 8s ease-in-out infinite; }
+@keyframes pbg-breathe { 0%, 100% { opacity: .65; } 50% { opacity: 1; } }
