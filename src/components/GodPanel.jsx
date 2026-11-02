@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchPlaces } from '../api/client'
 import FavoriteButton from './FavoriteButton'
+import GodArt from './GodArt'
 import { Empty, ErrorNote, Loading } from './Status'
 
 // 선택한 신의 소개 + 그 신과 이어지는 장소(TourAPI)
@@ -22,13 +23,14 @@ export default function GodPanel({ god }) {
 
   return (
     <article className="god-panel">
-      <div className="d-flex justify-content-between align-items-start gap-2">
-        <div className="tag">{god.tale}</div>
+      <GodArt id={god.id} className="god-art-banner" />
+      <div className="d-flex justify-content-between align-items-center gap-2 mb-2">
+        <span className="tale-chip"><i className="bi bi-book me-1" />{god.tale}</span>
         <FavoriteButton godId={god.id} />
       </div>
-      <h2 className="h3 mb-1">{god.name}</h2>
-      <p className="accent mb-3">{god.role}</p>
-      <p>{god.text}</p>
+      <h2 className="h3 mb-1 serif">{god.name}</h2>
+      <p className="accent mb-3"><i className="bi bi-stars me-1" />{god.role}</p>
+      <p className="god-text">{god.text}</p>
 
       <h3 className="h6 sea mt-4 mb-2"><i className="bi bi-geo-alt me-1" />이 이야기와 이어지는 곳</h3>
       <ErrorNote error={error} text="장소를 불러오지 못했어요" />

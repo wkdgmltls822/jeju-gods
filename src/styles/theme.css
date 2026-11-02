@@ -217,6 +217,36 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .today-god .tag, .god-panel .tag { font-size: .75rem; color: var(--sea); letter-spacing: .08em; }
 .place-list li { padding: .5rem 0; border-top: 1px solid var(--line); }
 
+/* 신 그림 카드 (GodArt) */
+.god-art-banner { display: block; width: calc(100% + 3rem); height: 190px; margin: -1.5rem -1.5rem 1.1rem; border-bottom: 1px solid var(--line); }
+.tale-chip { display: inline-block; font-size: .75rem; color: var(--yuchae); background: rgba(125, 211, 252, .1);
+  border: 1px solid rgba(125, 211, 252, .25); border-radius: 999px; padding: .15rem .65rem; letter-spacing: .04em; }
+.god-text { line-height: 1.85; border-left: 2px solid rgba(125, 211, 252, .3); padding-left: .8rem; }
+.gart-breathe, .gart-fall, .gart-rise, .gart-sway, .gart-petal, .gart-stalk, .gart-flame { transform-box: fill-box; }
+.gart-stalk { transform-origin: 50% 100%; }
+.gart-twinkle { animation: twinkle 3s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.gart-pulse { animation: gart-pulse 2.8s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.gart-breathe { animation: gart-breathe 4.5s ease-in-out infinite; transform-origin: center; }
+.gart-fall { animation: gart-fall 2.6s ease-in infinite; animation-delay: var(--d, 0s); }
+.gart-rise { animation: gart-rise 3s ease-out infinite; animation-delay: var(--d, 0s); }
+.gart-rays { animation: gart-pulse 2.4s ease-in-out infinite; }
+.gart-sway { animation: gart-sway 5s ease-in-out infinite alternate; }
+.gart-wind { animation: gart-wind 3.2s linear infinite; animation-delay: var(--d, 0s); }
+.gart-petal { animation: gart-petal 5s linear infinite; animation-delay: var(--d, 0s); }
+.gart-stalk { animation: gart-stalk 3.4s ease-in-out infinite alternate; animation-delay: var(--d, 0s); }
+.gart-flame { animation: gart-flame 1.1s ease-in-out infinite alternate; animation-delay: var(--d, 0s); transform-origin: 50% 100%; }
+.gart-snake { animation: gart-snake 6s linear infinite; }
+@keyframes gart-pulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@keyframes gart-breathe { 0%, 100% { opacity: .6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
+@keyframes gart-fall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(58px); opacity: 0; } }
+@keyframes gart-rise { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-90px); opacity: 0; } }
+@keyframes gart-sway { from { transform: translateX(-10px); } to { transform: translateX(10px); } }
+@keyframes gart-wind { to { stroke-dashoffset: -200; } }
+@keyframes gart-petal { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(340px, var(--y, 0px)); opacity: 0; } }
+@keyframes gart-stalk { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+@keyframes gart-flame { from { transform: scale(1, .94); } to { transform: scale(.94, 1.06); } }
+@keyframes gart-snake { to { stroke-dashoffset: -80; } }
+
 /* 별자리 지도 */
 .starmap { width: 100%; height: auto; background: radial-gradient(circle at 50% 30%, #14304f, var(--basalt-2) 70%);
   border: 1px solid var(--line); border-radius: 1rem; }

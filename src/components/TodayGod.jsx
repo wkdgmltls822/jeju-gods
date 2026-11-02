@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { pickGodForWeather } from '../data/gods'
 import { useAppStore } from '../store/useAppStore'
+import GodArt from './GodArt'
 
 // 홈 화면: 오늘 날씨가 불러온 신 한 명
 export default function TodayGod() {
@@ -12,6 +13,7 @@ export default function TodayGod() {
   const { god, reason } = pickGodForWeather(weather)
   return (
     <section className="today-god mx-auto">
+      <GodArt id={god.id} className="god-art-banner" />
       <div className="tag mb-2"><i className="bi bi-stars me-1" />오늘의 신</div>
       <h2 className="h2 mb-1">{god.name}</h2>
       <p className="accent mb-2">{god.role}</p>
