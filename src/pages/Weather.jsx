@@ -76,8 +76,8 @@ export default function Weather() {
   const weather = realWeather && patch ? { ...realWeather, ...patch } : realWeather
   const forecast = patch ? realForecast.map((h) => ({ ...h, ...patch, time: h.time })) : realForecast
 
-  if (weatherError) return <><PageHeader title="오늘의 제주 날씨" /><ErrorNote error={weatherError} text="날씨를 불러오지 못했어요" /></>
-  if (!weather) return <><PageHeader title="오늘의 제주 날씨" /><Loading text="날씨 불러오는 중…" /></>
+  if (weatherError) return <><PageHeader title="오늘의 제주 날씨" titleClass="title-shimmer flow" /><ErrorNote error={weatherError} text="날씨를 불러오지 못했어요" /></>
+  if (!weather) return <><PageHeader title="오늘의 제주 날씨" titleClass="title-shimmer flow" /><Loading text="날씨 불러오는 중…" /></>
 
   const { god, reason } = pickGodForWeather(weather)
   const kind = kindOf(weather)
@@ -90,7 +90,7 @@ export default function Weather() {
 
   return (
     <>
-      <PageHeader title="오늘의 제주 날씨" desc="기상청 단기예보로 본 제주시의 하늘이에요. 날씨마다 어울리는 신이 찾아옵니다." />
+      <PageHeader title="오늘의 제주 날씨" titleClass={`title-shimmer flow flow-${kind}`} desc="기상청 단기예보로 본 제주시의 하늘이에요. 날씨마다 어울리는 신이 찾아옵니다." />
 
       <section className={`wx-hero wx-${kind}`}>
         {/* 날씨에 맞춰 움직이는 배경 */}
