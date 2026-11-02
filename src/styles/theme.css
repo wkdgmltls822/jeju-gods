@@ -418,3 +418,21 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .pbg-my .pbg-deco { left: 0; right: 0; bottom: 0; height: 45vh;
   background: linear-gradient(180deg, transparent, rgba(253, 186, 116, .14) 70%, rgba(249, 168, 212, .18)); animation: pbg-breathe 8s ease-in-out infinite; }
 @keyframes pbg-breathe { 0%, 100% { opacity: .65; } 50% { opacity: 1; } }
+
+/* 신에게 묻는 입력창 */
+.ask-bar { display: flex; align-items: center; gap: .6rem; margin-top: 1rem; padding: .4rem .45rem .4rem 1rem; border-radius: 999px;
+  background: linear-gradient(180deg, rgba(18, 39, 63, .92), rgba(11, 27, 46, .92)); backdrop-filter: blur(8px);
+  border: 1px solid rgba(125, 211, 252, .35); box-shadow: 0 8px 30px -12px rgba(96, 165, 250, .55), inset 0 0 0 1px rgba(255, 255, 255, .03);
+  transition: border-color .25s, box-shadow .25s; }
+.ask-bar:focus-within { border-color: var(--yuchae); box-shadow: 0 0 0 3px rgba(125, 211, 252, .18), 0 10px 40px -10px rgba(125, 211, 252, .6); }
+.ask-icon { color: var(--yuchae); font-size: 1.1rem; animation: gart-pulse 2.8s ease-in-out infinite; }
+.ask-input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--hanji); font-size: 1rem; padding: .45rem 0; }
+.ask-input::placeholder { color: var(--hanji-dim); opacity: .8; font-family: 'Noto Serif KR', serif; }
+.ask-count { font-size: .7rem; color: var(--hanji-dim); opacity: 0; transition: opacity .2s; white-space: nowrap; }
+.ask-bar:focus-within .ask-count { opacity: .7; }
+.ask-send { flex: none; width: 2.7rem; height: 2.7rem; border: 0; border-radius: 50%; display: grid; place-items: center; font-size: 1.05rem; cursor: pointer;
+  color: var(--on-accent); background: linear-gradient(135deg, #7dd3fc, #60a5fa 60%, #a78bfa); box-shadow: 0 0 18px rgba(125, 211, 252, .5);
+  transition: transform .2s, box-shadow .2s, opacity .2s, filter .2s; }
+.ask-send:hover:not(:disabled) { transform: translateY(-2px) rotate(-8deg) scale(1.06); box-shadow: 0 0 26px rgba(125, 211, 252, .85); }
+.ask-send:disabled { opacity: .35; box-shadow: none; filter: grayscale(.5); cursor: default; }
+@media (max-width: 575px) { .ask-count { display: none; } }

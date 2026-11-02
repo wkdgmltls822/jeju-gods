@@ -112,10 +112,14 @@ export default function Agent() {
         <div ref={bottom} />
       </div>
 
-      <form className="d-flex gap-2 mt-3" onSubmit={submit}>
-        <input className="form-control" value={text} onChange={(e) => setText(e.target.value)}
-          placeholder={`${god.name}에게 묻기`} maxLength={300} disabled={chatLoading} />
-        <button className="btn btn-yuchae px-4 text-nowrap" disabled={chatLoading || !text.trim()}>보내기</button>
+      <form className="ask-bar" onSubmit={submit}>
+        <i className="bi bi-stars ask-icon" aria-hidden="true" />
+        <input className="ask-input" value={text} onChange={(e) => setText(e.target.value)}
+          placeholder={`${god.name}에게 묻기`} maxLength={300} disabled={chatLoading} aria-label={`${god.name}에게 묻기`} />
+        <span className="ask-count" aria-hidden="true">{text.length}/300</span>
+        <button className="ask-send" disabled={chatLoading || !text.trim()} aria-label="보내기">
+          <i className="bi bi-send-fill" />
+        </button>
       </form>
     </>
   )
