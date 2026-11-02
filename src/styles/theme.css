@@ -538,3 +538,5 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .god-art-banner { height: 210px; border-bottom: 0;
   -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
 .god-avatar .god-art-sweepless, .god-avatar .gart-sweep { display: none; }
+.gart-float { animation: gart-floatY 4s ease-in-out infinite alternate; }
+@keyframes gart-floatY { from { transform: translateY(-4px); } to { transform: translateY(5px); } }
