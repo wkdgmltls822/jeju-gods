@@ -508,3 +508,24 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
   .today-body { padding: 1rem 1.2rem 1.4rem; }
   .today-name { font-size: 1.9rem; }
 }
+
+/* 평면 별자리 지도 (StarMap) */
+.starmap2 { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid rgba(125, 211, 252, .3);
+  box-shadow: 0 20px 50px -24px rgba(124, 92, 255, .6); background: #0a1340; }
+.starmap2 .bg-star { stroke: #cfe8ff; stroke-width: 1; stroke-opacity: .5; }
+.starmap2 .sm-band { animation: pbg-breathe 9s ease-in-out infinite; }
+.starmap2 .sm-wave { animation: gart-sway 6s ease-in-out infinite alternate; }
+.starmap2 .sm-edge { stroke: #b4d4ff; stroke-opacity: .6; stroke-width: 1.6; stroke-dasharray: 3 5; stroke-linecap: round; animation: fade-in 1.4s ease-out both .5s; }
+.starmap2 .sm-edge.lit { stroke: #fff; stroke-opacity: .9; stroke-width: 2; stroke-dasharray: 7 6; filter: drop-shadow(0 0 4px #7dd3fc); animation: flow 1.2s linear infinite; }
+.starmap2 .sm-flow { fill: #fff; filter: drop-shadow(0 0 6px #7dd3fc); offset-distance: 0%; animation: sm-travel 2.2s ease-in-out infinite; }
+@keyframes sm-travel { from { offset-distance: 0%; opacity: 0; } 15%, 85% { opacity: 1; } to { offset-distance: 100%; opacity: 0; } }
+.starmap2 .sm-star { cursor: pointer; outline: none; animation: fade-in .9s ease-out both; animation-delay: var(--d, 0s); }
+.starmap2 .sm-glow { opacity: .6; transform-box: fill-box; transform-origin: center; animation: breathe-star 3.2s ease-in-out infinite; transition: opacity .2s; }
+.starmap2 .sm-spark { fill: #fff; opacity: .85; transform-box: fill-box; transform-origin: center; animation: ring-spin 18s linear infinite; transition: transform .25s; filter: drop-shadow(0 0 4px var(--c)); }
+.starmap2 .sm-core { filter: drop-shadow(0 0 6px var(--c)); transition: r .2s; }
+.starmap2 .sm-star:hover .sm-glow, .starmap2 .sm-star:focus-visible .sm-glow, .starmap2 .sm-star.active .sm-glow { opacity: 1; }
+.starmap2 .sm-star:hover .sm-spark { transform: scale(1.35) rotate(45deg); }
+.starmap2 .sm-today { fill: none; stroke: #fff; stroke-width: 1.4; stroke-dasharray: 3 5; transform-box: fill-box; transform-origin: center; animation: ring-spin 12s linear infinite; }
+.starmap2 .sm-ripple { fill: none; stroke: var(--c); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: vc-ring 2s ease-out infinite; }
+.starmap2 .sm-label { fill: #d7e6f7; font-size: 14px; font-family: 'Noto Serif KR', serif; paint-order: stroke; stroke: rgba(6, 16, 40, .85); stroke-width: 4px; stroke-linejoin: round; }
+.starmap2 .sm-star.active .sm-label { fill: #fff; font-weight: 700; }
