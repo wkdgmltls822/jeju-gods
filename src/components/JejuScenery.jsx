@@ -13,8 +13,9 @@ const WAVES = `
   const vec2 D[5] = vec2[5](vec2(1.0, 0.3), vec2(-0.4, 1.0), vec2(0.7, 0.7), vec2(0.2, -1.0), vec2(-0.9, -0.4));
   const float K[5] = float[5](1.6, 2.4, 3.8, 6.5, 11.0);
   const float S[5] = float[5](1.0, 1.3, 1.7, 2.2, 2.8);
-  const float A[5] = float[5](0.075, 0.05, 0.03, 0.014, 0.006);
+  const float A[5] = float[5](0.12, 0.08, 0.05, 0.022, 0.01);
 `
+// (실제 파도 높이는 낮게 해서 섬 해안이 잠기지 않게 하고, 결은 셰이더에서 선명하게 그린다)
 export function Sea() {
   const mat = useRef()
   const uniforms = useMemo(() => ({ t: { value: 0 }, ang: { value: 0 } }), [])
@@ -33,7 +34,7 @@ export function Sea() {
             vec3 p = position;
             float h = 0.0;
             for (int i = 0; i < 3; i++) h += A[i] * sin(dot(D[i], p.xy) * K[i] + t * S[i]);
-            p.z += h;
+            p.z += h * 0.3;
             vP = position.xy;
             vec4 w = modelMatrix * vec4(p, 1.0);
             vW = w.xyz;
@@ -45,8 +46,9 @@ export function Sea() {
           float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
           void main() {
             float h = 0.0, dx = 0.0, dy = 0.0;
+            float warp = 1.7 * sin(vP.x * 0.33 + vP.y * 0.27 + t * 0.2) + 1.2 * sin(vP.y * 0.52 - vP.x * 0.21 - t * 0.15) + 0.7 * sin(vP.x * 0.9 + vP.y * 0.8 + t * 0.35);
             for (int i = 0; i < N; i++) {
-              float ph = dot(D[i], vP) * K[i] + t * S[i];
+              float ph = dot(D[i], vP) * K[i] + t * S[i] + warp * (0.6 + 0.2 * float(i));
               h += A[i] * sin(ph);
               float c = cos(ph) * A[i] * K[i];
               dx += c * D[i].x; dy += c * D[i].y;
@@ -63,11 +65,13 @@ export function Sea() {
             vec3 deep = mix(vec3(0.02, 0.2, 0.38), vec3(0.01, 0.08, 0.2), smoothstep(4.0, 24.0, r));
             vec3 col = deep + vec3(0.05, 0.16, 0.28) * diff * 1.4;
             col += vec3(0.16, 0.3, 0.55) * fres * 0.9;
-            col += vec3(1.0, 0.97, 0.88) * spec * 1.8;
-            float crest = smoothstep(0.07, 0.15, h);
-            col += vec3(0.55, 0.8, 0.95) * crest * 0.45;
-            float trough = smoothstep(-0.07, -0.15, h);
-            col -= vec3(0.02, 0.05, 0.08) * trough;
+            col += vec3(1.0, 0.97, 0.88) * spec * 2.6;
+            float crest = smoothstep(0.11, 0.2, h);
+            float foam = smoothstep(0.17, 0.26, h);
+            col += vec3(0.6, 0.85, 1.0) * crest * 0.55 + vec3(0.9, 0.97, 1.0) * foam * 0.5;
+            float trough = smoothstep(-0.08, -0.2, h);
+            col -= vec3(0.03, 0.08, 0.12) * trough * 1.6;
+            
             vec2 q = floor(vW.xz * 8.0 + vec2(t * 0.5, -t * 0.35));
             float hh = hash(q);
             float tw = step(0.985, hh) * (0.5 + 0.5 * sin(t * 4.0 + hh * 40.0));
@@ -76,7 +80,7 @@ export function Sea() {
             float lane = exp(-pow((cx + 5.5 + cz * 0.28) / 1.9, 2.0));
             col += vec3(0.85, 0.93, 1.0) * tw * (0.35 + lane * 1.2);
             col += vec3(0.5, 0.65, 0.9) * lane * 0.14;
-            gl_FragColor = vec4(col, 0.8);
+            gl_FragColor = vec4(col, 0.92);
           }`} />
     </mesh>
   )
