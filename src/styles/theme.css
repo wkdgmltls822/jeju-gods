@@ -88,13 +88,14 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .bg-star.warm { fill: var(--yuchae); }
 @keyframes twinkle { 0%, 100% { opacity: .15; } 50% { opacity: .95; } }
 
-.shooting-star { stroke: #fff; stroke-width: 1.6; stroke-linecap: round; opacity: 0;
-  filter: drop-shadow(0 0 4px #7dd3fc); animation: shoot 9s ease-in infinite 2s; }
-@keyframes shoot {
-  0% { transform: translate(60px, 40px); opacity: 0; }
-  3% { opacity: 1; }
-  12% { transform: translate(520px, 230px); opacity: 0; }
-  100% { transform: translate(520px, 230px); opacity: 0; }
+/* 별똥별비: 유성마다 시작 위치·거리·속도·시작 시간이 달라서 여러 개가 겹쳐 떨어진다 */
+.meteor { stroke: #fff; stroke-linecap: round; opacity: 0; filter: drop-shadow(0 0 4px #7dd3fc);
+  animation: meteor var(--dur, 5s) ease-in infinite; animation-delay: var(--delay, 0s); }
+@keyframes meteor {
+  0% { transform: translate(var(--sx), var(--sy)); opacity: 0; }
+  4% { opacity: 1; }
+  26% { transform: translate(calc(var(--sx) + var(--dx)), calc(var(--sy) + var(--dy))); opacity: 0; }
+  100% { transform: translate(calc(var(--sx) + var(--dx)), calc(var(--sy) + var(--dy))); opacity: 0; }
 }
 
 .starmap .glow { opacity: .55; transform-box: fill-box; transform-origin: center; animation: breathe-star 3.2s ease-in-out infinite; }
@@ -168,7 +169,7 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .rise, .reveal { opacity: 1 !important; transform: none !important; }
   .bg-star { opacity: .5; }
-  .shooting-star { display: none; }
+  .meteor { display: none; }
 }
 
 /* 홈 히어로: 별 하늘 + 오로라 + 반짝이는 제목 */

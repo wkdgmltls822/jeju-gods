@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { GODS, EDGES, godById } from '../data/gods'
 import { makeBackgroundStars } from '../lib/stars'
+import Meteors from './Meteors'
 
 // 신들을 별자리로 그린 지도. 별을 누르면 onSelect(id) 가 불립니다.
 export default function StarMap({ selectedId, todayId, onSelect }) {
@@ -34,8 +35,8 @@ export default function StarMap({ selectedId, todayId, onSelect }) {
           <circle key={s.id} cx={s.x} cy={s.y} r={s.r} className={`bg-star ${s.warm ? 'warm' : ''}`}
             style={{ animationDelay: `${s.delay}s`, animationDuration: `${s.dur}s` }} />
         ))}
-        {/* 가끔 지나가는 별똥별 */}
-        <line className="shooting-star" x1="0" y1="0" x2="70" y2="26" />
+        {/* 쏟아지는 별똥별 */}
+        <Meteors count={8} seed={42} />
       </g>
 
       {/* 별과 별을 잇는 선: 고른 별에 이어진 선은 빛이 흐른다 */}
