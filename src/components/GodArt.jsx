@@ -145,22 +145,48 @@ const SCENES = {
     </>
   ),
 
-  // 바람을 타고 들어와 해녀의 바다에 씨를 뿌리는 여신
+  // 바람을 타고 제주에 들어와 바다에 씨를 뿌려 주는 영등할망: 휘날리는 머리와 옷자락, 동백꽃, 해녀의 바다
   yeongdeung: () => (
     <>
-      <path d="M-10 70 C80 10 150 120 230 56 S360 30 420 80 C330 60 290 120 200 96 S60 140 -10 70Z" fill="var(--c)" opacity=".14" className="gart-sway" />
-      {[[34, 62, 0], [66, 100, 0.8], [26, 134, 1.6], [48, 36, 2.2]].map(([y0, y1, d], i) => (
-        <path key={i} d={`M-10 ${y1} C70 ${y0 - 24} 130 ${y1 + 34} 210 ${y1 - 8} S350 ${y0 + 12} 410 ${y1}`} fill="none" stroke="var(--c)" strokeWidth={i % 2 ? 2 : 3} strokeLinecap="round" strokeOpacity=".8" strokeDasharray="70 44" className="gart-wind" style={{ '--d': `${d}s` }} />
+      <defs>
+        <linearGradient id="gb-cloak" x1="1" y1="0" x2="0" y2="0">
+          <stop offset="0" stopColor="var(--c)" stopOpacity=".85" /><stop offset="1" stopColor="var(--c)" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="gb-moonpath" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#fdf6d8" stopOpacity=".55" /><stop offset="1" stopColor="#fdf6d8" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <circle cx="72" cy="38" r="40" fill="#fdf6d8" opacity=".14" className="gart-breathe" />
+      <path d="M64 18 A20 20 0 1 0 92 48 A16 16 0 1 1 64 18Z" fill="#fdf6d8" />
+      <path d="M-10 92 C60 60 120 120 190 78 C230 54 262 66 276 74 L268 92 C220 80 190 110 130 112 C70 114 30 100 -10 120Z" fill="url(#gb-cloak)" className="gart-sway" />
+      <path d="M-10 62 C50 30 110 84 170 52 C206 34 240 44 262 62 L256 70 C220 56 190 74 150 76 C90 80 40 62 -10 82Z" fill="url(#gb-cloak)" opacity=".6" className="gart-sway" style={{ animationDirection: 'alternate-reverse' }} />
+      <path d="M262 64 C230 60 200 70 168 62 C130 52 96 66 60 56" fill="none" stroke="#fff" strokeOpacity=".7" strokeWidth="2" strokeLinecap="round" strokeDasharray="40 30" className="gart-wind" />
+      <path d="M270 88 C226 94 190 84 150 96 C112 106 76 96 40 104" fill="none" stroke="#fff" strokeOpacity=".55" strokeWidth="2" strokeLinecap="round" strokeDasharray="30 36" className="gart-wind" style={{ '--d': '1.2s' }} />
+      <g>
+        <circle cx="278" cy="66" r="9" fill="#ffe9f2" />
+        <path d="M270 62 C250 58 226 72 206 60 C226 50 252 50 270 56Z" fill="#17206b" className="gart-sway" />
+        <path d="M268 74 C262 96 258 112 252 126 C270 120 288 108 296 90 C298 80 292 72 284 72Z" fill="url(#gb-cloak)" />
+        <path d="M290 84 C304 90 316 98 326 108" stroke="#ffe9f2" strokeWidth="4" strokeLinecap="round" fill="none" />
+      </g>
+      {Array.from({ length: 8 }, (_, i) => (
+        <circle key={i} cx={316 + (i % 4) * 8} cy="112" r={i % 2 ? 1.8 : 2.6} fill="#ffe9a8" className="gart-fall" style={{ '--d': `${i * 0.3}s` }} />
       ))}
-      <path d="M300 70 a6 6 0 1 1 6 6 a12 12 0 1 1 -12 -12 a20 20 0 1 1 20 20" fill="none" stroke="#fff" strokeOpacity=".6" strokeWidth="2" strokeLinecap="round" className="gart-pulse" />
-      {Array.from({ length: 7 }, (_, i) => (
-        <ellipse key={i} cx={30 + i * 8} cy={50 + (i * 17) % 100} rx="4.5" ry="2.2" fill="#f9a8d4" className="gart-petal" style={{ '--d': `${i * 0.7}s`, '--y': `${(i % 3) * 10 - 10}px` }} />
+      {Array.from({ length: 6 }, (_, i) => (
+        <ellipse key={i} cx={120 + i * 22} cy={40 + (i * 23) % 70} rx="5" ry="2.6" fill={i % 2 ? '#fb7185' : '#f9a8d4'} className="gart-petal" style={{ '--d': `${i * 0.8}s`, '--y': `${(i % 3) * 14 - 10}px` }} />
       ))}
-      <path d="M0 156 Q50 144 100 156 T200 156 T300 156 T400 156 V200 H0Z" fill="#0c3a63" />
-      <path d="M0 172 Q50 162 100 172 T200 172 T300 172 T400 172 V200 H0Z" fill="#0a2d52" className="gart-sway" />
-      <path d="M0 188 Q50 180 100 188 T200 188 T300 188 T400 188 V200 H0Z" fill="#071f3a" className="gart-sway" />
-      <g fill="#050f22"><ellipse cx="318" cy="166" rx="10" ry="5" /><circle cx="340" cy="160" r="6" /><path d="M328 168 Q336 162 346 168 L342 176 Q334 172 326 176Z" /></g>
-      <circle cx="318" cy="160" r="6" fill="#ff8a5c" className="gart-pulse" />
+      <path d="M0 150 Q50 140 100 150 T200 150 T300 150 T400 150 V200 H0Z" fill="#0d4a78" />
+      <path d="M0 150 Q50 140 100 150 T200 150 T300 150 T400 150" fill="none" stroke="#bfe6ff" strokeOpacity=".6" />
+      <path d="M0 168 Q50 158 100 168 T200 168 T300 168 T400 168 V200 H0Z" fill="#0a3560" className="gart-sway" />
+      <path d="M0 168 Q50 158 100 168 T200 168 T300 168 T400 168" fill="none" stroke="#bfe6ff" strokeOpacity=".4" className="gart-sway" />
+      <path d="M0 186 Q50 178 100 186 T200 186 T300 186 T400 186 V200 H0Z" fill="#062648" className="gart-sway" style={{ animationDirection: 'alternate-reverse' }} />
+      <g className="gart-sway">
+        <circle cx="96" cy="158" r="9" fill="#ff8a5c" /><path d="M88 156 q8 6 16 0 M90 162 q6 4 12 0" stroke="#7a2f14" fill="none" />
+        <circle cx="116" cy="162" r="4.5" fill="#050f22" /><path d="M110 168 q6 -5 12 0" fill="#050f22" />
+      </g>
+      <path d="M340 200 L346 168 L362 160 L378 170 L400 166 V200Z" fill="#050f22" />
+      {[[352, 164], [366, 158], [384, 166]].map(([x, y], i) => (
+        <g key={i}><circle cx={x} cy={y} r="5" fill="#fb3a5e" /><circle cx={x} cy={y} r="2" fill="#ffd166" /></g>
+      ))}
     </>
   ),
 
