@@ -195,6 +195,14 @@ export default async function handler(req, res) {
   } catch (e) {
     console.error('agent error:', e.message)
     const msg = String(e.message)
-    demo(/429|quota|rate/i.test(msg) ? 'AI 사용 한도를 넘었어요' : /401|403|api key/i.test(msg) ? 'AI 키가 올바르지 않아요' : 'AI 연결에 문제가 있어요')
+    // 키·내용은 싣지 않고, 원인을 가릴 수 있는 상태 코드와 종류만 덧붙인다
+    const tag = [e.status, e.error?.error?.type ?? e.name].filter(Boolean).join(' ')
+    demo(
+      /credit balance|billing/i.test(msg) ? 'AI 크레딧(잔액)이 부족해요'
+        : /429|quota|rate/i.test(msg) ? 'AI 사용 한도를 넘었어요'
+        : /401|403|api key|authentication/i.test(msg) ? 'AI 키가 올바르지 않아요'
+        : /not_found|model/i.test(msg) ? `AI 모델을 찾지 못했어요 (${tag})`
+        : `AI 연결에 문제가 있어요 (${tag || 'unknown'})`,
+    )
   }
 }
