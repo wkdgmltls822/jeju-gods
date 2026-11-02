@@ -21,7 +21,7 @@ export default function Myths() {
       <PageHeader title="신들의 별자리" desc="밤하늘의 별을 눌러 제주의 신을 만나 보세요. 테두리가 빛나는 별이 오늘의 신이에요." />
       <div className="row g-4 align-items-start">
         <div className="col-lg-7"><StarMap selectedId={selected.id} todayId={today.id} onSelect={setSelectedId} /></div>
-        <div className="col-lg-5"><GodPanel god={selected} /></div>
+        <div className="col-lg-5"><GodPanel key={selected.id} god={selected} /></div>
       </div>
       <div className="mt-4"><VisitorChart /></div>
     </>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchVisitors } from '../api/client'
+import { ErrorNote, Loading } from './Status'
 
 // 서귀포 직영관광지 월별 관람객 — "사람들이 이 신의 땅을 얼마나 찾는지" 막대로 보여줍니다
 export default function VisitorChart() {
@@ -11,8 +12,8 @@ export default function VisitorChart() {
     fetchVisitors().then(setData).catch((e) => setError(e.message))
   }, [])
 
-  if (error) return <p className="text-secondary small">관람객 정보를 불러오지 못했어요 ({error})</p>
-  if (!data) return <p className="text-secondary small">관람객 정보를 불러오는 중…</p>
+  if (error) return <ErrorNote error={error} text="관람객 정보를 불러오지 못했어요" />
+  if (!data) return <Loading text="관람객 정보를 불러오는 중…" />
 
   const i = idx ?? data.months.length - 1
   const m = data.months[i]

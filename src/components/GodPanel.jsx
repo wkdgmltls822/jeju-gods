@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchPlaces } from '../api/client'
 import FavoriteButton from './FavoriteButton'
+import { Empty, ErrorNote, Loading } from './Status'
 
 // 선택한 신의 소개 + 그 신과 이어지는 장소(TourAPI)
 export default function GodPanel({ god }) {
@@ -8,9 +9,7 @@ export default function GodPanel({ god }) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    let alive = true
-    setPlaces(null)
-    setError('')
+    let alive = true // 신이 바뀌면 부모가 key 로 이 컴포넌트를 새로 만들어서 상태는 처음부터 시작
     Promise.all(god.places.map((kw) => fetchPlaces(kw).then((d) => d.items)))
       .then((lists) => {
         const seen = new Set()
@@ -32,9 +31,9 @@ export default function GodPanel({ god }) {
       <p>{god.text}</p>
 
       <h3 className="h6 sea mt-4 mb-2"><i className="bi bi-geo-alt me-1" />이 이야기와 이어지는 곳</h3>
-      {error && <p className="text-secondary small mb-0">장소를 불러오지 못했어요 ({error})</p>}
-      {!error && places === null && <p className="text-secondary small mb-0">찾는 중…</p>}
-      {!error && places?.length === 0 && <p className="text-secondary small mb-0">관련 장소를 찾지 못했어요.</p>}
+      <ErrorNote error={error} text="장소를 불러오지 못했어요" />
+      {!error && places === null && <Loading text="찾는 중…" />}
+      {!error && places?.length === 0 && <Empty>관련 장소를 찾지 못했어요.</Empty>}
       <ul className="list-unstyled place-list mb-0">
         {places?.map((p) => (
           <li key={p.id}>

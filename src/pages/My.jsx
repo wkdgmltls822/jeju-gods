@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import { Empty } from '../components/Status'
 import { godById } from '../data/gods'
 import { useAppStore } from '../store/useAppStore'
 import { supabase } from '../lib/supabase'
@@ -30,7 +31,7 @@ export default function My() {
 
       <h2 className="h5 sea mb-3"><i className="bi bi-star me-1" />즐겨찾기한 신</h2>
       {favorites.length === 0 ? (
-        <p className="text-secondary">아직 없어요. <Link to="/myths">별자리</Link>에서 신을 골라 즐겨찾기를 눌러 보세요.</p>
+        <Empty>아직 없어요. <Link to="/myths">별자리</Link>에서 신을 골라 즐겨찾기를 눌러 보세요.</Empty>
       ) : (
         <div className="d-flex gap-2 flex-wrap mb-4">
           {favorites.map((id) => {
@@ -42,7 +43,7 @@ export default function My() {
 
       <h2 className="h5 sea mt-4 mb-3"><i className="bi bi-chat-quote me-1" />최근 대화</h2>
       {logs.length === 0 ? (
-        <p className="text-secondary">아직 없어요. <Link to="/agent">신과 대화</Link>를 해 보세요.</p>
+        <Empty>아직 없어요. <Link to="/agent">신과 대화</Link>를 해 보세요.</Empty>
       ) : (
         <ul className="list-unstyled log-list">
           {logs.map((l) => (

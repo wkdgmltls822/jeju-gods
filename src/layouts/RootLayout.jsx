@@ -1,7 +1,9 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { NAV_ITEMS } from '../router'
+import { useAppStore } from '../store/useAppStore'
 
 export default function RootLayout() {
+  const nickname = useAppStore((s) => s.nickname)
   return (
     <>
       <nav className="navbar navbar-expand site-nav sticky-top">
@@ -19,6 +21,11 @@ export default function RootLayout() {
               </li>
             ))}
           </ul>
+          {nickname && (
+            <span className="navbar-text ms-3 small d-none d-sm-inline nick">
+              <i className="bi bi-person-circle me-1" />{nickname}
+            </span>
+          )}
         </div>
       </nav>
       <main className="container py-5">
