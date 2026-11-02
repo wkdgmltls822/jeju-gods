@@ -468,7 +468,7 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .view-toggle { display: inline-flex; gap: .25rem; padding: .25rem; margin-bottom: .75rem; border-radius: 999px; background: var(--basalt-2); border: 1px solid var(--line); }
 .view-toggle button { border: 0; background: transparent; color: var(--hanji-dim); padding: .3rem .9rem; border-radius: 999px; font-size: .85rem; transition: background .2s, color .2s; }
 .view-toggle button.on { background: var(--yuchae); color: var(--on-accent); font-weight: 700; }
-.starmap3d { position: relative; aspect-ratio: 800 / 520; min-height: 320px; border: 1px solid var(--line); border-radius: 1rem; overflow: hidden; background: #06101c; cursor: grab; }
+.starmap3d { position: relative; aspect-ratio: 800 / 520; min-height: 320px; border: 1px solid var(--line); border-radius: 1rem; overflow: hidden; background: #0b1b2e; cursor: grab; }
 .starmap3d:active { cursor: grabbing; }
 .starmap3d canvas { display: block; }
 .starmap3d-hint { position: absolute; left: 50%; bottom: .6rem; transform: translateX(-50%); font-size: .72rem; color: var(--hanji-dim); pointer-events: none;

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
-import { AdditiveBlending, CanvasTexture } from 'three'
+import { AdditiveBlending, BackSide, CanvasTexture, Color, Vector2 } from 'three'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Html, Line, OrbitControls, Sparkles, Stars } from '@react-three/drei'
 import { GODS, EDGES, GOD_COLORS, godById } from '../data/gods'
@@ -68,6 +68,101 @@ function GodStar({ god, selected, today, onSelect }) {
   )
 }
 
+// 하늘 전체를 감싸는 그라데이션: 위는 깊은 남색, 가운데는 보랏빛, 지평선 쪽은 바다 같은 청록
+function SkyDome() {
+  const uniforms = useMemo(() => ({
+    top: { value: new Color('#0a1340') }, mid: { value: new Color('#33208f') }, low: { value: new Color('#0f6d8f') },
+  }), [])
+  return (
+    <mesh>
+      <sphereGeometry args={[70, 32, 32]} />
+      <shaderMaterial side={BackSide} depthWrite={false} uniforms={uniforms}
+        vertexShader={'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }'}
+        fragmentShader={'uniform vec3 top; uniform vec3 mid; uniform vec3 low; varying vec3 vP; void main(){ float h = vP.y; vec3 c = h > 0.0 ? mix(mid, top, smoothstep(0.0, 0.8, h)) : mix(mid, low, smoothstep(0.0, -0.6, h)); gl_FragColor = vec4(c, 1.0); }'} />
+    </mesh>
+  )
+}
+
+// 멀리 떠 있는 색색의 성운 구름: 아주 천천히 흐른다
+const NEBULAE = [
+  { p: [-26, 10, -30], s: 46, c: '#6d4cff', o: 0.7 }, { p: [24, 14, -34], s: 52, c: '#ff6fb5', o: 0.5 },
+  { p: [4, -8, -40], s: 56, c: '#22d3ee', o: 0.55 }, { p: [-34, -6, -14], s: 40, c: '#3b82f6', o: 0.65 },
+  { p: [34, -2, -18], s: 42, c: '#a78bfa', o: 0.6 },
+]
+function Nebulae() {
+  const g = useRef()
+  useFrame((_, dt) => { g.current.rotation.y += dt * 0.01 })
+  return (
+    <group ref={g}>
+      {NEBULAE.map((n, i) => (
+        <sprite key={i} position={n.p} scale={[n.s, n.s, 1]}>
+          <spriteMaterial map={glowTexture} color={n.c} transparent opacity={n.o} depthWrite={false} blending={AdditiveBlending} fog={false} />
+        </sprite>
+      ))}
+    </group>
+  )
+}
+
+// 은하수: 하늘을 비스듬히 가로지르는 별가루 띠
+function MilkyWay() {
+  const { pos, col } = useMemo(() => {
+    let seed = 99
+    const rand = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296 }
+    const n = 4200, pos = new Float32Array(n * 3), col = new Float32Array(n * 3)
+    const palette = [new Color('#bfe6ff'), new Color('#c4b5fd'), new Color('#f9a8d4'), new Color('#fde68a')]
+    for (let i = 0; i < n; i++) {
+      const th = rand() * Math.PI * 2
+      const ph = (rand() + rand() + rand() - 1.5) * 0.28 // 띠 한가운데에 빽빽하게
+      const R = 55 + rand() * 6
+      pos.set([R * Math.cos(th) * Math.cos(ph), R * Math.sin(ph), R * Math.sin(th) * Math.cos(ph)], i * 3)
+      const c = palette[Math.floor(rand() * palette.length)].clone().multiplyScalar(0.5 + rand() * 0.5)
+      col.set([c.r, c.g, c.b], i * 3)
+    }
+    return { pos, col }
+  }, [])
+  return (
+    <points rotation={[0.55, 0, 0.5]}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[pos, 3]} />
+        <bufferAttribute attach="attributes-color" args={[col, 3]} />
+      </bufferGeometry>
+      <pointsMaterial size={0.38} vertexColors transparent opacity={0.85} depthWrite={false} blending={AdditiveBlending} sizeAttenuation fog={false} />
+    </points>
+  )
+}
+
+// 별자리 아래 제주섬: 빛나는 한라산 뼈대와 사방으로 퍼지는 바다 물결
+const HALLA = [[0, 1.5], [0.25, 1.42], [0.7, 1.05], [1.4, 0.66], [2.4, 0.34], [3.5, 0.12], [4.6, 0]].map(([r, y]) => new Vector2(r, y))
+function Island() {
+  const ripples = useRef([])
+  useFrame(({ clock }) => {
+    ripples.current.forEach((m, i) => {
+      if (!m) return
+      const k = ((clock.elapsedTime * 0.18 + i / 4) % 1)
+      m.scale.setScalar(0.5 + k * 2.4)
+      m.material.opacity = (1 - k) * 0.5
+    })
+  })
+  return (
+    <group position={[0, -5.4, 0]}>
+      <mesh>
+        <latheGeometry args={[HALLA, 28]} />
+        <meshBasicMaterial color="#06142a" />
+      </mesh>
+      <mesh scale={1.003}>
+        <latheGeometry args={[HALLA, 28]} />
+        <meshBasicMaterial color="#5eead4" wireframe transparent opacity={0.28} />
+      </mesh>
+      {[0, 1, 2, 3].map((i) => (
+        <mesh key={i} ref={(m) => { ripples.current[i] = m }} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]}>
+          <ringGeometry args={[4.3, 4.38, 96]} />
+          <meshBasicMaterial color="#7dd3fc" transparent opacity={0.4} depthWrite={false} side={2} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
 function Constellation({ selectedId, todayId, onSelect }) {
   const lines = useMemo(() => EDGES.map(([a, b]) => ({ key: a + b, a, b, pts: [pos(godById(a)), pos(godById(b))] })), [])
   return (
@@ -87,13 +182,15 @@ function Constellation({ selectedId, todayId, onSelect }) {
 export default function StarMap3D({ selectedId, todayId, onSelect }) {
   return (
     <div className="starmap3d" role="group" aria-label="제주 신들의 3D 별자리 지도">
-      <Canvas camera={{ position: [0, 0.5, 11.5], fov: 50 }} dpr={[1, 2]} onPointerMissed={() => { document.body.style.cursor = '' }}>
-        <color attach="background" args={['#06101c']} />
-        <fog attach="fog" args={['#06101c', 14, 42]} />
-        <Stars radius={50} depth={40} count={2600} factor={3.2} saturation={0.4} fade speed={0.8} />
+      <Canvas camera={{ position: [0, 1.2, 12.5], fov: 50 }} dpr={[1, 2]} onPointerMissed={() => { document.body.style.cursor = '' }}>
+        <SkyDome />
+        <Nebulae />
+        <MilkyWay />
+        <Island />
+        <Stars radius={50} depth={40} count={1800} factor={3.2} saturation={0.5} fade speed={0.8} />
         <Sparkles count={70} scale={[14, 9, 7]} size={2.4} speed={0.35} color="#bfe6ff" opacity={0.7} />
         <Constellation selectedId={selectedId} todayId={todayId} onSelect={onSelect} />
-        <OrbitControls enablePan={false} autoRotate autoRotateSpeed={0.7} minDistance={6} maxDistance={18} dampingFactor={0.08} />
+        <OrbitControls target={[0, -0.6, 0]} enablePan={false} autoRotate autoRotateSpeed={0.7} minDistance={6} maxDistance={18} dampingFactor={0.08} />
       </Canvas>
       <div className="starmap3d-hint"><i className="bi bi-hand-index me-1" />끌어서 돌려 보고, 별을 눌러 보세요</div>
     </div>
