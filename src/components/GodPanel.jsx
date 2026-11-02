@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { fetchPlaces } from '../api/client'
 import FavoriteButton from './FavoriteButton'
 import GodBanner from './GodBanner'
-import { Empty, ErrorNote, Loading } from './Status'
+import { Empty, Loading } from './Status'
+import { PINS } from '../lib/jeju'
 
 // 선택한 신의 소개 + 그 신과 이어지는 장소(TourAPI)
 export default function GodPanel({ god }) {
@@ -33,7 +34,7 @@ export default function GodPanel({ god }) {
       <p className="god-text">{god.text}</p>
 
       <h3 className="h6 sea mt-4 mb-2"><i className="bi bi-geo-alt me-1" />이 이야기와 이어지는 곳</h3>
-      <ErrorNote error={error} text="장소를 불러오지 못했어요" />
+      {error && <PlaceFallback godId={god.id} />}
       {!error && places === null && <Loading text="찾는 중…" />}
       {!error && places?.length === 0 && <Empty>관련 장소를 찾지 못했어요.</Empty>}
       <ul className="list-unstyled place-list mb-0">
@@ -45,5 +46,16 @@ export default function GodPanel({ god }) {
         ))}
       </ul>
     </article>
+  )
+}
+
+// 관광공사 서버가 쉴 때는 빨간 오류 대신, 우리가 알고 있는 대표 장소와 안내를 보여 준다
+function PlaceFallback({ godId }) {
+  const pin = PINS.find((p) => p.god === godId)
+  return (
+    <div className="place-soft" role="status">
+      {pin && <p className="mb-1"><i className="bi bi-geo-alt-fill me-1" /><strong>{pin.place}</strong></p>}
+      <p className="small text-secondary mb-0">관광공사 서버가 바빠서 자세한 주소와 사진은 잠시 뒤에 다시 보여 드릴게요. 별자리 화면을 다시 열어 보세요.</p>
+    </div>
   )
 }

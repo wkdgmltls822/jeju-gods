@@ -144,3 +144,21 @@ a { text-underline-offset: 3px; }
 .sf-qr b { color: var(--yuchae); font-size: .84rem; }
 .sf-qr small { font-size: .74rem; line-height: 1.6; }
 @media (max-width: 767px) { .sf-qr:hover img { transform: scale(1.25); } .sf-qr:hover span { transform: translateX(26px); } }
+
+/* ───── 터치·가독성 다듬기: 손가락으로 누르기 편한 크기(40px 안팎)와 읽기 편한 글씨 ───── */
+.site-nav .nav-link { min-height: 40px; display: inline-flex; align-items: center; }
+.sf-link { min-height: 40px; display: inline-flex; align-items: center; }
+.fav3-btn.fav3-btn, .tl-chip.tl-chip { min-height: 40px; }
+.tl-chip.all.all { min-height: 40px; }
+/* 모양은 그대로 두고 누를 수 있는 영역만 넓힌다 */
+.fav3-star, .tl-more.tl-more, .tl-resume.tl-resume, .wm-pin, .wm-ctl button { position: relative; }
+.fav3-star { position: absolute; }
+.fav3-star::after, .tl-more::after, .tl-resume::after { content: ''; position: absolute; inset: -8px; }
+.tl-more::after, .tl-resume::after { inset: -11px -6px; }
+.wm-pin::after { content: ''; position: absolute; inset: -8px; }
+.wm-pin { position: absolute; }
+.wm-ctl button { width: 2.5rem; height: 2.5rem; }
+.bar-num small { font-size: .74rem; }
+.ft-tag { font-size: .74rem; }
+.place-soft { padding: .7rem .9rem; border-radius: .8rem; background: rgba(125, 211, 252, .07); border: 1px solid rgba(125, 211, 252, .25); }
+[role="tab"], .btn.btn-sm { min-height: 38px; }

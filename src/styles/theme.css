@@ -460,7 +460,7 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
   animation: rise-in .5s ease-out both; animation-delay: calc(.2s + var(--i) * .1s); transition: transform .25s, box-shadow .25s, border-color .25s; }
 .suggest > .bi { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); font-size: 1.3rem; color: var(--yuchae); }
 .suggest:hover { transform: translateY(-3px); border-color: var(--yuchae); box-shadow: 0 10px 26px -12px rgba(125, 211, 252, .7); }
-.suggest-tag { font-size: .68rem; letter-spacing: .06em; color: var(--sea); }
+.suggest-tag { font-size: .75rem; letter-spacing: .06em; color: var(--sea); }
 .suggest-text { font-size: .88rem; line-height: 1.45; }
 .chat-box:has(.chat-empty) { max-height: none; }
 
@@ -755,7 +755,7 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
   .wx-temp { font-size: 3.6rem; }
   .wx-hour > i { font-size: 1.2rem; }
   .wx-h-plot em { font-size: .78rem; }
-  .wx-h-time, .wx-hour small { font-size: .62rem; }
+  .wx-h-time, .wx-hour small { font-size: .72rem; }
 }
 
 /* 날씨 제목: 색이 계속 흐르고, 하늘 종류에 따라 색 팔레트가 달라진다 */
