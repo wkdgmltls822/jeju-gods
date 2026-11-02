@@ -634,3 +634,13 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 /* 3D 별 이름표 */
 .star3d-label { padding: .08rem .55rem; border-radius: 999px; background: rgba(6, 16, 40, .5); border: 1px solid rgba(160, 200, 255, .22); backdrop-filter: blur(3px); }
 .star3d-label.on { background: rgba(125, 211, 252, .22); border-color: rgba(125, 211, 252, .7); box-shadow: 0 0 14px rgba(125, 211, 252, .55); }
+
+/* 사진 위에는 신(주인공)만 또렷하게, 하늘·땅·바다 같은 배경은 숨긴다 */
+.god-banner > .gb-over { mix-blend-mode: normal; }
+.god-banner > .gb-over.on { opacity: 1; }
+.gb-over [data-bg] { display: none; }
+.gb-over .gart-sweep { display: none; }
+.gb-photo { filter: saturate(1.15) contrast(1.05) brightness(.92); }
+.gb-tint { background: linear-gradient(180deg, rgba(9, 16, 58, .5), rgba(10, 20, 64, .08) 55%, rgba(6, 16, 40, .5)),
+    radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--c) 28%, transparent), transparent 62%); }
+.gb-over { filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .55)); }

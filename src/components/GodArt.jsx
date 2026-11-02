@@ -41,22 +41,22 @@ const SCENES = {
           <stop offset="0" stopColor="var(--c)" stopOpacity=".7" /><stop offset="1" stopColor="var(--c)" stopOpacity=".05" />
         </linearGradient>
       </defs>
-      <path d="M96 200 C100 118 140 76 200 66 C260 76 300 118 304 200Z" fill="url(#gb-seol)" className="gart-breathe" />
-      <circle cx="200" cy="50" r="16" fill="var(--c)" opacity=".75" />
+      <path d="M96 200 C100 118 140 76 200 66 C260 76 300 118 304 200Z" fill="url(#gb-seol)" stroke="#fff" strokeOpacity=".75" strokeWidth="1.6" className="gart-breathe" />
+      <circle cx="200" cy="50" r="16" fill="var(--c)" stroke="#fff" strokeOpacity=".8" strokeWidth="1.6" />
       <path d="M186 44 C150 58 138 112 146 160 M214 44 C250 58 262 112 254 160" stroke="var(--c)" strokeWidth="5" strokeLinecap="round" fill="none" opacity=".45" className="gart-sway" />
       <path d="M160 112 Q118 140 100 176 M240 112 Q282 140 300 176" stroke="var(--c)" strokeWidth="6" strokeLinecap="round" fill="none" opacity=".5" />
       <Dotted pts={[[176, 96], [196, 84], [218, 100], [206, 124], [186, 118]]} />
       {[[176, 96], [196, 84], [218, 100], [206, 124], [186, 118]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2" fill="#fff" className="gart-pulse" style={{ '--d': `${i * 0.3}s` }} />)}
-      <ellipse cx="130" cy="128" rx="48" ry="9" fill="#9bd3ff" opacity=".18" /><ellipse cx="276" cy="140" rx="44" ry="8" fill="#9bd3ff" opacity=".16" />
+      <ellipse data-bg cx="130" cy="128" rx="48" ry="9" fill="#9bd3ff" opacity=".18" /><ellipse data-bg cx="276" cy="140" rx="44" ry="8" fill="#9bd3ff" opacity=".16" />
       {Array.from({ length: 9 }, (_, i) => (
         <circle key={i} cx={104 + i * 24} cy="172" r="2.2" fill="#fde68a" className="gart-fall" style={{ '--d': `${i * 0.35}s` }} />
       ))}
-      <path d="M300 200 L316 168 Q340 162 364 168 L380 200Z" fill="#0f3a62" /><path d="M316 168 Q340 162 364 168" fill="none" stroke="var(--c)" strokeOpacity=".7" />
-      <path d="M20 200 L160 124 Q200 108 240 124 L380 200Z" fill="#0b2a49" />
-      <path d="M160 124 Q200 108 240 124 L228 134 Q200 126 172 134Z" fill="#e6f6ff" opacity=".85" />
-      <ellipse cx="200" cy="130" rx="15" ry="4" fill="var(--c)" opacity=".9" className="gart-pulse" />
+      <path data-bg d="M300 200 L316 168 Q340 162 364 168 L380 200Z" fill="#0f3a62" /><path data-bg d="M316 168 Q340 162 364 168" fill="none" stroke="var(--c)" strokeOpacity=".7" />
+      <path data-bg d="M20 200 L160 124 Q200 108 240 124 L380 200Z" fill="#0b2a49" />
+      <path data-bg d="M160 124 Q200 108 240 124 L228 134 Q200 126 172 134Z" fill="#e6f6ff" opacity=".85" />
+      <ellipse data-bg cx="200" cy="130" rx="15" ry="4" fill="var(--c)" opacity=".9" className="gart-pulse" />
       {[[70, 190, 34], [140, 194, 24], [270, 192, 30], [340, 196, 22]].map(([x, y, r], i) => (
-        <g key={i}><ellipse cx={x} cy={y} rx={r} ry={r * 0.42} fill="#0e3358" /><path d={`M${x - r} ${y} Q${x} ${y - r * 0.6} ${x + r} ${y}`} stroke="var(--c)" strokeOpacity=".5" fill="none" /></g>
+        <g data-bg key={i}><ellipse data-bg cx={x} cy={y} rx={r} ry={r * 0.42} fill="#0e3358" /><path data-bg d={`M${x - r} ${y} Q${x} ${y - r * 0.6} ${x + r} ${y}`} stroke="var(--c)" strokeOpacity=".5" fill="none" /></g>
       ))}
     </>
   ),
@@ -70,8 +70,8 @@ const SCENES = {
       </defs>
       <circle cx="250" cy="40" r="84" fill="url(#gb-halo)" className="gart-breathe" />
       <polygon points="238,36 262,36 340,200 164,200" fill="url(#gb-gate)" opacity=".5" className="gart-pulse" />
-      <path d="M110 40 Q160 14 210 32 T330 28 T420 38 V70 H110Z" fill="#35348f" opacity=".92" />
-      <path d="M140 64 Q200 40 250 58 T360 54 T420 62 V86 H140Z" fill="#46449f" opacity=".85" />
+      <path data-bg d="M110 40 Q160 14 210 32 T330 28 T420 38 V70 H110Z" fill="#35348f" opacity=".92" />
+      <path data-bg d="M140 64 Q200 40 250 58 T360 54 T420 62 V86 H140Z" fill="#46449f" opacity=".85" />
       <path d="M70 200 C34 156 112 136 92 96 C76 64 126 44 150 58" fill="none" stroke="#86d36b" strokeWidth="4" strokeLinecap="round" className="gart-sway" />
       {[[60, 168, -30], [100, 136, 40], [84, 98, -40], [130, 60, 30]].map(([x, y, r], i) => <ellipse key={i} cx={x} cy={y} rx="11" ry="5" fill="#a3e48a" transform={`rotate(${r} ${x} ${y})`} className="gart-pulse" style={{ '--d': `${i * 0.4}s` }} />)}
       {[[50, 186], [112, 112]].map(([x, y], i) => <g key={i}><circle cx={x} cy={y + 6} r="10" fill="#fff0b0" /><circle cx={x} cy={y - 6} r="6" fill="#fff0b0" /><circle cx={x - 3} cy={y + 3} r="3" fill="#fff" opacity=".6" /></g>)}
@@ -82,8 +82,8 @@ const SCENES = {
         <path d="M244 96 L214 118 L222 126 L246 110Z M256 96 L286 118 L278 126 L254 110Z" fill="#ffe08a" />
       </g>
       {[0, 1, 2, 3, 4].map((i) => <ellipse key={i} cx={282 + i * 5} cy="124" rx="2.2" ry="3.2" fill="#fff0b0" className="gart-fall" style={{ '--d': `${i * 0.45}s` }} />)}
-      <path d="M0 200 V176 Q100 160 200 176 T400 172 V200Z" fill="#0b2a49" />
-      <g><path d="M300 176 L336 150 L372 176Z" fill="#7a5a30" /><rect x="306" y="176" width="60" height="24" fill="#1a2748" /><rect x="326" y="180" width="16" height="14" fill="#ffcf85" className="gart-pulse" /></g>
+      <path data-bg d="M0 200 V176 Q100 160 200 176 T400 172 V200Z" fill="#0b2a49" />
+      <g data-bg><path data-bg d="M300 176 L336 150 L372 176Z" fill="#7a5a30" /><rect data-bg x="306" y="176" width="60" height="24" fill="#1a2748" /><rect data-bg x="326" y="180" width="16" height="14" fill="#ffcf85" className="gart-pulse" /></g>
     </>
   ),
 
@@ -108,7 +108,7 @@ const SCENES = {
       <path d="M100 106 Q142 136 100 168 Q124 136 100 106Z" fill="#c9852b" />
       <g fill="#0b1b33"><circle cx="86" cy="130" r="7" /><path d="M70 176 Q70 146 86 140 Q102 146 102 176Z" /><path d="M96 144 L112 134 L114 140 L100 152Z" /></g>
       <g fill="#0b1b33"><circle cx="330" cy="148" r="5" /><path d="M318 176 Q318 156 330 152 Q342 156 342 176Z" /></g>
-      <path d="M0 176 Q60 168 120 176 T240 176 T360 176 T400 176 V200 H0Z" fill="#0b2748" />
+      <path data-bg d="M0 176 Q60 168 120 176 T240 176 T360 176 T400 176 V200 H0Z" fill="#0b2748" />
       {[[210, 186], [260, 188]].map(([x, y], i) => (
         <g key={i}><rect x={x - 8} y={y - 8} width="16" height="12" rx="3" fill="#2a2150" /><path d={`M${x} ${y - 8} V${y - 22}`} stroke="#7ccf6b" strokeWidth="2" />{i === 0 && [-6, 0, 6].map((d) => <circle key={d} cx={x + d} cy={y - 24 + Math.abs(d) / 2} r="4" fill="#f9a8d4" className="gart-pulse" />)}{i === 1 && <circle cx={x} cy={y - 24} r="3" fill="#9aa4c9" />}</g>
       ))}
@@ -122,9 +122,9 @@ const SCENES = {
         <linearGradient id="gb-col" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="var(--c)" stopOpacity=".9" /><stop offset="1" stopColor="var(--c)" stopOpacity="0" /></linearGradient>
         <linearGradient id="gb-dawnsea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffb58a" stopOpacity=".6" /><stop offset="1" stopColor="#0d4a78" /></linearGradient>
       </defs>
-      <rect x="196" y="96" width="204" height="104" fill="url(#gb-dawnsea)" />
-      <circle cx="320" cy="96" r="34" fill="#ffe3b0" opacity=".85" className="gart-breathe" />
-      <path d="M0 200 V150 Q100 138 196 154 L196 200Z" fill="#0b2a49" />
+      <rect data-bg x="196" y="96" width="204" height="104" fill="url(#gb-dawnsea)" />
+      <circle data-bg cx="320" cy="96" r="34" fill="#ffe3b0" opacity=".85" className="gart-breathe" />
+      <path data-bg d="M0 200 V150 Q100 138 196 154 L196 200Z" fill="#0b2a49" />
       {[72, 112, 152].map((x, i) => (
         <g key={x}>
           <polygon points={`${x - 6},150 ${x + 6},150 ${x + 20},0 ${x - 20},0`} fill="url(#gb-col)" opacity=".55" className="gart-pulse" style={{ '--d': `${i * 0.5}s` }} />
@@ -133,9 +133,9 @@ const SCENES = {
           <path d={`M${x - 9} 138 L${x + 9} 134`} stroke="#8a6a3b" strokeWidth="3" />
         </g>
       ))}
-      {[[20, 112], [190, 120]].map(([x, y], i) => <g key={i} fill="#0b2a49"><path d={`M${x - 18} ${y + 30} L${x} ${y - 20} L${x + 18} ${y + 30}Z`} /><rect x={x - 2} y={y + 26} width="4" height="20" /></g>)}
-      <path d="M196 150 Q246 142 296 150 T400 150 V200 H196Z" fill="#0d4a78" opacity=".9" />
-      <path d="M196 168 Q246 160 296 168 T400 168 V200 H196Z" fill="#0a3560" className="gart-sway" />
+      {[[20, 112], [190, 120]].map(([x, y], i) => <g data-bg key={i} fill="#0b2a49"><path data-bg d={`M${x - 18} ${y + 30} L${x} ${y - 20} L${x + 18} ${y + 30}Z`} /><rect data-bg x={x - 2} y={y + 26} width="4" height="20" /></g>)}
+      <path data-bg d="M196 150 Q246 142 296 150 T400 150 V200 H196Z" fill="#0d4a78" opacity=".9" />
+      <path data-bg d="M196 168 Q246 160 296 168 T400 168 V200 H196Z" fill="#0a3560" className="gart-sway" />
       <g className="gart-sway">
         <rect x="268" y="138" width="56" height="26" rx="3" fill="#7a5a30" /><rect x="268" y="138" width="56" height="8" rx="3" fill="#a07a42" />
         <rect x="292" y="148" width="8" height="10" fill="#ffd166" className="gart-pulse" />
@@ -152,8 +152,8 @@ const SCENES = {
       <defs>
         <radialGradient id="gb-mom"><stop offset="0" stopColor="#fff" /><stop offset=".3" stopColor="var(--c)" stopOpacity=".8" /><stop offset="1" stopColor="var(--c)" stopOpacity="0" /></radialGradient>
       </defs>
-      <path d="M0 200 V150 Q60 120 130 142 Q170 108 220 140 Q280 118 400 150 V200Z" fill="#0c2c4d" />
-      <path d="M130 142 Q170 108 220 140" fill="none" stroke="var(--c)" strokeOpacity=".6" />
+      <path data-bg d="M0 200 V150 Q60 120 130 142 Q170 108 220 140 Q280 118 400 150 V200Z" fill="#0c2c4d" />
+      <path data-bg d="M130 142 Q170 108 220 140" fill="none" stroke="var(--c)" strokeOpacity=".6" />
       {[[64, 30], [110, 18], [160, 34], [248, 20], [296, 34], [340, 24], [90, 62], [320, 66], [36, 78]].map(([x, y], i) => (
         <g key={i}><circle cx={x} cy={y} r="9" fill="url(#gb-mom)" className="gart-pulse" style={{ '--d': `${i * 0.3}s` }} /><circle cx={x} cy={y} r="2.4" fill="#fff" /></g>
       ))}
@@ -171,7 +171,7 @@ const SCENES = {
       })}
       <rect x="176" y="176" width="48" height="10" rx="2" fill="#3a3a5a" /><rect x="186" y="168" width="28" height="8" rx="2" fill="#4a4a6a" />
       <circle cx="200" cy="164" r="5" fill="#ffd166" className="gart-pulse" />
-      <path d="M0 200 V188 Q100 178 200 188 T400 188 V200Z" fill="#071d36" />
+      <path data-bg d="M0 200 V188 Q100 178 200 188 T400 188 V200Z" fill="#071d36" />
     </>
   ),
 
@@ -204,22 +204,22 @@ const SCENES = {
       {Array.from({ length: 6 }, (_, i) => (
         <ellipse key={i} cx={120 + i * 22} cy={40 + (i * 23) % 70} rx="5" ry="2.6" fill={i % 2 ? '#fb7185' : '#f9a8d4'} className="gart-petal" style={{ '--d': `${i * 0.8}s`, '--y': `${(i % 3) * 14 - 10}px` }} />
       ))}
-      <path d="M0 150 Q50 140 100 150 T200 150 T300 150 T400 150 V200 H0Z" fill="#0d4a78" />
-      <ellipse cx="200" cy="151" rx="200" ry="3.5" fill="#bfe6ff" opacity=".22" />
-      <path d="M0 168 Q50 158 100 168 T200 168 T300 168 T400 168 V200 H0Z" fill="#0a3560" className="gart-sway" />
-      <ellipse cx="200" cy="169" rx="200" ry="3" fill="#bfe6ff" opacity=".16" className="gart-sway" />
-      <path d="M0 186 Q50 178 100 186 T200 186 T300 186 T400 186 V200 H0Z" fill="#062648" className="gart-sway" style={{ animationDirection: 'alternate-reverse' }} />
+      <path data-bg d="M0 150 Q50 140 100 150 T200 150 T300 150 T400 150 V200 H0Z" fill="#0d4a78" />
+      <ellipse data-bg cx="200" cy="151" rx="200" ry="3.5" fill="#bfe6ff" opacity=".22" />
+      <path data-bg d="M0 168 Q50 158 100 168 T200 168 T300 168 T400 168 V200 H0Z" fill="#0a3560" className="gart-sway" />
+      <ellipse data-bg cx="200" cy="169" rx="200" ry="3" fill="#bfe6ff" opacity=".16" className="gart-sway" />
+      <path data-bg d="M0 186 Q50 178 100 186 T200 186 T300 186 T400 186 V200 H0Z" fill="#062648" className="gart-sway" style={{ animationDirection: 'alternate-reverse' }} />
       {[[40, 190], [232, 192]].map(([x, y], i) => (
-        <g key={i}><path d={`M${x - 9} ${y} q-2 -12 10 -12 q10 2 8 12 q-4 6 -10 4 q-6 -2 -3 -8 q4 -3 6 1`} fill="#ffd9c2" stroke="#ff9f7a" /><path d={`M${x - 9} ${y} q-6 2 -4 6 q6 3 12 0`} fill="#ffb59a" /></g>
+        <g data-bg key={i}><path data-bg d={`M${x - 9} ${y} q-2 -12 10 -12 q10 2 8 12 q-4 6 -10 4 q-6 -2 -3 -8 q4 -3 6 1`} fill="#ffd9c2" stroke="#ff9f7a" /><path data-bg d={`M${x - 9} ${y} q-6 2 -4 6 q6 3 12 0`} fill="#ffb59a" /></g>
       ))}
-      {[[170, 198], [190, 198], [300, 198]].map(([x, y], i) => <path key={i} d={`M${x} ${y} C${x - 9} ${y - 8} ${x - 7} ${y - 22} ${x} ${y - 34} C${x + 5} ${y - 22} ${x + 9} ${y - 8} ${x} ${y}Z`} fill="#1f9d6b" opacity=".85" className="gart-sway" style={{ animationDelay: `${i * 0.5}s` }} />)}
-      <g className="gart-sway">
-        <circle cx="96" cy="158" r="9" fill="#ff8a5c" /><path d="M88 156 q8 6 16 0 M90 162 q6 4 12 0" stroke="#7a2f14" fill="none" />
-        <circle cx="116" cy="162" r="4.5" fill="#050f22" /><path d="M110 168 q6 -5 12 0" fill="#050f22" />
+      {[[170, 198], [190, 198], [300, 198]].map(([x, y], i) => <path data-bg key={i} d={`M${x} ${y} C${x - 9} ${y - 8} ${x - 7} ${y - 22} ${x} ${y - 34} C${x + 5} ${y - 22} ${x + 9} ${y - 8} ${x} ${y}Z`} fill="#1f9d6b" opacity=".85" className="gart-sway" style={{ animationDelay: `${i * 0.5}s` }} />)}
+      <g data-bg className="gart-sway">
+        <circle data-bg cx="96" cy="158" r="9" fill="#ff8a5c" /><path data-bg d="M88 156 q8 6 16 0 M90 162 q6 4 12 0" stroke="#7a2f14" fill="none" />
+        <circle data-bg cx="116" cy="162" r="4.5" fill="#050f22" /><path data-bg d="M110 168 q6 -5 12 0" fill="#050f22" />
       </g>
-      <path d="M340 200 L346 168 L362 160 L378 170 L400 166 V200Z" fill="#050f22" />
+      <path data-bg d="M340 200 L346 168 L362 160 L378 170 L400 166 V200Z" fill="#050f22" />
       {[[352, 164], [366, 158], [384, 166]].map(([x, y], i) => (
-        <g key={i}><circle cx={x} cy={y} r="5" fill="#fb3a5e" /><circle cx={x} cy={y} r="2" fill="#ffd166" /></g>
+        <g data-bg key={i}><circle data-bg cx={x} cy={y} r="5" fill="#fb3a5e" /><circle data-bg cx={x} cy={y} r="2" fill="#ffd166" /></g>
       ))}
     </>
   ),
@@ -231,9 +231,9 @@ const SCENES = {
         <radialGradient id="gb-flower"><stop offset="0" stopColor="#fff" /><stop offset=".4" stopColor="#ffc2e0" stopOpacity=".9" /><stop offset="1" stopColor="#ff7ab8" stopOpacity="0" /></radialGradient>
         <radialGradient id="gb-gold"><stop offset="0" stopColor="#fff6c9" /><stop offset="1" stopColor="#ffd166" stopOpacity="0" /></radialGradient>
       </defs>
-      <circle cx="300" cy="44" r="52" fill="url(#gb-gold)" className="gart-breathe" />
-      <path d="M0 54 Q60 34 120 50 T250 46 T400 50 V76 H0Z" fill="#46449f" opacity=".7" />
-      <path d="M0 200 V150 Q200 128 400 150 V200Z" fill="#14483a" />
+      <circle data-bg cx="300" cy="44" r="52" fill="url(#gb-gold)" className="gart-breathe" />
+      <path data-bg d="M0 54 Q60 34 120 50 T250 46 T400 50 V76 H0Z" fill="#46449f" opacity=".7" />
+      <path data-bg d="M0 200 V150 Q200 128 400 150 V200Z" fill="#14483a" />
       {Array.from({ length: 9 }, (_, i) => {
         const x = 20 + i * 44, h = 36 + (i % 3) * 10
         return <g key={i} className="gart-stalk" style={{ '--d': `${i * 0.25}s` }}><line x1={x} y1="172" x2={x} y2={172 - h} stroke="#c9d66b" strokeWidth="2.4" strokeLinecap="round" /><ellipse cx={x} cy={172 - h} rx="2.8" ry="7" fill="#ffd166" /><ellipse cx={x - 4} cy={172 - h + 8} rx="2.4" ry="5.5" fill="#ffe08a" transform={`rotate(-24 ${x - 4} ${172 - h + 8})`} /></g>
@@ -267,14 +267,14 @@ const SCENES = {
       {[[96, 24], [118, 18], [140, 26], [162, 16], [184, 24], [206, 16], [228, 22]].map(([x, y], i) => (
         <g key={i}><circle cx={x + 40} cy={y + 8} r="7" fill="url(#gb-warm)" className="gart-pulse" style={{ '--d': `${i * 0.3}s` }} /><path d={spark(x + 40, y + 8, 4)} fill="#fff" /></g>
       ))}
-      <circle cx="200" cy="128" r="100" fill="url(#gb-warm)" opacity=".5" className="gart-breathe" />
-      <path d="M92 104 L200 52 L308 104 L298 110 L200 66 L102 110Z" fill="#6b5030" /><path d="M102 110 L200 66 L298 110 L288 118 L200 80 L112 118Z" fill="#3a2b17" />
-      <rect x="120" y="116" width="160" height="62" fill="#1a2748" />
-      <rect x="170" y="124" width="60" height="54" rx="3" fill="#ffcf85" className="gart-pulse" />
-      <path d="M200 124 V178 M170 150 H230" stroke="#5a3d1a" strokeWidth="3" />
-      <rect x="132" y="126" width="22" height="18" fill="#ffcf85" opacity=".75" className="gart-pulse" style={{ '--d': '.6s' }} />
+      <circle data-bg cx="200" cy="128" r="100" fill="url(#gb-warm)" opacity=".5" className="gart-breathe" />
+      <path data-bg d="M92 104 L200 52 L308 104 L298 110 L200 66 L102 110Z" fill="#6b5030" /><path data-bg d="M102 110 L200 66 L298 110 L288 118 L200 80 L112 118Z" fill="#3a2b17" />
+      <rect data-bg x="120" y="116" width="160" height="62" fill="#1a2748" />
+      <rect data-bg x="170" y="124" width="60" height="54" rx="3" fill="#ffcf85" className="gart-pulse" />
+      <path data-bg d="M200 124 V178 M170 150 H230" stroke="#5a3d1a" strokeWidth="3" />
+      <rect data-bg x="132" y="126" width="22" height="18" fill="#ffcf85" opacity=".75" className="gart-pulse" style={{ '--d': '.6s' }} />
       {[[0, 170, 52], [52, 176, 44], [300, 172, 48], [350, 174, 50]].map(([x, y, w], i) => (
-        <g key={i} fill="#0e1b33"><rect x={x} y={y} width={w} height={32} rx="3" />{[0, 1, 2].map((k) => <ellipse key={k} cx={x + 8 + k * (w / 3)} cy={y + 8 + (k % 2) * 8} rx="7" ry="5" fill="#16264a" />)}</g>
+        <g data-bg key={i} fill="#0e1b33"><rect data-bg x={x} y={y} width={w} height={32} rx="3" />{[0, 1, 2].map((k) => <ellipse data-bg key={k} cx={x + 8 + k * (w / 3)} cy={y + 8 + (k % 2) * 8} rx="7" ry="5" fill="#16264a" />)}</g>
       ))}
       <rect x="100" y="150" width="14" height="52" rx="3" fill="#2b2b3d" /><rect x="286" y="150" width="14" height="52" rx="3" fill="#2b2b3d" />
       {[158, 170, 194].map((y) => <rect key={y} x="98" y={y} width="204" height="5" rx="2" fill="#8a6a3b" />)}
@@ -290,8 +290,8 @@ const SCENES = {
       <defs>
         <radialGradient id="gb-fire"><stop offset="0" stopColor="#fff3b0" stopOpacity=".95" /><stop offset=".5" stopColor="var(--c)" stopOpacity=".5" /><stop offset="1" stopColor="var(--c)" stopOpacity="0" /></radialGradient>
       </defs>
-      <rect width="400" height="200" fill="#1a0f22" opacity=".5" />
-      <rect x="40" y="30" width="60" height="50" rx="3" fill="#0f1a33" stroke="#4a3820" strokeWidth="4" /><path d="M70 30 V80 M40 55 H100" stroke="#4a3820" strokeWidth="2" />
+      <rect data-bg width="400" height="200" fill="#1a0f22" opacity=".5" />
+      <rect data-bg x="40" y="30" width="60" height="50" rx="3" fill="#0f1a33" stroke="#4a3820" strokeWidth="4" /><path data-bg d="M70 30 V80 M40 55 H100" stroke="#4a3820" strokeWidth="2" />
       <circle cx="160" cy="146" r="110" fill="url(#gb-fire)" className="gart-breathe" />
       <path d="M118 120 Q160 86 202 120 L196 142 H124Z" fill="#111827" /><ellipse cx="160" cy="120" rx="42" ry="7" fill="#1f2937" />
       <path d="M130 114 Q160 106 190 114" stroke="#fff" strokeOpacity=".25" fill="none" />
@@ -335,7 +335,7 @@ const SCENES = {
       <ellipse cx="228" cy="102" rx="11" ry="8" fill="var(--c)" /><circle cx="231" cy="99" r="2.2" fill="#ffe08a" />
       <path d="M238 104 l10 3 m-10 -3 l9 -4" stroke="#ff6f91" strokeWidth="1.5" strokeLinecap="round" className="gart-pulse" />
       {[[40, 190], [52, 196], [350, 192], [362, 188], [372, 196]].map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="7" ry="3.5" fill="#ffd166" />)}
-      <path d="M0 200 V186 Q100 176 200 186 T400 186 V200Z" fill="#0b1633" />
+      <path data-bg d="M0 200 V186 Q100 176 200 186 T400 186 V200Z" fill="#0b1633" />
     </>
   ),
 }
@@ -359,7 +359,7 @@ export default function GodArt({ id, className = '', overlay = false }) {
       {!overlay && <rect width="400" height="200" fill="url(#gb-sky)" />}
       {!overlay && <rect width="400" height="200" fill="url(#gb-neb-a)" />}
       {!overlay && <rect width="400" height="200" fill="url(#gb-neb-b)" />}
-      {STARS.map(([x, y], i) => (
+      {!overlay && STARS.map(([x, y], i) => (
         i % 7 === 0
           ? <path key={i} d={spark(x, y, 3.4)} fill="#fff" className="gart-twinkle" style={{ '--d': `${(i % 6) * 0.5}s` }} />
           : <circle key={i} cx={x} cy={y} r={i % 3 === 0 ? 1.5 : 0.9} fill="#fff" className="gart-twinkle" style={{ '--d': `${(i % 6) * 0.5}s` }} />
