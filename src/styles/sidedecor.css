@@ -51,9 +51,9 @@
 
 /* ───── 더 채우기: 두 번째 별자리, 떠오르는 감귤·빛방울, 달, 구름, 해시계 ───── */
 .sd-line.l2 { stroke: #c4b5fd; animation-delay: 1.4s, 5.4s; }
-.sd-citrus { position: absolute; bottom: -40px; width: 22px; height: 22px; animation: sd-rise var(--t) var(--d) linear infinite; }
-.sd-citrus i { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffd98a, #ff9f43 65%, #e8731a); box-shadow: 0 0 16px rgba(255, 159, 67, .45); animation: sd-bob 3.4s ease-in-out infinite; }
-.sd-citrus i::after { content: ''; position: absolute; left: 9px; top: -6px; width: 9px; height: 6px; border-radius: 0 100% 0 100%; background: #4ade80; rotate: -20deg; }
+.sd-flower { position: absolute; bottom: -40px; width: 30px; height: 30px; animation: sd-rise var(--t) var(--d) linear infinite; filter: drop-shadow(0 0 8px rgba(255, 160, 170, .35)); }
+.sd-fl { width: 100%; height: 100%; animation: sd-sway2 5s ease-in-out infinite, sd-spin 14s linear infinite; }
+@keyframes sd-sway2 { 50% { translate: 10px -6px; } }
 @keyframes sd-rise { from { translate: 0 0; opacity: 0; } 8% { opacity: .85; } 90% { opacity: .7; } to { translate: 40px -110vh; opacity: 0; } }
 @keyframes sd-bob { 50% { translate: 8px -6px; rotate: 20deg; } }
 .sd-orb { position: absolute; bottom: -20px; width: var(--s); height: var(--s); border-radius: 50%; background: radial-gradient(circle, rgba(190, 225, 255, .9), rgba(125, 180, 255, .15) 70%); animation: sd-rise var(--t) var(--d) linear infinite; }

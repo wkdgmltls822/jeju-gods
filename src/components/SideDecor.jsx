@@ -7,12 +7,27 @@ import '../styles/sidedecor.css'
 const STARS = [[150, 40, 2.4], [96, 120, 3.2], [188, 205, 2.2], [120, 300, 3.6], [212, 372, 2.6], [150, 470, 3.2], [82, 548, 2.2], [176, 640, 3], [128, 730, 2.4]]
 const LINE = STARS.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ')
 const DOTS = [[40, 90], [250, 160], [60, 420], [262, 590], [30, 700], [230, 810]]
-// 떠오르는 감귤·빛방울 위치(%)와 속도
-const CITRUS = [[14, 0], [34, 4], [8, 9], [26, 13], [42, 6]]
+// 떠오르는 꽃·빛방울 위치(%)와 속도
+const FLOWERS = [[14, 0, 'c'], [34, 4, 'y'], [8, 9, 'c'], [26, 13, 'y'], [42, 6, 'c'], [20, 7, 'y']] // 동백꽃(c)·유채꽃(y)
 const ORBS = [[6, 0], [18, 3], [30, 7], [12, 11], [38, 2], [24, 14], [46, 9], [3, 5]]
 const STARS2 = [[330, 90, 2.2], [372, 190, 3], [318, 280, 2.2], [360, 380, 2.8], [330, 470, 2.2]]
 const LINE2 = STARS2.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ')
 const RIDGE = 'M0 120 L40 96 L78 108 L122 60 L150 78 L186 22 L214 70 L250 52 L300 100 L300 130 Z'
+
+// 제주의 꽃: 겨울 동백(붉은 꽃잎 + 노란 꽃술), 봄 유채(노란 네 잎)
+const Camellia = () => (
+  <svg viewBox="-20 -20 40 40" className="sd-fl">
+    {[0, 72, 144, 216, 288].map((r) => <ellipse key={r} cx="0" cy="-9" rx="7.5" ry="10" fill="#e63950" transform={`rotate(${r})`} opacity=".92" />)}
+    {[0, 72, 144, 216, 288].map((r) => <ellipse key={r} cx="0" cy="-6" rx="3.4" ry="6" fill="#ff6b81" transform={`rotate(${r + 36})`} opacity=".8" />)}
+    <circle r="4.2" fill="#ffd84d" /><circle r="2" fill="#fff3b0" />
+  </svg>
+)
+const Yuchae = () => (
+  <svg viewBox="-20 -20 40 40" className="sd-fl">
+    {[0, 90, 180, 270].map((r) => <ellipse key={r} cx="0" cy="-8" rx="6" ry="9" fill="#ffd84d" transform={`rotate(${r + 20})`} />)}
+    <circle r="3" fill="#d9a400" />
+  </svg>
+)
 
 export default function SideDecor() {
   const root = useRef(null)
@@ -41,7 +56,11 @@ export default function SideDecor() {
           ))}
           {DOTS.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.6" className="sd-dust" style={{ '--d': `${i * 0.7}s` }} />)}
         </svg>
-        {CITRUS.map(([x, d], i) => <span key={i} className="sd-citrus" style={{ left: `${x}%`, "--d": `${d * -2}s`, "--t": `${22 + (i % 3) * 6}s` }}><i /></span>)}
+        {FLOWERS.map(([x, d, kind], i) => (
+          <span key={i} className="sd-flower" style={{ left: `${x}%`, '--d': `${d * -2}s`, '--t': `${22 + (i % 3) * 6}s` }}>
+            {kind === 'c' ? <Camellia /> : <Yuchae />}
+          </span>
+        ))}
         {ORBS.map(([x, d], i) => <span key={i} className="sd-orb" style={{ left: `${x * 2}%`, "--d": `${d * -2.5}s`, "--t": `${16 + (i % 4) * 5}s`, "--s": `${6 + (i % 3) * 4}px` }} />)}
         <p className="sd-vert sd-par2 serif">1만 8천 신이 깃든 섬</p>
         <svg className="sd-ridge" viewBox="0 0 300 130" preserveAspectRatio="none">
