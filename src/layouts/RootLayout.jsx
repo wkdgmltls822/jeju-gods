@@ -4,6 +4,7 @@ import { useAppStore } from '../store/useAppStore'
 import PageBackground from '../components/PageBackground'
 import SiteFooter from '../components/SiteFooter'
 import ScrollUI from '../components/ScrollUI'
+import SideDecor from '../components/SideDecor'
 
 // 홈은 자기 하늘이 있어서, 나머지 화면만 주소에 맞는 배경을 깐다
 const BG_THEME = { '/myths': 'myths', '/agent': 'agent', '/my': 'my' }
@@ -14,6 +15,7 @@ export default function RootLayout() {
   const bg = BG_THEME[pathname]
   return (
     <>
+      <SideDecor />
       {bg && <PageBackground key={bg} theme={bg} />}
       <nav className="navbar navbar-expand site-nav sticky-top">
         <div className="container">
