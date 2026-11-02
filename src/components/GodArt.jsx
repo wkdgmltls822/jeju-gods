@@ -8,6 +8,30 @@ const STARS = [[30, 24], [88, 50], [140, 18], [210, 36], [262, 14], [330, 40], [
 // 네 갈래로 반짝이는 별
 const spark = (x, y, r) => `M${x} ${y - r} Q${x + r * 0.14} ${y - r * 0.14} ${x + r} ${y} Q${x + r * 0.14} ${y + r * 0.14} ${x} ${y + r} Q${x - r * 0.14} ${y + r * 0.14} ${x - r} ${y} Q${x - r * 0.14} ${y - r * 0.14} ${x} ${y - r}Z`
 
+// 별과 별 사이를 선 대신 작은 별가루 점으로 잇는다
+function Dotted({ pts, gap = 6, r = 1.1, o = 0.6 }) {
+  const dots = []
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x1, y1] = pts[i], [x2, y2] = pts[i + 1]
+    const n = Math.max(1, Math.round(Math.hypot(x2 - x1, y2 - y1) / gap))
+    for (let k = 1; k < n; k++) dots.push([x1 + ((x2 - x1) * k) / n, y1 + ((y2 - y1) * k) / n])
+  }
+  return <g>{dots.map(([x, y], i) => <circle key={i} cx={x} cy={y} r={r} fill="#fff" opacity={o} />)}</g>
+}
+
+// 소용돌이치며 불어오는 바람 한 덩어리 (줄이 아니라 채워진 모양)
+function Gust({ x, y, s = 1, rot = 0, d = 0 }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`}>
+      <g className="gart-sway" style={{ animationDelay: `${d}s` }}>
+        <path d="M-30 6 C-14 -16 22 -18 36 -2 C46 10 38 26 22 24 C34 16 32 6 22 4 C10 2 2 12 -10 10 C-18 8 -24 10 -30 6Z" fill="#fff" opacity=".5" />
+        <path d="M-30 6 C-14 -10 16 -12 28 -2 C20 -4 8 -2 -4 4 C-14 9 -22 9 -30 6Z" fill="var(--c)" opacity=".55" />
+        <circle cx="-34" cy="7" r="2" fill="#fff" opacity=".8" className="gart-pulse" />
+      </g>
+    </g>
+  )
+}
+
 const SCENES = {
   // 한라산 위로 솟은 거인 여신: 은하수를 품은 치마폭에서 흙이 쏟아져 오름이 된다
   seolmundae: () => (
@@ -21,7 +45,7 @@ const SCENES = {
       <circle cx="200" cy="50" r="16" fill="var(--c)" opacity=".75" />
       <path d="M186 44 C150 58 138 112 146 160 M214 44 C250 58 262 112 254 160" stroke="var(--c)" strokeWidth="5" strokeLinecap="round" fill="none" opacity=".45" className="gart-sway" />
       <path d="M160 112 Q118 140 100 176 M240 112 Q282 140 300 176" stroke="var(--c)" strokeWidth="6" strokeLinecap="round" fill="none" opacity=".5" />
-      <polyline points="176,96 196,84 218,100 206,124 186,118" fill="none" stroke="#fff" strokeOpacity=".5" />
+      <Dotted pts={[[176, 96], [196, 84], [218, 100], [206, 124], [186, 118]]} />
       {[[176, 96], [196, 84], [218, 100], [206, 124], [186, 118]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2" fill="#fff" className="gart-pulse" style={{ '--d': `${i * 0.3}s` }} />)}
       <ellipse cx="130" cy="128" rx="48" ry="9" fill="#9bd3ff" opacity=".18" /><ellipse cx="276" cy="140" rx="44" ry="8" fill="#9bd3ff" opacity=".16" />
       {Array.from({ length: 9 }, (_, i) => (
@@ -75,13 +99,13 @@ const SCENES = {
       <circle cx="292" cy="54" r="22" fill="#fff4bf" />
       <circle cx="176" cy="44" r="46" fill="url(#gb-sun2)" className="gart-pulse" />
       <circle cx="176" cy="44" r="17" fill="#ffb199" />
-      <path d="M176 44 C160 80 138 96 120 128" fill="none" stroke="#ff8a5c" strokeWidth="5" strokeLinecap="round" strokeDasharray="6 7" className="gart-wind" />
+      <path d="M176 44 C172 78 152 102 122 138 C140 106 152 78 160 52Z" fill="url(#gb-sun2)" opacity=".75" className="gart-pulse" />
       {[[150, 80], [138, 98], [128, 114]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2.4" fill="#ffd166" className="gart-fall" style={{ '--d': `${i * 0.3}s` }} />)}
       <path d="M58 20 A18 18 0 1 0 80 44 A14 14 0 1 1 58 20Z" fill="#e7ecff" />
       <path d="M118 22 A12 12 0 1 0 134 38 A9 9 0 1 1 118 22Z" fill="#8b93c9" opacity=".5" />
-      <line x1="96" y1="136" x2="170" y2="50" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-      <path d="M96 136 l-8 -2 l4 -6 M96 136 l-2 8 l-6 -4" stroke="#fff" fill="none" strokeWidth="1.6" strokeLinecap="round" />
-      <path d="M100 108 Q132 136 100 166" fill="none" stroke="#c9852b" strokeWidth="3" strokeLinecap="round" /><line x1="100" y1="108" x2="100" y2="166" stroke="#fff" strokeOpacity=".4" />
+      <path d="M95 135 L166 54 L171 58 L99 139Z" fill="#fff6c9" /><path d="M178 46 L162 52 L172 63Z" fill="#fff" />
+      <path d="M95 135 L84 134 L91 125Z M99 139 L97 150 L88 143Z" fill="#fff" opacity=".9" />
+      <path d="M100 106 Q142 136 100 168 Q124 136 100 106Z" fill="#c9852b" />
       <g fill="#0b1b33"><circle cx="86" cy="130" r="7" /><path d="M70 176 Q70 146 86 140 Q102 146 102 176Z" /><path d="M96 144 L112 134 L114 140 L100 152Z" /></g>
       <g fill="#0b1b33"><circle cx="330" cy="148" r="5" /><path d="M318 176 Q318 156 330 152 Q342 156 342 176Z" /></g>
       <path d="M0 176 Q60 168 120 176 T240 176 T360 176 T400 176 V200 H0Z" fill="#0b2748" />
@@ -142,7 +166,8 @@ const SCENES = {
       ))}
       {Array.from({ length: 14 }, (_, i) => {
         const x = 128 + i * 11
-        return <path key={i} d={`M${x} ${112 + (i % 3) * 8} q${i % 2 ? 4 : -4} 14 0 26 q${i % 2 ? -3 : 3} 8 0 14`} fill="none" stroke={i % 3 ? '#fff' : '#f9a8d4'} strokeWidth="3" strokeLinecap="round" opacity=".9" className="gart-sway" style={{ animationDelay: `${i * 0.2}s` }} />
+        const y0 = 112 + (i % 3) * 8, d = i % 2 ? 4 : -4
+        return <path key={i} d={`M${x - 2.4} ${y0} Q${x - 2.4 + d} ${y0 + 14} ${x - 2.4} ${y0 + 26} L${x - 3} ${y0 + 40} L${x} ${y0 + 36} L${x + 3} ${y0 + 40} L${x + 2.4} ${y0 + 26} Q${x + 2.4 + d} ${y0 + 14} ${x + 2.4} ${y0}Z`} fill={i % 3 ? '#fff' : '#f9a8d4'} opacity=".92" className="gart-sway" style={{ animationDelay: `${i * 0.2}s` }} />
       })}
       <rect x="176" y="176" width="48" height="10" rx="2" fill="#3a3a5a" /><rect x="186" y="168" width="28" height="8" rx="2" fill="#4a4a6a" />
       <circle cx="200" cy="164" r="5" fill="#ffd166" className="gart-pulse" />
@@ -165,8 +190,8 @@ const SCENES = {
       <path d="M64 18 A20 20 0 1 0 92 48 A16 16 0 1 1 64 18Z" fill="#fdf6d8" />
       <path d="M-10 92 C60 60 120 120 190 78 C230 54 262 66 276 74 L268 92 C220 80 190 110 130 112 C70 114 30 100 -10 120Z" fill="url(#gb-cloak)" className="gart-sway" />
       <path d="M-10 62 C50 30 110 84 170 52 C206 34 240 44 262 62 L256 70 C220 56 190 74 150 76 C90 80 40 62 -10 82Z" fill="url(#gb-cloak)" opacity=".6" className="gart-sway" style={{ animationDirection: 'alternate-reverse' }} />
-      <path d="M262 64 C230 60 200 70 168 62 C130 52 96 66 60 56" fill="none" stroke="#fff" strokeOpacity=".7" strokeWidth="2" strokeLinecap="round" strokeDasharray="40 30" className="gart-wind" />
-      <path d="M270 88 C226 94 190 84 150 96 C112 106 76 96 40 104" fill="none" stroke="#fff" strokeOpacity=".55" strokeWidth="2" strokeLinecap="round" strokeDasharray="30 36" className="gart-wind" style={{ '--d': '1.2s' }} />
+      <Gust x={60} y={52} s={1.5} rot={-8} /><Gust x={150} y={82} s={1.2} rot={6} d={0.8} /><Gust x={296} y={84} s={1.3} rot={12} d={0.4} />
+      <Gust x={206} y={34} s={1.7} rot={0} d={1.6} /><Gust x={104} y={118} s={1.0} rot={-4} d={2.2} />
       <g>
         <circle cx="278" cy="66" r="9" fill="#ffe9f2" />
         <path d="M270 62 C250 58 226 72 206 60 C226 50 252 50 270 56Z" fill="#17206b" className="gart-sway" />
@@ -180,14 +205,14 @@ const SCENES = {
         <ellipse key={i} cx={120 + i * 22} cy={40 + (i * 23) % 70} rx="5" ry="2.6" fill={i % 2 ? '#fb7185' : '#f9a8d4'} className="gart-petal" style={{ '--d': `${i * 0.8}s`, '--y': `${(i % 3) * 14 - 10}px` }} />
       ))}
       <path d="M0 150 Q50 140 100 150 T200 150 T300 150 T400 150 V200 H0Z" fill="#0d4a78" />
-      <path d="M0 150 Q50 140 100 150 T200 150 T300 150 T400 150" fill="none" stroke="#bfe6ff" strokeOpacity=".6" />
+      <ellipse cx="200" cy="151" rx="200" ry="3.5" fill="#bfe6ff" opacity=".22" />
       <path d="M0 168 Q50 158 100 168 T200 168 T300 168 T400 168 V200 H0Z" fill="#0a3560" className="gart-sway" />
-      <path d="M0 168 Q50 158 100 168 T200 168 T300 168 T400 168" fill="none" stroke="#bfe6ff" strokeOpacity=".4" className="gart-sway" />
+      <ellipse cx="200" cy="169" rx="200" ry="3" fill="#bfe6ff" opacity=".16" className="gart-sway" />
       <path d="M0 186 Q50 178 100 186 T200 186 T300 186 T400 186 V200 H0Z" fill="#062648" className="gart-sway" style={{ animationDirection: 'alternate-reverse' }} />
       {[[40, 190], [232, 192]].map(([x, y], i) => (
         <g key={i}><path d={`M${x - 9} ${y} q-2 -12 10 -12 q10 2 8 12 q-4 6 -10 4 q-6 -2 -3 -8 q4 -3 6 1`} fill="#ffd9c2" stroke="#ff9f7a" /><path d={`M${x - 9} ${y} q-6 2 -4 6 q6 3 12 0`} fill="#ffb59a" /></g>
       ))}
-      {[[170, 198], [190, 198], [300, 198]].map(([x, y], i) => <path key={i} d={`M${x} ${y} q-6 -10 0 -18 q6 -8 0 -16`} fill="none" stroke="#1f9d6b" strokeWidth="3" strokeLinecap="round" className="gart-sway" style={{ animationDelay: `${i * 0.5}s` }} />)}
+      {[[170, 198], [190, 198], [300, 198]].map(([x, y], i) => <path key={i} d={`M${x} ${y} C${x - 9} ${y - 8} ${x - 7} ${y - 22} ${x} ${y - 34} C${x + 5} ${y - 22} ${x + 9} ${y - 8} ${x} ${y}Z`} fill="#1f9d6b" opacity=".85" className="gart-sway" style={{ animationDelay: `${i * 0.5}s` }} />)}
       <g className="gart-sway">
         <circle cx="96" cy="158" r="9" fill="#ff8a5c" /><path d="M88 156 q8 6 16 0 M90 162 q6 4 12 0" stroke="#7a2f14" fill="none" />
         <circle cx="116" cy="162" r="4.5" fill="#050f22" /><path d="M110 168 q6 -5 12 0" fill="#050f22" />
@@ -270,7 +295,7 @@ const SCENES = {
       <circle cx="160" cy="146" r="110" fill="url(#gb-fire)" className="gart-breathe" />
       <path d="M118 120 Q160 86 202 120 L196 142 H124Z" fill="#111827" /><ellipse cx="160" cy="120" rx="42" ry="7" fill="#1f2937" />
       <path d="M130 114 Q160 106 190 114" stroke="#fff" strokeOpacity=".25" fill="none" />
-      {[0, 1, 2].map((i) => <path key={i} d={`M${140 + i * 18} 104 q-8 -14 0 -26 q8 -12 0 -24`} fill="none" stroke="#e5e7eb" strokeOpacity=".35" strokeWidth="3" strokeLinecap="round" className="gart-rise" style={{ '--d': `${i * 0.8}s` }} />)}
+      {[0, 1, 2].map((i) => <g key={i} className="gart-rise" style={{ '--d': `${i * 0.8}s` }}><circle cx={142 + i * 18} cy="96" r="7" fill="#e5e7eb" opacity=".24" /><circle cx={148 + i * 18} cy="88" r="5.5" fill="#e5e7eb" opacity=".2" /></g>)}
       <path d="M160 94 C184 120 198 134 194 156 C191 172 178 180 160 180 C142 180 129 172 126 156 C122 134 138 124 160 94Z" fill="var(--c)" className="gart-flame" />
       <path d="M160 122 C172 140 180 150 177 164 C175 174 168 178 160 178 C152 178 145 174 143 164 C140 150 148 140 160 122Z" fill="#ffd166" className="gart-flame" style={{ '--d': '.25s' }} />
       <path d="M160 150 C166 158 169 164 167 172 C166 176 163 178 160 178 C157 178 154 176 153 172 C151 164 154 158 160 150Z" fill="#fff6c9" className="gart-flame" style={{ '--d': '.5s' }} />
@@ -292,7 +317,7 @@ const SCENES = {
         <radialGradient id="gb-moon"><stop offset="0" stopColor="#fff" /><stop offset=".5" stopColor="var(--c)" stopOpacity=".35" /><stop offset="1" stopColor="var(--c)" stopOpacity="0" /></radialGradient>
         <linearGradient id="gb-jar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#3a2f86" /><stop offset=".4" stopColor="#6a5cc4" /><stop offset="1" stopColor="#2a2060" /></linearGradient>
       </defs>
-      <polyline points="40,34 84,48 128,42 164,62 178,92 226,94 262,66" fill="none" stroke="#fff" strokeOpacity=".5" />
+      <Dotted pts={[[40, 34], [84, 48], [128, 42], [164, 62], [178, 92], [226, 94], [262, 66]]} gap={7} r={1.3} o={0.7} />
       {[[40, 34], [84, 48], [128, 42], [164, 62], [178, 92], [226, 94], [262, 66]].map(([x, y], i) => (
         <g key={i}><circle cx={x} cy={y} r="10" fill="url(#gb-moon)" className="gart-pulse" style={{ '--d': `${i * 0.3}s` }} /><path d={spark(x, y, 7)} fill="#fff" /></g>
       ))}
