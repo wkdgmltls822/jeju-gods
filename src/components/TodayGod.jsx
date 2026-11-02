@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { GOD_COLORS, pickGodForWeather } from '../data/gods'
 import { useAppStore } from '../store/useAppStore'
-import GodArt from './GodArt'
+import GodBanner from './GodBanner'
 
 // 홈 화면: 오늘 날씨가 불러온 신 한 명
 export default function TodayGod() {
@@ -22,7 +22,7 @@ export default function TodayGod() {
   return (
     <section className="today-card" style={{ '--c': GOD_COLORS[god.id] }}>
       <div className="today-art">
-        <GodArt id={god.id} />
+        <GodBanner key={god.id} god={god} />
         <span className="today-badge"><i className="bi bi-stars me-1" />오늘의 신</span>
       </div>
       <div className="today-body">

@@ -27,7 +27,7 @@ export async function searchTour({ keyword = '', contentTypeId = '' } = {}) {
       id: i.contentid,
       title: i.title,
       address: i.addr1,
-      image: i.firstimage || null,
+      image: i.firstimage ? i.firstimage.replace(/^http:/, 'https:') : null,
       lat: Number(i.mapy) || null,
       lng: Number(i.mapx) || null,
       type: i.contenttypeid,

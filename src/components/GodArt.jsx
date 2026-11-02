@@ -340,7 +340,7 @@ const SCENES = {
   ),
 }
 
-export default function GodArt({ id, className = '' }) {
+export default function GodArt({ id, className = '', overlay = false }) {
   const Scene = SCENES[id]
   return (
     <svg className={`god-art ${className}`} viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"
@@ -356,16 +356,16 @@ export default function GodArt({ id, className = '' }) {
         <linearGradient id="gb-sweep" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset=".5" stopColor="#fff" stopOpacity=".22" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient>
         <radialGradient id="gb-vig" cx="50%" cy="50%" r="75%"><stop offset=".6" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#020617" stopOpacity=".55" /></radialGradient>
       </defs>
-      <rect width="400" height="200" fill="url(#gb-sky)" />
-      <rect width="400" height="200" fill="url(#gb-neb-a)" />
-      <rect width="400" height="200" fill="url(#gb-neb-b)" />
+      {!overlay && <rect width="400" height="200" fill="url(#gb-sky)" />}
+      {!overlay && <rect width="400" height="200" fill="url(#gb-neb-a)" />}
+      {!overlay && <rect width="400" height="200" fill="url(#gb-neb-b)" />}
       {STARS.map(([x, y], i) => (
         i % 7 === 0
           ? <path key={i} d={spark(x, y, 3.4)} fill="#fff" className="gart-twinkle" style={{ '--d': `${(i % 6) * 0.5}s` }} />
           : <circle key={i} cx={x} cy={y} r={i % 3 === 0 ? 1.5 : 0.9} fill="#fff" className="gart-twinkle" style={{ '--d': `${(i % 6) * 0.5}s` }} />
       ))}
       {Scene && <Scene />}
-      <rect width="400" height="200" fill="url(#gb-vig)" />
+      {!overlay && <rect width="400" height="200" fill="url(#gb-vig)" />}
       <rect x="-140" width="120" height="200" fill="url(#gb-sweep)" className="gart-sweep" />
     </svg>
   )

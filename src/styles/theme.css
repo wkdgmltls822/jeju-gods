@@ -615,3 +615,18 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .starmap2 .sm-legend text { fill: #cfe3f7; font-size: 12px; font-family: 'Noto Sans KR', sans-serif; }
 .starmap2 .sm-legend .sm-today { stroke: #fff; }
 @media (max-width: 575px) { .starmap2 .sm-legend { display: none; } }
+
+/* 신 배너: 실제 장소 사진 + 일러스트 겹치기 */
+.god-banner { position: relative; overflow: hidden; background: #0a1340; }
+.god-banner > .god-art, .god-banner > .gb-photo { position: absolute; inset: 0; width: 100%; height: 100%; }
+.gb-photo { object-fit: cover; opacity: 0; transition: opacity .9s ease; filter: saturate(1.2) contrast(1.06) brightness(.82); }
+.gb-photo.on { opacity: 1; }
+.gb-tint { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; pointer-events: none;
+  background: linear-gradient(180deg, rgba(9, 16, 58, .78), rgba(10, 20, 64, .22) 55%, rgba(6, 16, 40, .6)),
+    radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--c) 38%, transparent), transparent 62%); }
+.gb-tint.on { opacity: 1; }
+.god-banner > .gb-over { opacity: 0; mix-blend-mode: screen; transition: opacity .9s ease; }
+.god-banner > .gb-over.on { opacity: .95; }
+.gb-credit { position: absolute; left: .6rem; bottom: .55rem; z-index: 2; max-width: 80%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: .64rem; color: #e6f2ff; padding: .1rem .6rem; border-radius: 999px; background: rgba(6, 16, 40, .62); backdrop-filter: blur(4px); animation: fade-in .8s ease both; }
+.today-art .god-banner { position: absolute; inset: 0; }

@@ -22,4 +22,11 @@ export const askAgent = (message, history, godId) => post('/api/agent', { messag
 export const ping = () => get('/api/hello') // 동작 체크용
 export const fetchVisitors = () => get('/api/visitors')
 export const fetchWeather = (place = '제주시') => get(`/api/weather?place=${encodeURIComponent(place)}`)
-export const fetchPlaces = (keyword) => get(`/api/tour?keyword=${encodeURIComponent(keyword)}`)
+// 신 소개 패널과 사진 배너가 같은 장소를 찾으므로, 같은 검색은 한 번만 서버에 묻는다
+const placeCache = new Map()
+export const fetchPlaces = (keyword) => {
+  if (!placeCache.has(keyword)) {
+    placeCache.set(keyword, get(`/api/tour?keyword=${encodeURIComponent(keyword)}`).catch((e) => { placeCache.delete(keyword); throw e }))
+  }
+  return placeCache.get(keyword)
+}

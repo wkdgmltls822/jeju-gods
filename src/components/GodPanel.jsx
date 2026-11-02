@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchPlaces } from '../api/client'
 import FavoriteButton from './FavoriteButton'
-import GodArt from './GodArt'
+import GodBanner from './GodBanner'
 import { Empty, ErrorNote, Loading } from './Status'
 
 // 선택한 신의 소개 + 그 신과 이어지는 장소(TourAPI)
@@ -23,7 +23,7 @@ export default function GodPanel({ god }) {
 
   return (
     <article className="god-panel">
-      <GodArt id={god.id} className="god-art-banner" />
+      <GodBanner key={god.id} god={god} className="god-art-banner" />
       <div className="d-flex justify-content-between align-items-center gap-2 mb-2">
         <span className="tale-chip"><i className="bi bi-book me-1" />{god.tale}</span>
         <FavoriteButton godId={god.id} />
