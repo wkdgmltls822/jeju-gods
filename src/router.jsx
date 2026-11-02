@@ -4,7 +4,6 @@ import Home from './pages/Home'
 import Myths from './pages/Myths'
 import Agent from './pages/Agent'
 import My from './pages/My'
-import Weather from './pages/Weather'
 import NotFound from './pages/NotFound'
 import Film from './pages/Film'
 
@@ -13,7 +12,6 @@ import Film from './pages/Film'
 export const NAV_ITEMS = [
   { to: '/', label: '홈', icon: 'house' },
   { to: '/myths', label: '별자리', icon: 'stars' },
-  { to: '/weather', label: '날씨', icon: 'cloud-sun' },
   { to: '/agent', label: '신과 대화', icon: 'chat-quote' },
   { to: '/my', label: '내 신 기록', icon: 'bookmark-star' },
 ]
@@ -26,7 +24,6 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'myths', element: <Myths /> },
-      { path: 'weather', element: <Weather /> },
       { path: 'agent', element: <Agent /> },
       { path: 'my', element: <My /> },
     ],
