@@ -14,6 +14,12 @@ const STARS2 = [[330, 90, 2.2], [372, 190, 3], [318, 280, 2.2], [360, 380, 2.8],
 const LINE2 = STARS2.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ')
 const RIDGE = 'M0 120 L40 96 L78 108 L122 60 L150 78 L186 22 L214 70 L250 52 L300 100 L300 130 Z'
 
+// 오른쪽: 두 번째 별자리·억새·성산일출봉·해녀 테왁·갈매기·물고기
+const R_STARS = [[250, 330, 2.6], [300, 410, 3.2], [236, 500, 2.4], [290, 590, 3.4], [224, 680, 2.4], [284, 770, 3]]
+const R_LINE = R_STARS.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ')
+const GRASS = Array.from({ length: 26 }, (_, i) => ({ x: 8 + i * 11.2, h: 54 + ((i * 37) % 46), lean: ((i * 53) % 24) - 12, d: (i % 7) * -0.6 }))
+const SEONGSAN = 'M0 110 L26 92 Q44 80 62 52 L78 36 L96 30 L128 30 L146 36 L168 54 Q190 82 214 94 L240 110 Z'
+
 // 제주의 꽃: 겨울 동백(붉은 꽃잎 + 노란 꽃술), 봄 유채(노란 네 잎)
 const Camellia = () => (
   <svg viewBox="-20 -20 40 40" className="sd-fl">
@@ -80,12 +86,25 @@ export default function SideDecor() {
             </span>
           ))}
         </div>
+        <svg className="sd-svg sd-par2" viewBox="0 0 400 900" preserveAspectRatio="xMidYMid slice">
+          <path d={R_LINE} className="sd-line l3" pathLength="1" />
+          {R_STARS.map(([x, y, r], i) => (
+            <g key={i} style={{ '--d': `${i * 0.5}s` }}><circle cx={x} cy={y} r={r * 4.5} className="sd-halo" /><circle cx={x} cy={y} r={r} className="sd-star" /></g>
+          ))}
+        </svg>
         <span className="sd-moon" />
         <div className="sd-clouds"><i /><i /><i /></div>
         <div className="sd-dial sd-par2"><i className="d1" /><i className="d2" /><i className="d3" /></div>
         {ORBS.slice(0, 6).map(([x, d], i) => <span key={`r${i}`} className="sd-orb r" style={{ right: `${x * 2 + 4}%`, "--d": `${d * -2.5 - 3}s`, "--t": `${18 + (i % 3) * 5}s`, "--s": `${6 + (i % 3) * 4}px` }} />)}
         <p className="sd-vert sd-par2 serif">공공데이터 × AI 에이전트</p>
         <div className="sd-meteors"><i /><i /><i /><i /><i /></div>
+        <svg className="sd-seongsan" viewBox="0 0 240 120" preserveAspectRatio="none"><path d={SEONGSAN} className="sd-ss-fill" /><path d={SEONGSAN.replace(' Z', '')} className="sd-ss-line" fill="none" /></svg>
+        <svg className="sd-grass" viewBox="0 0 300 120" preserveAspectRatio="none">
+          {GRASS.map((g, i) => <path key={i} className="sd-blade" d={`M${g.x} 120 Q${g.x + g.lean * 0.3} ${120 - g.h * 0.6} ${g.x + g.lean} ${120 - g.h}`} style={{ animationDelay: `${g.d}s` }} />)}
+        </svg>
+        <div className="sd-birds">{[0, 1, 2, 3].map((i) => <svg key={i} viewBox="0 0 28 10"><path d="M1 8 Q7 -2 14 6 Q21 -2 27 8" /></svg>)}</div>
+        <div className="sd-fishes">{[0, 1, 2].map((i) => <svg key={i} viewBox="0 0 36 16"><path d="M2 8 Q12 -2 26 8 Q12 18 2 8 Z M26 8 L35 2 L35 14 Z" /></svg>)}</div>
+        <div className="sd-tewak"><i /><b /></div>
         <svg className="sd-waves" viewBox="0 0 300 120" preserveAspectRatio="none">
           {[0, 1, 2].map((i) => (
             <path key={i} className={`sd-wave w${i}`} d={`M0 ${60 + i * 16} ` + Array.from({ length: 6 }, (_, k) => `Q${k * 100 + 25} ${48 + i * 16} ${k * 100 + 50} ${60 + i * 16} T${k * 100 + 100} ${60 + i * 16}`).join(' ')} />
