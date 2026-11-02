@@ -5,7 +5,7 @@ import HealthCheck from '../components/HealthCheck'
 import SkyBackground from '../components/SkyBackground'
 import HeroConstellation from '../components/HeroConstellation'
 import GodMarquee from '../components/GodMarquee'
-import { HomeStats, FeatureTiles } from '../components/HomeBlocks'
+import { FeatureTiles } from '../components/HomeBlocks'
 import Reveal from '../components/Reveal'
 import IntroVideo from '../components/IntroVideo'
 import '../styles/home.css'
@@ -44,7 +44,6 @@ export default function Home() {
         </svg>
       </section>
       <div id="home-more" />
-      <Reveal><HomeStats /></Reveal>
       <Reveal className="mb-5"><GodMarquee /></Reveal>
       <Reveal className="mb-5"><IntroVideo /></Reveal>
       <Reveal><TodayGod /></Reveal>

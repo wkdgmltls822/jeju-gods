@@ -1,29 +1,7 @@
 import { Link } from 'react-router-dom'
-import CountUp from './CountUp'
 import Reveal from './Reveal'
 
-// 홈: 숫자로 보는 요약, 메뉴 카드
-
-const STATS = [
-  { icon: 'stars', value: 10, label: '신화 속 신', color: '#7dd3fc' },
-  { icon: 'database', value: 3, label: '공공데이터 API', color: '#fde68a' },
-  { icon: 'badge-3d', value: 3, label: '별자리 보기 방식', color: '#c4b5fd' },
-  { icon: 'tools', value: 4, label: 'AI 에이전트 도구', color: '#f9a8d4' },
-]
-
-export function HomeStats() {
-  return (
-    <section className="home-stats" aria-label="한눈에 보기">
-      {STATS.map((s, i) => (
-        <div key={s.label} className="hs-tile" style={{ '--c': s.color, '--i': i }}>
-          <i className={`bi bi-${s.icon}`} />
-          <b><CountUp value={s.value} duration={1200} /></b>
-          <span>{s.label}</span>
-        </div>
-      ))}
-    </section>
-  )
-}
+// 홈: 둘러보기 메뉴 카드
 
 const TILES = [
   { to: '/myths', icon: 'stars', color: '#c4b5fd', title: '별자리', desc: '신 열 명을 평면·3D 별자리와 3D 제주 지도로 만나요', tag: 'TourAPI · Three.js' },
