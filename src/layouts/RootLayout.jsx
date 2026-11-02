@@ -19,8 +19,8 @@ export default function RootLayout() {
             <i className="bi bi-moon-stars-fill me-2" />신들의 섬, 제주
           </NavLink>
           <ul className="navbar-nav ms-auto gap-1">
-            {NAV_ITEMS.map((n) => (
-              <li className="nav-item" key={n.to}>
+            {NAV_ITEMS.map((n, i) => (
+              <li className="nav-item" key={n.to} style={{ '--nc': n.color, '--i': i }}>
                 <NavLink to={n.to} end={n.to === '/'} className="nav-link">
                   <i className={`bi bi-${n.icon} me-1`} />
                   <span className="d-none d-md-inline">{n.label}</span>

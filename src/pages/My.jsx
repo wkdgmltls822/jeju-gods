@@ -37,7 +37,7 @@ export default function My() {
 
   return (
     <>
-      <PageHeader title="내 신 기록" desc="닉네임으로 구분해서 즐겨찾기한 신과 나눈 대화를 보관해요. 새로고침해도 남아 있어요." />
+      <PageHeader title="내 신 기록" titleClass="title-shimmer flow flow-my" desc="닉네임으로 구분해서 즐겨찾기한 신과 나눈 대화를 보관해요. 새로고침해도 남아 있어요." />
 
       {!supabase && <div className="alert alert-warning">Supabase가 연결되지 않았어요. <code>.env.local</code>의 <code>VITE_SUPABASE_URL</code>과 <code>VITE_SUPABASE_ANON_KEY</code>를 채워 주세요.</div>}
       {dbError && supabase && <div className="alert alert-danger">{dbError}</div>}

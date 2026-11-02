@@ -11,11 +11,11 @@ import Film from './pages/Film'
 // 페이지를 추가할 때: ① pages/ 에 파일 만들기 ② NAV_ITEMS 한 줄 ③ routes 한 줄
 // 아이콘 이름: https://icons.getbootstrap.com
 export const NAV_ITEMS = [
-  { to: '/', label: '홈', icon: 'house' },
-  { to: '/myths', label: '별자리', icon: 'stars' },
-  { to: '/weather', label: '날씨', icon: 'cloud-sun' },
-  { to: '/agent', label: '신과 대화', icon: 'chat-quote' },
-  { to: '/my', label: '내 신 기록', icon: 'bookmark-star' },
+  { to: '/', label: '홈', icon: 'house', color: '#7dd3fc' },
+  { to: '/myths', label: '별자리', icon: 'stars', color: '#c4b5fd' },
+  { to: '/weather', label: '날씨', icon: 'cloud-sun', color: '#fde68a' },
+  { to: '/agent', label: '신과 대화', icon: 'chat-quote', color: '#f9a8d4' },
+  { to: '/my', label: '내 신 기록', icon: 'bookmark-star', color: '#5eead4' },
 ]
 
 export const router = createBrowserRouter([

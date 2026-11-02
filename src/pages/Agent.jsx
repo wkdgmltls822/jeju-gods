@@ -69,7 +69,7 @@ export default function Agent() {
 
   return (
     <>
-      <PageHeader title="신과 대화" desc="신을 고르면 그 신의 말투로 답해요. 날씨와 장소는 AI가 스스로 도구를 골라 확인해요." />
+      <PageHeader title="신과 대화" titleClass="title-shimmer flow flow-agent" desc="신을 고르면 그 신의 말투로 답해요. 날씨와 장소는 AI가 스스로 도구를 골라 확인해요." />
 
       <div className="god-picker" role="radiogroup" aria-label="대화할 신">
         {GODS.map((g) => (

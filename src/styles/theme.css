@@ -764,3 +764,41 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .title-shimmer.flow-night { background-image: linear-gradient(90deg, #a78bfa, #ffffff, #7dd3fc, #f9a8d4, #c4b5fd, #a78bfa); }
 .title-shimmer.flow-cloud { background-image: linear-gradient(90deg, #cbd5e1, #ffffff, #93c5fd, #e2e8f0, #a5b4fc, #cbd5e1); }
 .title-shimmer.flow-rain { background-image: linear-gradient(90deg, #7dd3fc, #e0f2fe, #38bdf8, #a5f3fc, #93c5fd, #7dd3fc); }
+
+/* 상단 메뉴: 메뉴마다 자기 색이 있고, 글자에 색이 흐르며, 지금 보는 메뉴는 빛나는 알약이 된다 */
+.site-nav .nav-link { position: relative; font-weight: 500; letter-spacing: .01em; padding: .45rem 1rem; }
+.site-nav .nav-link > i { color: var(--nc); filter: drop-shadow(0 0 6px color-mix(in srgb, var(--nc) 70%, transparent)); transition: transform .3s cubic-bezier(.2, 1.4, .4, 1); }
+.site-nav .nav-link > span {
+  background: linear-gradient(90deg, var(--nc), #ffffff, var(--nc), #cfe8ff, var(--nc));
+  background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  animation: title-flow 7s linear infinite; animation-delay: calc(var(--i) * -1.4s);
+}
+.site-nav .nav-link:hover { background: color-mix(in srgb, var(--nc) 16%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--nc) 45%, transparent), 0 6px 18px -6px var(--nc); }
+.site-nav .nav-link:hover > i { transform: scale(1.25) rotate(-8deg); }
+.site-nav .nav-link.active {
+  background: linear-gradient(110deg, var(--nc), #ffffff 45%, var(--nc) 70%, color-mix(in srgb, var(--nc) 70%, #fff));
+  background-size: 300% 100%; animation: nav-pop .55s cubic-bezier(.2, 1.4, .4, 1), title-flow 6s linear infinite;
+  box-shadow: 0 0 18px -2px var(--nc), inset 0 0 0 1px rgba(255, 255, 255, .5);
+}
+.site-nav .nav-link.active > i { color: #0b1a2e; filter: none; }
+.site-nav .nav-link.active > span { background: none; color: #0b1a2e; -webkit-text-fill-color: #0b1a2e; animation: none; font-weight: 800; }
+@media (prefers-reduced-motion: reduce) { .site-nav .nav-link > span, .site-nav .nav-link.active { animation: none; } }
+
+/* 메뉴 다듬기: 아래 테두리에 흐르는 색 띠, 메뉴가 바뀔 때 톡 튀어나오는 알약, 키보드 포커스, 작은 화면에서는 지금 메뉴 이름만 보인다 */
+.site-nav { position: sticky; border-bottom: none; }
+.site-nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; pointer-events: none; opacity: .75;
+  background: linear-gradient(90deg, transparent, #7dd3fc, #c4b5fd, #fde68a, #f9a8d4, #5eead4, #7dd3fc, transparent); background-size: 200% 100%; animation: nav-line 9s linear infinite; }
+@keyframes nav-line { to { background-position: -200% 0; } }
+@keyframes nav-pop { 0% { transform: scale(.82); } 100% { transform: none; } }
+.site-nav .nav-link:focus-visible { outline: 2px solid var(--nc); outline-offset: 2px; }
+@media (max-width: 767px) {
+  .site-nav .nav-link { padding: .45rem .7rem; }
+  .site-nav .nav-link.active > span { display: inline !important; }
+}
+@media (prefers-reduced-motion: reduce) { .site-nav::after { animation: none; } }
+
+/* 페이지 제목: 위 메뉴와 같은 색 계열로 흐른다 (별자리=보라, 신과 대화=분홍, 내 신 기록=민트) */
+.title-shimmer.flow-myths { background-image: linear-gradient(90deg, #c4b5fd, #ffffff, #7dd3fc, #f0abfc, #a5b4fc, #c4b5fd); }
+.title-shimmer.flow-agent { background-image: linear-gradient(90deg, #f9a8d4, #ffffff, #fde68a, #fda4af, #f0abfc, #f9a8d4); }
+.title-shimmer.flow-my { background-image: linear-gradient(90deg, #5eead4, #ffffff, #bef264, #7dd3fc, #a7f3d0, #5eead4); }
