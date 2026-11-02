@@ -52,7 +52,8 @@ export default function Film() {
   useEffect(() => {
     if (!run) return undefined
     const times = [INTRO, ...GODS.map(() => SCENE), OUTRO]
-    let k = 0, timer
+    const from = new URLSearchParams(window.location.search).get('from') // ?from=7 이면 8번째 신부터(확인용)
+    let k = from === null ? 0 : Number(from) + 1, timer
     const step = () => {
       if (k >= times.length) { document.body.dataset.filmDone = '1'; return }
       setI(k - 1)

@@ -24,10 +24,10 @@
 .film-title.small { font-size: 4.2rem; }
 .film-sub { font: 500 2rem/1.7 'Noto Serif KR', serif; color: #d7e6f7; opacity: 0; animation: film-rise 1.2s 1.6s ease-out both; }
 .film-intro-text, .film-outro-text { position: relative; z-index: 1; }
-.film-outro-map { position: absolute; left: 50%; top: 47%; width: 920px; transform: translate(-50%, -50%); opacity: .95; }
+.film-outro-map { position: absolute; left: 50%; top: 40%; width: 760px; transform: translate(-50%, -50%); opacity: .95; }
 .film-outro-star { opacity: 0; animation: film-rise .8s ease-out both; }
 .film-outro-label { fill: #e9f2ff; font-size: 26px; font-family: 'Noto Serif KR', serif; paint-order: stroke; stroke: #050a1f; stroke-width: 6px; }
-.film-outro-text { position: absolute; left: 0; right: 0; bottom: 3rem; }
+.film-outro-text { position: absolute; left: 0; right: 0; bottom: 1.6rem; }
 .film-outro-text .film-title { animation-delay: 2.4s, 0s; }
 .film-outro-text .film-sub { font-size: 1.6rem; animation-delay: 3.2s; margin: 0; }
 .film-start { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1.5rem; background: radial-gradient(circle at 30% 20%, #33208f, #0a1340 60%, #050a1f); }
