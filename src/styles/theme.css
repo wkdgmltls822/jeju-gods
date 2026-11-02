@@ -644,3 +644,23 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .gb-tint { background: linear-gradient(180deg, rgba(9, 16, 58, .5), rgba(10, 20, 64, .08) 55%, rgba(6, 16, 40, .5)),
     radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--c) 28%, transparent), transparent 62%); }
 .gb-over { filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .55)); }
+
+/* 홈: 소개 영상 */
+.intro-video { max-width: 960px; margin-top: 2.2rem; }
+.iv-head { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin-bottom: .8rem; }
+.iv-frame { position: relative; aspect-ratio: 16 / 9; border-radius: 1.25rem; overflow: hidden; background: #070e33; border: 1px solid rgba(125, 211, 252, .4);
+  box-shadow: 0 24px 60px -26px rgba(124, 92, 255, .7), 0 0 80px -34px #7dd3fc; }
+.iv-frame iframe, .iv-frame video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+.iv-cover { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; cursor: pointer; background: linear-gradient(180deg, #0a1340, #1b1a63 60%, #0f4468); color: #fff; }
+.iv-cover:disabled { cursor: default; }
+.iv-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.iv-cover .sky-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.iv-shade { position: absolute; inset: 0; background: radial-gradient(circle at 50% 55%, rgba(6, 16, 40, .15), rgba(6, 16, 40, .6)); }
+.iv-play { position: absolute; left: 50%; top: 50%; width: 84px; height: 84px; margin: -48px 0 0 -42px; display: grid; place-items: center; font-size: 2.6rem; border-radius: 50%;
+  color: var(--on-accent); background: linear-gradient(135deg, #7dd3fc, #60a5fa 60%, #a78bfa); box-shadow: 0 0 0 10px rgba(125, 211, 252, .18), 0 0 40px rgba(125, 211, 252, .65);
+  transition: transform .25s; animation: pbg-breathe 2.6s ease-in-out infinite; }
+.iv-play .bi-play-fill { margin-left: 5px; }
+.iv-cover:not(:disabled):hover .iv-play { transform: scale(1.1); }
+.iv-frame.soon .iv-play { background: rgba(255, 255, 255, .08); color: #fde68a; box-shadow: 0 0 0 10px rgba(253, 230, 138, .12), 0 0 36px rgba(253, 230, 138, .3); font-size: 2rem; }
+.iv-label { position: absolute; left: 0; right: 0; top: calc(50% + 56px); text-align: center; font-family: 'Noto Serif KR', serif; text-shadow: 0 0 10px #06101c; }
+@media (max-width: 575px) { .iv-play { width: 64px; height: 64px; margin: -40px 0 0 -32px; font-size: 2rem; } .iv-label { top: calc(50% + 40px); font-size: .9rem; } }
