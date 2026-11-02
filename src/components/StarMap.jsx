@@ -9,10 +9,16 @@ const sparkle = (r) => `M0 ${-r} Q${r * 0.12} ${-r * 0.12} ${r} 0 Q${r * 0.12} $
 // 신들을 별자리로 그린 지도. 별을 누르면 onSelect(id) 가 불립니다.
 export default function StarMap({ selectedId, todayId, onSelect }) {
   const bgStars = useMemo(() => makeBackgroundStars(), [])
+  const twinkles = useMemo(() => makeBackgroundStars(14, 909), [])
+  const onMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    e.currentTarget.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3))
+    e.currentTarget.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3))
+  }
   const dust = useMemo(() => makeBackgroundStars(260, 55), []) // 은하수 별가루
 
   return (
-    <svg className="starmap2" viewBox="0 0 800 520" role="group" aria-label="제주 신들의 별자리 지도">
+    <svg className="starmap2" viewBox="0 0 800 520" role="group" aria-label="제주 신들의 별자리 지도" onMouseMove={onMove}>
       <defs>
         <linearGradient id="sm-sky" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#0a1340" />
@@ -27,6 +33,18 @@ export default function StarMap({ selectedId, todayId, onSelect }) {
         </linearGradient>
         <linearGradient id="sm-land" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0d3a5a" /><stop offset="1" stopColor="#06172b" /></linearGradient>
         <filter id="sm-blur" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="16" /></filter>
+        {EDGES.map(([a, b]) => {
+          const p = godById(a), q = godById(b)
+          return (
+            <linearGradient key={a + b} id={`sm-edge-${a}-${b}`} gradientUnits="userSpaceOnUse" x1={p.x} y1={p.y} x2={q.x} y2={q.y}>
+              <stop offset="0" stopColor={GOD_COLORS[a]} /><stop offset="1" stopColor={GOD_COLORS[b]} />
+            </linearGradient>
+          )
+        })}
+        <linearGradient id="sm-aur" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#5eead4" stopOpacity="0" /><stop offset=".35" stopColor="#5eead4" stopOpacity=".5" />
+          <stop offset=".7" stopColor="#a78bfa" stopOpacity=".5" /><stop offset="1" stopColor="#f9a8d4" stopOpacity="0" />
+        </linearGradient>
         {GODS.map((g) => (
           <radialGradient key={g.id} id={`sm-glow-${g.id}`}>
             <stop offset="0" stopColor="#fff" stopOpacity=".95" />
@@ -50,12 +68,24 @@ export default function StarMap({ selectedId, todayId, onSelect }) {
         ))}
       </g>
 
+      {/* 오로라 리본 */}
+      <g aria-hidden="true" className="sm-par sm-par1">
+        <path d="M-20 120 C120 40 240 170 380 96 S640 40 820 110 L820 190 C660 120 540 210 380 150 S120 120 -20 200Z" fill="url(#sm-aur)" filter="url(#sm-blur)" className="sm-aurora" />
+      </g>
+
+      {/* 천구 눈금: 천천히 도는 동심원과 방사선 */}
+      <g aria-hidden="true" className="sm-grid" fill="none" stroke="#bfe6ff" strokeOpacity=".16">
+        {[120, 220, 330].map((r) => <circle key={r} cx="400" cy="270" r={r} strokeDasharray={r === 220 ? '2 7' : '1 0'} />)}
+        {Array.from({ length: 12 }, (_, i) => <line key={i} x1="400" y1="270" x2={400 + 330 * Math.cos((i * Math.PI) / 6)} y2={270 + 330 * Math.sin((i * Math.PI) / 6)} strokeDasharray="1 9" />)}
+      </g>
+
       {/* 깜빡이는 배경 별과 별똥별 */}
       <g aria-hidden="true">
         {bgStars.map((s) => (
           <circle key={s.id} cx={s.x} cy={s.y} r={s.r} className={`bg-star ${s.warm ? 'warm' : ''}`}
             style={{ animationDelay: `${s.delay}s`, animationDuration: `${s.dur}s` }} />
         ))}
+        {twinkles.map((t) => <path key={t.id} d={sparkle(3 + t.r * 2.2)} className="sm-tw" transform={`translate(${t.x} ${t.y})`} style={{ animationDelay: `${t.delay}s` }} />)}
         <Meteors count={8} seed={42} />
       </g>
 
@@ -72,7 +102,7 @@ export default function StarMap({ selectedId, todayId, onSelect }) {
         const lit = selectedId === a || selectedId === b
         return (
           <g key={a + b}>
-            <line x1={p.x} y1={p.y} x2={q.x} y2={q.y} className={lit ? 'sm-edge lit' : 'sm-edge'} />
+            <line x1={p.x} y1={p.y} x2={q.x} y2={q.y} className={lit ? 'sm-edge lit' : 'sm-edge'} style={{ stroke: lit ? '#fff' : `url(#sm-edge-${a}-${b})` }} />
             {lit && <circle r="3" className="sm-flow" style={{ offsetPath: `path('M${p.x} ${p.y} L${q.x} ${q.y}')` }} />}
           </g>
         )
@@ -96,9 +126,17 @@ export default function StarMap({ selectedId, todayId, onSelect }) {
             <path d={sparkle(active ? 20 : 14)} className="sm-spark" />
             <circle r={active ? 6.5 : 5} className="sm-core" style={{ fill: active ? '#fff' : color }} />
             <text y="38" textAnchor="middle" className="sm-label">{g.name}</text>
+            {active && <text y="55" textAnchor="middle" className="sm-role">{g.role}</text>}
           </g>
         )
       })}
+      <g className="sm-legend" aria-hidden="true" transform="translate(20 28)">
+        <rect x="-10" y="-16" width="236" height="42" rx="12" />
+        <circle cx="6" cy="-1" r="6" className="sm-today" style={{ fill: 'none' }} />
+        <text x="20" y="3">오늘의 신</text>
+        <path d={sparkle(6)} transform="translate(104 -1)" fill="#fff" />
+        <text x="116" y="3">별을 눌러 보세요</text>
+      </g>
     </svg>
   )
 }

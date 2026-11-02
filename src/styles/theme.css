@@ -598,3 +598,20 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .log-feed li.log-day { justify-content: center; margin: .4rem 0 .1rem; animation: none; }
 .log-feed li.log-day span { font-size: .72rem; color: var(--hanji-dim); padding: .15rem .8rem; border-radius: 999px; background: rgba(255, 255, 255, .05); border: 1px solid var(--line); }
 .fav-card-body strong { font-size: 1.02rem; }
+
+/* 평면 별자리: 더 풍성하게 */
+.starmap2 { --px: 0; --py: 0; }
+.starmap2 .sm-par { transition: transform .25s ease-out; }
+.starmap2 .sm-par1 { transform: translate(calc(var(--px) * -14px), calc(var(--py) * -8px)); }
+.starmap2 .sm-aurora { animation: sm-aur 16s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+@keyframes sm-aur { from { transform: translateX(-3%) scaleY(.92); opacity: .5; } to { transform: translateX(3%) scaleY(1.08); opacity: .95; } }
+.starmap2 .sm-grid { transform-box: fill-box; transform-origin: center; animation: ring-spin 300s linear infinite; }
+.starmap2 .sm-tw { fill: #fff; opacity: .2; animation: twinkle 3.4s ease-in-out infinite; }
+.starmap2 .sm-edge { stroke-opacity: .85; stroke-width: 1.8; }
+.starmap2 .sm-edge.lit { stroke-opacity: 1; stroke-width: 2.4; }
+.starmap2 .sm-label { font-size: 15px; }
+.starmap2 .sm-role { fill: var(--c); font-size: 11px; font-family: 'Noto Serif KR', serif; paint-order: stroke; stroke: rgba(6, 16, 40, .85); stroke-width: 3px; letter-spacing: .04em; animation: fade-in .4s ease-out both; }
+.starmap2 .sm-legend rect { fill: rgba(6, 16, 40, .55); stroke: rgba(125, 211, 252, .3); }
+.starmap2 .sm-legend text { fill: #cfe3f7; font-size: 12px; font-family: 'Noto Sans KR', sans-serif; }
+.starmap2 .sm-legend .sm-today { stroke: #fff; }
+@media (max-width: 575px) { .starmap2 .sm-legend { display: none; } }
