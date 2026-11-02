@@ -1,0 +1,66 @@
+/* 홈 화면: 별자리가 그려지는 히어로, 시차, 통계, 신들의 띠, 메뉴 카드 */
+
+/* 히어로: 마우스를 따라 움직이는 층 */
+.hero { --px: 0; --py: 0; }
+.hero .moon { translate: calc(var(--px) * -28px) calc(var(--py) * -16px); transition: translate .25s ease-out; }
+.hero .aurora { translate: calc(var(--px) * 24px) calc(var(--py) * 12px); transition: translate .3s ease-out; }
+.hero-const { opacity: .5; z-index: 0; transform: translate(calc(var(--px) * -16px), calc(var(--py) * -9px)) scale(1.04); transition: transform .3s ease-out; }
+.hc-edge { stroke: #b4d4ff; stroke-opacity: .4; stroke-width: 1.3; stroke-dasharray: 1; stroke-dashoffset: 1; animation: hc-draw 1.2s ease-out forwards; }
+@keyframes hc-draw { to { stroke-dashoffset: 0; } }
+.hc-star { opacity: 0; transform-box: fill-box; transform-origin: center; animation: hc-pop .8s cubic-bezier(.3, 1.5, .5, 1) forwards; }
+@keyframes hc-pop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+.hc-core { fill: #fff; filter: drop-shadow(0 0 6px var(--c)); }
+.hc-glow { fill: var(--c); opacity: .22; transform-box: fill-box; transform-origin: center; animation: breathe-star 3.4s ease-in-out infinite; }
+.hc-flow { fill: #fff; opacity: 0; filter: drop-shadow(0 0 6px #7dd3fc); offset-distance: 0%; animation: hc-flow 5.4s ease-in-out infinite; }
+@keyframes hc-flow { 0% { offset-distance: 0%; opacity: 0; } 12%, 88% { opacity: .95; } 100% { offset-distance: 100%; opacity: 0; } }
+.hero-scroll { display: inline-flex; flex-direction: column; align-items: center; gap: .1rem; margin-top: 2.2rem; font-size: .72rem; letter-spacing: .25em; color: var(--hanji-dim); text-decoration: none; transition: color .2s; }
+.hero-scroll:hover { color: #fff; }
+.hero-scroll .bi { font-size: 1.2rem; color: var(--yuchae); animation: hs-bounce 1.8s ease-in-out infinite; }
+@keyframes hs-bounce { 0%, 100% { transform: translateY(-3px); opacity: .6; } 50% { transform: translateY(5px); opacity: 1; } }
+#home-more { scroll-margin-top: 4.5rem; }
+
+/* 숫자로 보는 요약 */
+.home-stats { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem; max-width: 960px; margin: -2.6rem auto 2.4rem; }
+.hs-tile { display: flex; flex-direction: column; align-items: center; gap: .1rem; padding: 1rem .6rem .85rem; text-align: center; border-radius: 1.1rem; cursor: default;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--c) 14%, rgba(18, 39, 63, .92)), rgba(13, 30, 53, .92)); border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+  backdrop-filter: blur(8px); box-shadow: 0 16px 36px -22px var(--c); transition: transform .25s, box-shadow .25s, border-color .25s; animation: fav3-float 6s ease-in-out infinite; animation-delay: calc(var(--i) * .5s); }
+.hs-tile:hover { transform: translateY(-5px); border-color: var(--c); box-shadow: 0 22px 44px -18px var(--c); }
+.hs-tile > .bi { font-size: 1.25rem; color: var(--c); filter: drop-shadow(0 0 8px var(--c)); }
+.hs-tile b { font: 900 2.2rem/1.1 'Noto Serif KR', serif; color: #fff; }
+.hs-tile span { font-size: .76rem; color: var(--hanji-dim); }
+@media (max-width: 575px) { .home-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: -1.8rem; } }
+
+/* 신들이 흘러가는 띠 */
+.marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
+.marquee-track { display: flex; width: max-content; animation: mq-run 56s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes mq-run { to { transform: translateX(-50%); } }
+.mq-item { display: flex; align-items: center; gap: .7rem; margin-right: 1rem; padding: .5rem 1.1rem .5rem .5rem; border-radius: 999px; text-decoration: none; color: var(--hanji); flex: none;
+  background: rgba(255, 255, 255, .04); border: 1px solid color-mix(in srgb, var(--c) 38%, transparent); transition: transform .25s, background .25s, box-shadow .25s; }
+.mq-item:hover { transform: translateY(-4px) scale(1.03); background: color-mix(in srgb, var(--c) 16%, transparent); box-shadow: 0 10px 28px -12px var(--c); color: #fff; }
+.mq-item .god-avatar { border-color: color-mix(in srgb, var(--c) 70%, transparent); }
+.mq-item b { display: block; font-size: .98rem; line-height: 1.2; }
+.mq-item small { display: block; font-size: .72rem; color: var(--c); }
+
+/* 둘러보기 카드 */
+.feat { max-width: 960px; margin: 3rem auto 2rem; }
+.feat-title { display: flex; align-items: center; font-size: 1.35rem; font-weight: 900; margin-bottom: 1.1rem; }
+.feat-title > .bi { color: #fde68a; filter: drop-shadow(0 0 8px rgba(253, 230, 138, .6)); animation: gart-pulse 3s ease-in-out infinite; }
+.feat-line { flex: 1; height: 1px; margin-left: .8rem; background: linear-gradient(90deg, rgba(125, 211, 252, .6), rgba(167, 139, 250, .3), transparent); transform-origin: left; animation: sec-grow 1.1s .2s ease-out both; }
+@keyframes sec-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+.feat-tile { position: relative; display: flex; flex-direction: column; height: 100%; padding: 1.3rem 1.2rem 1.1rem; border-radius: 1.2rem; overflow: hidden; text-decoration: none; color: var(--hanji);
+  background: linear-gradient(165deg, color-mix(in srgb, var(--c) 13%, #12273f), #0d1e35 75%); border: 1px solid color-mix(in srgb, var(--c) 36%, transparent); transition: transform .3s, box-shadow .3s, border-color .3s; }
+.feat-tile::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--c), transparent); background-size: 200% 100%; animation: ft-sweep 3.6s linear infinite; }
+@keyframes ft-sweep { from { background-position: 200% 0; } to { background-position: -100% 0; } }
+.feat-tile:hover { transform: translateY(-6px); border-color: var(--c); box-shadow: 0 24px 46px -20px var(--c); color: #fff; }
+.ft-icon { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; font-size: 1.4rem; color: var(--c); margin-bottom: .8rem; position: relative;
+  background: color-mix(in srgb, var(--c) 16%, transparent); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); }
+.ft-icon::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid var(--c); opacity: 0; animation: vc-ring 2.6s ease-out infinite; }
+.feat-tile:hover .ft-icon i { animation: ft-wiggle .6s ease; }
+@keyframes ft-wiggle { 30% { transform: rotate(-14deg) scale(1.2); } 60% { transform: rotate(10deg) scale(1.1); } }
+.feat-tile h3 { font-size: 1.2rem; font-weight: 900; margin: 0 0 .3rem; }
+.feat-tile p { font-size: .84rem; line-height: 1.7; color: var(--hanji-dim); margin: 0 0 .9rem; }
+.ft-tag { margin-top: auto; align-self: flex-start; font-size: .7rem; letter-spacing: .04em; padding: .12rem .6rem; border-radius: 999px; color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); }
+.ft-arrow { position: absolute; right: 1.1rem; bottom: 1.1rem; color: var(--c); opacity: 0; transform: translateX(-8px); transition: opacity .25s, transform .25s; }
+.feat-tile:hover .ft-arrow { opacity: 1; transform: none; }
