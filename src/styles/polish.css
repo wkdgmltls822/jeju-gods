@@ -1,0 +1,87 @@
+/* 사이트 전체 다듬기: 스크롤바, 선택·포커스, 버튼, 푸터, 로딩, 404, 동작 체크 */
+html { scroll-behavior: smooth; }
+::selection { background: rgba(125, 211, 252, .38); color: #fff; }
+* { scrollbar-width: thin; scrollbar-color: #4a7fc4 transparent; }
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: linear-gradient(#5b9be0, #8b7cf0); border-radius: 999px; border: 3px solid #0b1b2e; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(#7dd3fc, #a78bfa); }
+:focus-visible { outline: 2px solid var(--yuchae); outline-offset: 3px; }
+a { text-underline-offset: 3px; }
+
+/* 버튼: 그라데이션과 지나가는 빛 */
+.btn-yuchae { position: relative; overflow: hidden; background: linear-gradient(135deg, #7dd3fc, #60a5fa 60%, #a78bfa); transition: transform .2s, box-shadow .2s, filter .2s; }
+.btn-yuchae::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; transform: skewX(-20deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent); transition: left .55s ease; }
+.btn-yuchae:hover { transform: translateY(-2px); filter: none; box-shadow: 0 10px 30px -8px rgba(125, 211, 252, .85); }
+.btn-yuchae:hover::after { left: 130%; }
+.btn-yuchae:active { transform: translateY(0) scale(.98); }
+.btn-hanji { background: rgba(255, 255, 255, .04); border-color: rgba(191, 230, 255, .5); backdrop-filter: blur(4px); transition: transform .2s, box-shadow .2s, background .2s, color .2s; }
+.btn-hanji:hover { transform: translateY(-2px); }
+
+/* 맨 위 읽은 정도 띠, 맨 위로 버튼 */
+.scroll-progress { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 2000; pointer-events: none; }
+.scroll-progress i { display: block; height: 100%; transform: scaleX(0); transform-origin: left; background: linear-gradient(90deg, #7dd3fc, #a78bfa, #f9a8d4, #fde68a); box-shadow: 0 0 10px rgba(125, 211, 252, .8); }
+.to-top { position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 1500; width: 2.9rem; height: 2.9rem; border: 0; border-radius: 50%; display: grid; place-items: center; font-size: 1.2rem; cursor: pointer;
+  color: var(--on-accent); background: linear-gradient(135deg, #7dd3fc, #a78bfa); box-shadow: 0 6px 22px rgba(125, 211, 252, .5); opacity: 0; transform: translateY(14px) scale(.9); pointer-events: none; transition: opacity .3s, transform .3s; }
+.to-top.on { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { transform: translateY(-3px); }
+
+/* 푸터 */
+.site-footer { margin-top: 3rem; padding: 0 0 2rem; background: linear-gradient(180deg, transparent, rgba(5, 10, 31, .72) 40%); }
+.sf-line { display: block; width: 100%; height: 40px; margin-bottom: 1.6rem; }
+.sf-dot { fill: #fff; animation: twinkle 3s ease-in-out infinite; }
+.sf-grid { display: grid; grid-template-columns: 1.4fr 1fr 1.4fr; gap: 1.6rem 2.4rem; text-align: left; }
+.sf-logo { font-size: 1.25rem; font-weight: 900; background: linear-gradient(90deg, #7dd3fc, #fff, #a78bfa, #f9a8d4); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
+.sf-brand p { color: var(--hanji-dim); font-size: .85rem; line-height: 1.8; margin: .5rem 0 0; }
+.sf-links, .sf-credits { display: flex; flex-direction: column; gap: .35rem; font-size: .85rem; }
+.sf-links b, .sf-credits b { color: var(--yuchae); font-size: .78rem; letter-spacing: .1em; margin-bottom: .2rem; }
+.sf-links a { color: var(--hanji-dim); text-decoration: none; transition: color .2s, transform .2s; }
+.sf-links a:hover { color: #fff; transform: translateX(4px); }
+.sf-credits span { color: var(--hanji-dim); }
+.sf-credits .sf-note { font-size: .74rem; opacity: .75; }
+.sf-copy { margin: 1.8rem 0 0; padding-top: 1.1rem; border-top: 1px solid var(--line); text-align: center; font-size: .76rem; color: var(--hanji-dim); }
+@media (max-width: 767px) { .sf-grid { grid-template-columns: 1fr; } }
+
+/* 로딩: 별이 도는 작은 궤도 */
+.star-loader { display: inline-flex; align-items: center; gap: .55rem; }
+.star-loader .sl-orbit { position: relative; width: 22px; height: 22px; border-radius: 50%; border: 1px dashed rgba(125, 211, 252, .6); animation: orbit-spin 2.4s linear infinite; --r: 0; flex: none; }
+.star-loader .sl-orbit::after { content: ''; position: absolute; left: 50%; top: -3px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 2px rgba(125, 211, 252, .9); }
+.empty-note { display: flex; align-items: center; gap: .6rem; padding: .8rem 1rem; border-radius: .9rem; border: 1px dashed rgba(125, 211, 252, .3); background: rgba(125, 211, 252, .04); color: var(--hanji-dim); font-size: .88rem; }
+.empty-note .bi { color: var(--yuchae); font-size: 1.1rem; }
+.status-error { display: flex; align-items: center; gap: .5rem; padding: .6rem .9rem; border-radius: .8rem; background: rgba(253, 164, 175, .08); border: 1px solid rgba(253, 164, 175, .35); font-size: .86rem; }
+
+/* 페이지 제목 아래 별빛 구분선 */
+.ph-line { display: flex; align-items: center; gap: .6rem; margin: .7rem 0 .6rem; }
+.ph-line i { height: 1px; width: 70px; background: linear-gradient(90deg, #7dd3fc, transparent); }
+.ph-line b { width: 7px; height: 7px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px 2px rgba(125, 211, 252, .9); animation: gart-pulse 2.6s ease-in-out infinite; }
+
+/* 404 */
+.nf { position: relative; min-height: 100vh; display: grid; place-items: center; overflow: hidden; text-align: center; background: linear-gradient(180deg, #0a1340, #1b1a63 65%, #0f4468); }
+.nf .sky-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.nf-body { position: relative; z-index: 1; padding: 2rem 1rem; }
+.nf-moon { position: relative; width: 120px; height: 120px; margin: 0 auto .4rem; display: grid; place-items: center; font-size: 3.2rem; color: #fde68a; text-shadow: 0 0 28px rgba(253, 230, 138, .7); }
+.nf-moon .orbit-ring { position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgba(125, 211, 252, .5); animation: orbit-spin 20s linear infinite; --r: 0; }
+.nf-code { font: 900 7.5rem/1 'Noto Serif KR', serif; letter-spacing: -.04em; background: linear-gradient(90deg, #7dd3fc, #fff, #a78bfa, #f9a8d4, #7dd3fc); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: title-flow 8s linear infinite; }
+.nf-title { font-size: 2rem; font-weight: 900; margin: .2rem 0 .4rem; }
+.nf-sub { color: var(--hanji-dim); margin-bottom: 1.6rem; }
+@media (max-width: 575px) { .nf-code { font-size: 5rem; } }
+
+/* 동작 체크: 알약 모양과 빛나는 점 */
+.health { border: 1px solid var(--line); background: rgba(255, 255, 255, .03); backdrop-filter: blur(6px); }
+.health-list { gap: .5rem; }
+.health-item { display: inline-flex; align-items: center; padding: .22rem .75rem; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 255, 255, .04); transition: transform .2s, border-color .2s; }
+.health-item:hover { transform: translateY(-2px); }
+.health-item.ok { border-color: rgba(92, 224, 138, .45); }
+.health-item.ok .bi { filter: drop-shadow(0 0 5px #5ce08a); }
+.health-item.warn { border-color: rgba(125, 211, 252, .45); }
+.health-item.fail { border-color: rgba(253, 164, 175, .55); }
+
+/* 모바일: 메뉴가 5개라 한 줄에 안 들어가므로 로고 줄과 메뉴 줄로 나눈다 */
+@media (max-width: 575px) {
+  .site-nav .container { flex-wrap: wrap; justify-content: center; row-gap: .15rem; }
+  .site-nav .navbar-brand { margin-right: 0; }
+  .site-nav .navbar-nav { width: 100%; flex-direction: row; justify-content: space-around; margin-left: 0 !important; }
+  .site-nav .nav-link { white-space: nowrap; }
+  .site-nav .nav-link span { white-space: nowrap; }
+}

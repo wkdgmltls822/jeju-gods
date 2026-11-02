@@ -2,6 +2,8 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { NAV_ITEMS } from '../router'
 import { useAppStore } from '../store/useAppStore'
 import PageBackground from '../components/PageBackground'
+import SiteFooter from '../components/SiteFooter'
+import ScrollUI from '../components/ScrollUI'
 
 // 홈은 자기 하늘이 있어서, 나머지 화면만 주소에 맞는 배경을 깐다
 const BG_THEME = { '/myths': 'myths', '/agent': 'agent', '/my': 'my' }
@@ -39,9 +41,8 @@ export default function RootLayout() {
         {/* 주소가 바뀔 때마다 key 가 달라져서 페이지가 새로 떠오르며 나타난다 */}
         <div key={pathname} className="page-enter"><Outlet /></div>
       </main>
-      <footer className="container py-4 text-center text-secondary small page-main">
-        제주대 청년도약 부트캠프 BOOT UP · 제주 신화·설화 IP
-      </footer>
+      <SiteFooter />
+      <ScrollUI />
     </>
   )
 }

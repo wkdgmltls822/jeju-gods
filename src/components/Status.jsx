@@ -3,8 +3,8 @@
 
 export function Loading({ text = '불러오는 중…' }) {
   return (
-    <p className="text-secondary small mb-0" role="status">
-      <span className="spinner-border spinner-border-sm me-2" aria-hidden="true" />{text}
+    <p className="text-secondary small mb-0 star-loader" role="status">
+      <span className="sl-orbit" aria-hidden="true" />{text}
     </p>
   )
 }
@@ -20,8 +20,8 @@ export function ErrorNote({ error, text = '불러오지 못했어요' }) {
 
 export function Empty({ children = '결과가 없어요' }) {
   return (
-    <p className="text-secondary small mb-0">
-      <i className="bi bi-inbox me-1" />{children}
+    <p className="empty-note mb-0">
+      <i className="bi bi-moon-stars" /><span>{children}</span>
     </p>
   )
 }
