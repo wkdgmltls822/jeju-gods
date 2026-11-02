@@ -62,7 +62,7 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
   animation: breathe 6s ease-in-out infinite;
 }
 @keyframes breathe { 50% { transform: translateX(-50%) scale(1.06); opacity: 0.26; } }
-.hero > *:not(.moon):not(.waves) { position: relative; z-index: 1; }
+.hero > *:not(.moon):not(.waves):not(.sky-bg):not(.aurora) { position: relative; z-index: 1; }
 .waves { position: absolute; left: 0; right: 0; bottom: 0; height: 4.5rem; z-index: 0; }
 .waves path { fill: var(--sea); opacity: 0.18; }
 .waves path:nth-child(2) { opacity: 0.12; transform: translateX(-4%); }
@@ -84,11 +84,11 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .weather-badge .bi { color: var(--yuchae); }
 
 /* ── 반짝이는 밤하늘 (별자리 지도 꾸미기) ── */
-.starmap .bg-star { fill: #cfe8ff; opacity: .25; animation: twinkle 3s ease-in-out infinite; }
-.starmap .bg-star.warm { fill: var(--yuchae); }
+.bg-star { fill: #cfe8ff; opacity: .25; animation: twinkle 3s ease-in-out infinite; }
+.bg-star.warm { fill: var(--yuchae); }
 @keyframes twinkle { 0%, 100% { opacity: .15; } 50% { opacity: .95; } }
 
-.starmap .shooting-star { stroke: #fff; stroke-width: 1.6; stroke-linecap: round; opacity: 0;
+.shooting-star { stroke: #fff; stroke-width: 1.6; stroke-linecap: round; opacity: 0;
   filter: drop-shadow(0 0 4px #7dd3fc); animation: shoot 9s ease-in infinite 2s; }
 @keyframes shoot {
   0% { transform: translate(60px, 40px); opacity: 0; }
@@ -112,10 +112,25 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 
 /* 움직임이 불편한 사용자는 애니메이션을 끈다 */
 @media (prefers-reduced-motion: reduce) {
-  .starmap *, .moon { animation: none !important; }
-  .starmap .bg-star { opacity: .5; }
-  .starmap .shooting-star { display: none; }
+  .starmap *, .sky-bg *, .moon, .aurora, .hero-title .accent { animation: none !important; }
+  .bg-star { opacity: .5; }
+  .shooting-star { display: none; }
 }
+
+/* 홈 히어로: 별 하늘 + 오로라 + 반짝이는 제목 */
+.sky-bg .bg-star { stroke: #cfe8ff; stroke-width: 1.1; stroke-opacity: .6; }
+.sky-bg .bg-star.warm { stroke: var(--yuchae); }
+.sky-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.aurora {
+  position: absolute; left: -10%; right: -10%; top: 8%; height: 55%; z-index: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 5%, rgba(125, 211, 252, .16) 30%, rgba(96, 165, 250, .20) 50%, rgba(167, 139, 250, .14) 70%, transparent 95%);
+  filter: blur(36px); transform: skewY(-6deg); animation: aurora-drift 14s ease-in-out infinite alternate;
+}
+@keyframes aurora-drift { from { transform: skewY(-6deg) translateX(-4%); opacity: .55; } to { transform: skewY(-3deg) translateX(4%); opacity: 1; } }
+.hero-title .accent { background: linear-gradient(90deg, var(--yuchae), #fff, var(--sea), var(--yuchae)); background-size: 250% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 6s linear infinite; }
+@keyframes shimmer { to { background-position: 250% 0; } }
+.today-god { box-shadow: 0 0 0 1px rgba(125, 211, 252, .08), 0 10px 40px -12px rgba(96, 165, 250, .35); }
 
 /* 오늘의 신 · 신 소개 패널 */
 .today-god, .god-panel {

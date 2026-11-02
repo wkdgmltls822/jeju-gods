@@ -1,17 +1,6 @@
 import { useMemo } from 'react'
 import { GODS, EDGES, godById } from '../data/gods'
-
-// 장식용 배경 별: 매번 같은 모양이 나오도록 숫자 씨앗으로 만든다 (렌더마다 위치가 바뀌지 않게)
-function makeBackgroundStars(count = 90) {
-  let seed = 20261102
-  const rand = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296 }
-  return Array.from({ length: count }, (_, i) => ({
-    id: i, x: rand() * 800, y: rand() * 520,
-    r: 0.5 + rand() * 1.4,
-    delay: rand() * 6, dur: 2.5 + rand() * 4,
-    warm: rand() > 0.8, // 가끔 노란 별
-  }))
-}
+import { makeBackgroundStars } from '../lib/stars'
 
 // 신들을 별자리로 그린 지도. 별을 누르면 onSelect(id) 가 불립니다.
 export default function StarMap({ selectedId, todayId, onSelect }) {

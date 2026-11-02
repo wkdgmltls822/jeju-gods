@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import WeatherBadge from '../components/WeatherBadge'
 import TodayGod from '../components/TodayGod'
 import HealthCheck from '../components/HealthCheck'
+import SkyBackground from '../components/SkyBackground'
 
 // 첫 화면: 기획 의도가 한 줄로 보여야 합니다
 const INTENT = '1만 8천 신이 깃든 땅의 신화와 설화를 AI 이야기꾼과 함께 오늘의 날씨와 장소 위에서 다시 만납니다.'
@@ -10,6 +11,8 @@ export default function Home() {
   return (
     <>
       <section className="hero">
+        <SkyBackground />
+        <div className="aurora" aria-hidden="true" />
         <div className="moon" />
         <div className="mb-3"><WeatherBadge /></div>
         <p className="page-eyebrow mb-2">Jeju Myth · Public Data · AI Agent</p>
