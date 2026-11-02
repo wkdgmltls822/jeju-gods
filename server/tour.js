@@ -14,6 +14,7 @@ export async function searchTour({ keyword = '', contentTypeId = '' } = {}) {
   if (contentTypeId) params.contentTypeId = contentTypeId
   // areaCode 필터를 걸면 제주 삼성혈 같은 곳이 빠져서, 전국에서 찾은 뒤 주소로 제주만 거릅니다.
   const r = await fetch(`${BASE}/searchKeyword2?${new URLSearchParams(params)}`)
+  if (r.status === 429) throw new Error('관광공사 서버가 요청이 많아 잠시 쉬는 중이에요(429). 조금 뒤에 다시 시도해 주세요')
   const j = await r.json().catch(() => { throw new Error(`TourAPI 응답이 JSON이 아님 (${r.status})`) })
   const header = j.response?.header
   if (header?.resultCode !== '0000') throw new Error(`TourAPI 오류: ${header?.resultMsg ?? r.status}`)
