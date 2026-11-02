@@ -543,3 +543,7 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .pin3d-label { display: inline-block; white-space: nowrap; font-size: 12px; color: #06202e; background: rgba(125, 211, 252, .95); padding: .1rem .55rem; border-radius: 999px; box-shadow: 0 0 14px rgba(125, 211, 252, .7); user-select: none; }
 .view-toggle { max-width: 100%; overflow-x: auto; }
 .view-toggle button { white-space: nowrap; }
+.lm3d { display: inline-flex; align-items: center; gap: .3rem; white-space: nowrap; font-size: 10px; color: #dbeafe; opacity: .85; text-shadow: 0 0 4px #06101c, 0 0 8px #06101c; user-select: none; }
+.lm3d.city { font-size: 11px; font-weight: 700; color: #fff; opacity: 1; }
+.lm3d.city i { width: 7px; height: 7px; border-radius: 50%; background: #ffd166; box-shadow: 0 0 8px #ffd166; }
+.lm3d.peak { color: #fff; font-weight: 700; }
