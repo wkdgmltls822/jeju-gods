@@ -7,7 +7,14 @@ import { HALLA } from '../lib/jeju'
 
 // 3D 제주 지도의 배경 장식: 일렁이는 바다, 달과 달빛, 오로라 커튼, 안개, 반딧불, 별똥별
 
-// 일렁이는 밤바다: 물결 모양으로 출렁이고, 달빛 길 위로 반짝임이 흩어진다
+// 일렁이는 밤바다: 여러 겹의 파도가 출렁이고, 물결마루가 달빛을 받아 하얗게 반짝인다
+const WAVES = `
+  const int N = 5;
+  const vec2 D[5] = vec2[5](vec2(1.0, 0.3), vec2(-0.4, 1.0), vec2(0.7, 0.7), vec2(0.2, -1.0), vec2(-0.9, -0.4));
+  const float K[5] = float[5](1.6, 2.4, 3.8, 6.5, 11.0);
+  const float S[5] = float[5](1.0, 1.3, 1.7, 2.2, 2.8);
+  const float A[5] = float[5](0.075, 0.05, 0.03, 0.014, 0.006);
+`
 export function Sea() {
   const mat = useRef()
   const uniforms = useMemo(() => ({ t: { value: 0 }, ang: { value: 0 } }), [])
@@ -17,34 +24,59 @@ export function Sea() {
   })
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[60, 60, 240, 240]} />
+      <planeGeometry args={[60, 60, 300, 300]} />
       <shaderMaterial ref={mat} uniforms={uniforms} transparent depthWrite={false}
         vertexShader={`
-          uniform float t; varying vec3 vW;
+          uniform float t; varying vec3 vW; varying vec2 vP;
+          ${WAVES}
           void main() {
             vec3 p = position;
-            p.z += 0.025 * sin(p.x * 2.4 + t * 1.3) + 0.02 * sin(p.y * 3.1 + t * 1.7);
+            float h = 0.0;
+            for (int i = 0; i < 3; i++) h += A[i] * sin(dot(D[i], p.xy) * K[i] + t * S[i]);
+            p.z += h;
+            vP = position.xy;
             vec4 w = modelMatrix * vec4(p, 1.0);
             vW = w.xyz;
             gl_Position = projectionMatrix * viewMatrix * w;
           }`}
         fragmentShader={`
-          uniform float t; uniform float ang; varying vec3 vW;
+          uniform float t; uniform float ang; varying vec3 vW; varying vec2 vP;
+          ${WAVES}
           float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
           void main() {
+            float h = 0.0, dx = 0.0, dy = 0.0;
+            for (int i = 0; i < N; i++) {
+              float ph = dot(D[i], vP) * K[i] + t * S[i];
+              h += A[i] * sin(ph);
+              float c = cos(ph) * A[i] * K[i];
+              dx += c * D[i].x; dy += c * D[i].y;
+            }
+            vec3 n = normalize(vec3(-dx, 1.0, dy));
+            vec3 V = normalize(cameraPosition - vW);
+            vec3 M = vec3(-11.0 * cos(ang) - 17.0 * sin(ang), 8.0, 11.0 * sin(ang) - 17.0 * cos(ang));
+            vec3 L = normalize(M - vW);
+            vec3 H = normalize(L + V);
+            float diff = max(dot(n, L), 0.0);
+            float spec = pow(max(dot(n, H), 0.0), 90.0);
+            float fres = pow(1.0 - max(dot(n, V), 0.0), 3.0);
             float r = length(vW.xz);
-            vec3 base = mix(vec3(0.03, 0.24, 0.42), vec3(0.015, 0.1, 0.22), smoothstep(4.0, 22.0, r));
-            float w = sin(vW.x * 3.0 + t * 1.2) * sin(vW.z * 3.4 - t);
-            base += vec3(0.04, 0.1, 0.14) * smoothstep(0.55, 1.0, w);
+            vec3 deep = mix(vec3(0.02, 0.2, 0.38), vec3(0.01, 0.08, 0.2), smoothstep(4.0, 24.0, r));
+            vec3 col = deep + vec3(0.05, 0.16, 0.28) * diff * 1.4;
+            col += vec3(0.16, 0.3, 0.55) * fres * 0.9;
+            col += vec3(1.0, 0.97, 0.88) * spec * 1.8;
+            float crest = smoothstep(0.07, 0.15, h);
+            col += vec3(0.55, 0.8, 0.95) * crest * 0.45;
+            float trough = smoothstep(-0.07, -0.15, h);
+            col -= vec3(0.02, 0.05, 0.08) * trough;
             vec2 q = floor(vW.xz * 8.0 + vec2(t * 0.5, -t * 0.35));
-            float h = hash(q);
-            float tw = step(0.982, h) * (0.5 + 0.5 * sin(t * 4.0 + h * 40.0));
+            float hh = hash(q);
+            float tw = step(0.985, hh) * (0.5 + 0.5 * sin(t * 4.0 + hh * 40.0));
             float cx = vW.x * cos(ang) - vW.z * sin(ang);
             float cz = vW.x * sin(ang) + vW.z * cos(ang);
             float lane = exp(-pow((cx + 5.5 + cz * 0.28) / 1.9, 2.0));
-            base += vec3(0.8, 0.9, 1.0) * tw * (0.3 + lane * 1.2);
-            base += vec3(0.5, 0.65, 0.9) * lane * 0.16;
-            gl_FragColor = vec4(base, 0.66);
+            col += vec3(0.85, 0.93, 1.0) * tw * (0.35 + lane * 1.2);
+            col += vec3(0.5, 0.65, 0.9) * lane * 0.14;
+            gl_FragColor = vec4(col, 0.8);
           }`} />
     </mesh>
   )
