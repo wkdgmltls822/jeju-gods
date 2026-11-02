@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import WeatherBadge from '../components/WeatherBadge'
 import TodayGod from '../components/TodayGod'
 import HealthCheck from '../components/HealthCheck'
 import SkyBackground from '../components/SkyBackground'
@@ -16,7 +15,6 @@ export default function Home() {
         <SkyBackground />
         <div className="aurora" aria-hidden="true" />
         <div className="moon" />
-        <div className="mb-3 rise" style={{ animationDelay: '.05s' }}><WeatherBadge /></div>
         <p className="page-eyebrow mb-2 rise" style={{ animationDelay: '.15s' }}>Jeju Myth · Public Data · AI Agent</p>
         <h1 className="display-3 hero-title title-shimmer mb-3 rise" style={{ animationDelay: '.25s' }}>신들의 섬, <span className="accent">제주</span></h1>
         <p className="lead mx-auto mb-4 serif rise" style={{ maxWidth: 640, lineHeight: 1.8, animationDelay: '.4s' }}>{INTENT}</p>

@@ -12,12 +12,6 @@ export default function TodayGod() {
   useEffect(() => { loadWeather() }, [loadWeather])
 
   const { god, reason } = pickGodForWeather(weather)
-  const chips = weather ? [
-    { icon: 'thermometer-half', text: `${weather.temp}°C` },
-    { icon: 'cloud-sun', text: weather.sky },
-    { icon: 'wind', text: `${weather.wind}m/s` },
-    { icon: 'droplet', text: `강수 ${weather.rainChance}%` },
-  ] : []
 
   return (
     <section className="today-card" style={{ '--c': GOD_COLORS[god.id] }}>
@@ -26,11 +20,6 @@ export default function TodayGod() {
         <span className="today-badge"><i className="bi bi-stars me-1" />오늘의 신</span>
       </div>
       <div className="today-body">
-        {chips.length > 0 && (
-          <div className="today-chips">
-            {chips.map((c) => <span key={c.icon}><i className={`bi bi-${c.icon}`} />{c.text}</span>)}
-          </div>
-        )}
         <div className="today-tale"><i className="bi bi-book me-1" />{god.tale}</div>
         <h2 className="today-name serif">{god.name}</h2>
         <p className="today-role">{god.role}</p>

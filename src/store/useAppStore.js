@@ -13,14 +13,15 @@ export const useAppStore = create(
       setNickname: (nickname) => set({ nickname: nickname.trim(), favorites: [], logs: [] }),
       who: () => get().nickname || '익명',
 
-      // 오늘 제주 날씨 (홈 배지와 "오늘의 신"이 함께 씀)
+      // 오늘 제주 날씨 (날씨 메뉴와 "오늘의 신"이 함께 씀)
       weather: null,          // 지금 시각 예보 한 줄
+      forecast: [],           // 앞으로 몇 시간 예보 (날씨 메뉴의 시간대별 표)
       weatherError: '',
       loadWeather: async () => {
         if (get().weather) return
         try {
           const d = await fetchWeather('제주시')
-          set({ weather: d.hours[0], weatherError: '' })
+          set({ weather: d.hours[0], forecast: d.hours, weatherError: '' })
         } catch (e) {
           set({ weatherError: e.message })
         }

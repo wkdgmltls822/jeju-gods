@@ -5,9 +5,14 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Html, Line, OrbitControls, Sparkles, Stars } from '@react-three/drei'
 import { GODS, EDGES, GOD_COLORS, godById } from '../data/gods'
 
-// 2D 지도(800×520)의 위치를 3D 로 옮긴다. 높이(z)는 별마다 달리해서 돌려 볼 때 입체감이 난다.
-const DEPTH = { seolmundae: 0, cheonjiwang: -1.6, daebyeol: 1.4, samseong: -1.0, baekjuddo: 1.6, yeongdeung: -1.4, jacheongbi: 0.8, munjeon: -0.6, jowang: 1.2, chilseong: -1.8 }
-const pos = (g) => [(g.x - 400) / 62, -(g.y - 260) / 62, DEPTH[g.id] ?? 0]
+const FLOOR = -5.4 // 별빛 기둥이 닿는 바닥 높이
+// 3D 에서는 평면 배치를 버리고, 설문대할망을 꼭대기에 두고 나머지 신들이 나선을 그리며 내려오는 천구 배치를 쓴다.
+const pos = (g) => {
+  const i = GODS.indexOf(g)
+  if (i === 0) return [0, 3.4, 0]
+  const k = i - 1
+  return [Math.cos(k * 0.72) * 5.2, 2.6 - k * 0.62, Math.sin(k * 0.72) * 5.2]
+}
 
 
 function GodStar({ god, selected, today, onSelect }) {
@@ -35,8 +40,15 @@ function GodStar({ god, selected, today, onSelect }) {
     }
   })
 
+  const p = pos(god)
   return (
-    <group position={pos(god)}>
+    <group position={p}>
+      {/* 바닥까지 내려오는 별빛 기둥: 별마다 높이와 깊이가 다름을 보여 준다 */}
+      <Line points={[[0, 0, 0], [0, FLOOR - p[1], 0]]} color={color} transparent opacity={selected ? 0.8 : 0.3} lineWidth={1} dashed dashSize={0.18} gapSize={0.14} />
+      <mesh position={[0, FLOOR - p[1] + 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.2, 0.27, 32]} />
+        <meshBasicMaterial color={color} transparent opacity={selected ? 0.95 : 0.55} depthWrite={false} side={2} />
+      </mesh>
       <sprite ref={halo}>
         <spriteMaterial map={glowTexture} color={color} transparent opacity={selected ? 0.95 : 0.7} depthWrite={false} blending={AdditiveBlending} />
       </sprite>
@@ -75,10 +87,10 @@ function GodStar({ god, selected, today, onSelect }) {
 }
 
 // 하늘 전체를 감싸는 그라데이션: 위는 깊은 남색, 가운데는 보랏빛, 지평선 쪽은 바다 같은 청록
-export function SkyDome() {
+export function SkyDome({ top = '#0a1340', mid = '#33208f', low = '#0f6d8f' }) {
   const uniforms = useMemo(() => ({
-    top: { value: new Color('#0a1340') }, mid: { value: new Color('#33208f') }, low: { value: new Color('#0f6d8f') },
-  }), [])
+    top: { value: new Color(top) }, mid: { value: new Color(mid) }, low: { value: new Color(low) },
+  }), [top, mid, low])
   return (
     <mesh>
       <sphereGeometry args={[70, 32, 32]} />
@@ -213,6 +225,8 @@ function Constellation({ selectedId, todayId, onSelect }) {
   return (
     <>
       <Rings />
+      {/* 한라산 축: 꼭대기 별에서 섬까지 내려오는 빛줄기 */}
+      <Line points={[[0, 3.4, 0], [0, FLOOR, 0]]} color="#7dd3fc" transparent opacity={0.35} lineWidth={1.2} />
       {lines.map((l) => {
         const lit = selectedId === l.a || selectedId === l.b
         return (
@@ -234,15 +248,16 @@ function Constellation({ selectedId, todayId, onSelect }) {
 export default function StarMap3D({ selectedId, todayId, onSelect }) {
   return (
     <div className="starmap3d" role="group" aria-label="제주 신들의 3D 별자리 지도">
-      <Canvas camera={{ position: [0, 1.2, 12.5], fov: 50 }} dpr={[1, 2]} onPointerMissed={() => { document.body.style.cursor = '' }}>
-        <SkyDome />
+      <Canvas camera={{ position: [6, 3.2, 12.5], fov: 55 }} dpr={[1, 2]} onPointerMissed={() => { document.body.style.cursor = '' }}>
+        <SkyDome top="#010207" mid="#0d0630" low="#031f2c" />
         <Nebulae />
+        <gridHelper args={[30, 30, '#22d3ee', '#15385c']} position={[0, FLOOR, 0]} material-transparent material-opacity={0.32} material-depthWrite={false} />
         <MilkyWay />
         <Island />
-        <Stars radius={50} depth={40} count={1800} factor={3.2} saturation={0.5} fade speed={0.8} />
-        <Sparkles count={70} scale={[14, 9, 7]} size={2.4} speed={0.35} color="#bfe6ff" opacity={0.7} />
+        <Stars radius={50} depth={40} count={3200} factor={3.6} saturation={0.5} fade speed={0.8} />
+        <Sparkles count={110} scale={[18, 10, 14]} size={2.4} speed={0.35} color="#bfe6ff" opacity={0.7} />
         <Constellation selectedId={selectedId} todayId={todayId} onSelect={onSelect} />
-        <OrbitControls target={[0, -0.6, 0]} enablePan={false} autoRotate autoRotateSpeed={0.7} minDistance={6} maxDistance={18} dampingFactor={0.08} />
+        <OrbitControls target={[0, -0.6, 0]} enablePan={false} autoRotate autoRotateSpeed={1.1} minDistance={5} maxDistance={20} dampingFactor={0.08} />
       </Canvas>
       <div className="starmap3d-hint"><i className="bi bi-hand-index me-1" />끌어서 돌려 보고, 별을 눌러 보세요</div>
     </div>

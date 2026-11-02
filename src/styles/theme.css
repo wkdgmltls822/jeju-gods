@@ -664,3 +664,50 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
 .iv-frame.soon .iv-play { background: rgba(255, 255, 255, .08); color: #fde68a; box-shadow: 0 0 0 10px rgba(253, 230, 138, .12), 0 0 36px rgba(253, 230, 138, .3); font-size: 2rem; }
 .iv-label { position: absolute; left: 0; right: 0; top: calc(50% + 56px); text-align: center; font-family: 'Noto Serif KR', serif; text-shadow: 0 0 10px #06101c; }
 @media (max-width: 575px) { .iv-play { width: 64px; height: 64px; margin: -40px 0 0 -32px; font-size: 2rem; } .iv-label { top: calc(50% + 40px); font-size: .9rem; } }
+
+/* 평면 별자리: 한지 위에 먹으로 그린 옛 성도. 어두운 3D 우주와 달리 밝은 종이 톤 */
+.hj-map { width: 100%; height: auto; display: block; border-radius: 1rem; border: 2px solid #6b4f2a; box-shadow: 0 10px 30px rgba(0, 0, 0, .35), inset 0 0 0 5px #f3e9d0, inset 0 0 0 6px #b99a63; }
+.hj-map .hj-grid circle, .hj-map .hj-grid line { fill: none; stroke: #7a5c2e; stroke-opacity: .28; stroke-dasharray: 2 6; }
+.hj-map .hj-grid circle:nth-child(2) { stroke-dasharray: none; stroke-opacity: .2; }
+.hj-map .hj-grid text { fill: #7a5c2e; opacity: .6; font-size: 17px; font-family: 'Noto Serif KR', serif; }
+.hj-map .hj-dots circle { fill: #3b2a18; opacity: .35; }
+.hj-map .hj-sun { fill: #c2381f; opacity: .85; }
+.hj-map .hj-moon { fill: #fbf6e6; stroke: #7a5c2e; stroke-width: 1.2; }
+.hj-map .hj-hill { fill: #3a2c1c; opacity: .88; }
+.hj-map .hj-ridge { fill: none; stroke: #1c130a; stroke-width: 2; }
+.hj-map .hj-sea { fill: none; stroke: #2f5d6e; stroke-width: 1.6; stroke-opacity: .7; animation: gart-sway 6s ease-in-out infinite alternate; }
+.hj-map .hj-figure { fill: #c2381f; fill-opacity: .1; stroke: none; }
+.hj-map .hj-edge { stroke: #3b2a18; stroke-width: 1.6; stroke-opacity: .75; stroke-linecap: round; animation: fade-in 1.2s ease-out both .4s; }
+.hj-map .hj-edge.lit { stroke: #c2381f; stroke-width: 3; stroke-opacity: 1; }
+.hj-map .hj-flow { fill: #c2381f; offset-distance: 0%; animation: sm-travel 2s ease-in-out infinite; }
+.hj-map .hj-star { cursor: pointer; outline: none; animation: fade-in .8s ease-out both; animation-delay: var(--d, 0s); }
+.hj-map .hj-core { fill: var(--c); stroke: #2a1d10; stroke-width: 2; transition: r .2s; }
+.hj-map .hj-dot { fill: #2a1d10; transition: r .2s; }
+.hj-map .hj-star:hover .hj-core, .hj-map .hj-star:focus-visible .hj-core { r: 13; }
+.hj-map .hj-star.active .hj-core { stroke: #c2381f; stroke-width: 3; }
+.hj-map .hj-ripple { fill: none; stroke: #c2381f; stroke-width: 1.6; transform-box: fill-box; transform-origin: center; animation: vc-ring 2s ease-out infinite; }
+.hj-map .hj-today { fill: none; stroke: #c2381f; stroke-width: 1.6; stroke-dasharray: 3 4; transform-box: fill-box; transform-origin: center; animation: ring-spin 14s linear infinite; }
+.hj-map .hj-seal { fill: #c2381f; }
+.hj-map .hj-star.active .hj-seal { fill: #7f1d12; }
+.hj-map .hj-no { fill: #fbf1dc; font-size: 10px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; }
+.hj-map .hj-label { fill: #2a1d10; font-size: 15px; font-weight: 700; font-family: 'Noto Serif KR', serif; paint-order: stroke; stroke: #f6edd6; stroke-width: 4px; stroke-linejoin: round; }
+.hj-map .hj-role { fill: #8a2a14; font-size: 12px; font-family: 'Noto Serif KR', serif; paint-order: stroke; stroke: #f6edd6; stroke-width: 3.5px; animation: fade-in .4s ease-out both; }
+.hj-map .hj-tale { fill: #4a3820; font-size: 11px; font-family: 'Noto Serif KR', serif; paint-order: stroke; stroke: #f6edd6; stroke-width: 3px; animation: fade-in .4s ease-out both; }
+.hj-map .hj-legend text { fill: #5a4528; font-size: 12px; font-family: 'Noto Sans KR', sans-serif; }
+@media (max-width: 575px) { .hj-map .hj-legend { display: none; } }
+
+/* 날씨 메뉴 */
+.wx-now { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between; padding: 1.6rem 1.8rem; border-radius: 1.2rem; border: 1px solid var(--line); background: linear-gradient(135deg, rgba(56, 120, 190, .35), rgba(12, 30, 56, .7)); margin-bottom: 1rem; }
+.wx-main { display: flex; align-items: center; gap: 1.2rem; }
+.wx-icon { font-size: 4.2rem; color: #fde68a; filter: drop-shadow(0 0 14px rgba(253, 230, 138, .55)); }
+.wx-temp { font-size: 3.6rem; font-weight: 700; line-height: 1; }
+.wx-sky { color: var(--hanji-dim); margin-top: .3rem; }
+.wx-stats { display: grid; grid-template-columns: repeat(2, minmax(120px, 1fr)); gap: .6rem; }
+.wx-stat { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: .5rem; padding: .55rem .9rem; border-radius: .8rem; background: rgba(6, 16, 40, .45); }
+.wx-stat i { grid-row: span 2; color: #7dd3fc; font-size: 1.2rem; }
+.wx-stat span { font-size: .72rem; color: var(--hanji-dim); }
+.wx-hours { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: .5rem; margin-bottom: 1rem; }
+.wx-hour { display: flex; flex-direction: column; align-items: center; gap: .15rem; padding: .7rem .3rem; border-radius: .9rem; border: 1px solid var(--line); background: rgba(6, 16, 40, .4); }
+.wx-hour span, .wx-hour small { font-size: .75rem; color: var(--hanji-dim); }
+.wx-hour i { font-size: 1.4rem; color: #bfe6ff; }
+.wx-god { padding: 1.4rem 1.6rem; border-radius: 1.2rem; border: 1px solid var(--line); border-left: 4px solid var(--c); background: rgba(6, 16, 40, .45); }
