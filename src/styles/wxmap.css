@@ -83,3 +83,41 @@
 .wm-legend { display: flex; flex-wrap: wrap; gap: .4rem .9rem; justify-content: center; margin-top: .8rem; font-size: .72rem; color: var(--hanji-dim); }
 .wm-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: .3rem; vertical-align: -1px; }
 @media (max-width: 575px) { .wm { padding: 1rem .8rem; } .wm-bubble { font-size: .8rem; padding: .22rem .5rem; } .wm-card-temp { font-size: 3rem; } }
+
+/* ───── 상세 보기: 확대·이동, 값 바꾸기, 열 지도, 미니 차트 ───── */
+.wm-modes { display: inline-flex; gap: .3rem; padding: .25rem; margin-bottom: .9rem; border-radius: 999px; background: rgba(255, 255, 255, .05); border: 1px solid var(--line); }
+.wm-modes button { border: 0; background: transparent; color: var(--hanji-dim); padding: .3rem .95rem; border-radius: 999px; font-size: .85rem; cursor: pointer; transition: background .2s, color .2s; }
+.wm-modes button:hover { color: #fff; }
+.wm-modes button.on { background: var(--yuchae); color: var(--on-accent); font-weight: 700; }
+.wm-map { touch-action: pan-y; user-select: none; }
+.wm-map.zoomed { cursor: grab; touch-action: none; }
+.wm-map.zoomed:active { cursor: grabbing; }
+.wm-zoom { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.wm-map.zoomed:active .wm-zoom { transition: none; }
+.wm-zoom .wm-svg { position: absolute; inset: 0; }
+.wm-heat { opacity: .42; transition: opacity .4s; }
+.wm-heat circle { transition: fill .5s; }
+.wm-pin { transform: translate(-50%, -78%) scale(calc(1 / var(--k, 1))); transform-origin: 50% 78%; }
+.wm-pin.compact .wm-bubble { padding: .12rem .45rem; gap: 0; border-width: 1.5px; }
+.wm-pin.compact .wm-bubble > i, .wm-pin.compact .wm-drops { display: none; }
+.wm-pin.compact .wm-bubble b { font-size: .82rem; }
+.wm-pin.compact .wm-pname { display: none; }
+.wm-bubble > i, .wm-bubble b, .wm-pname { transition: color .4s; }
+.wm-arrow { color: var(--tc); font-size: 1.2rem; display: inline-block; transition: transform .5s; }
+.wm-ctl { position: absolute; right: .6rem; top: .6rem; z-index: 5; display: grid; gap: .3rem; }
+.wm-ctl button { width: 2.1rem; height: 2.1rem; border-radius: .6rem; border: 1px solid rgba(125, 211, 252, .45); background: rgba(6, 18, 36, .85); color: #fff; display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(4px); transition: background .2s, transform .2s; }
+.wm-ctl button:hover:not(:disabled) { background: rgba(125, 211, 252, .25); transform: scale(1.08); }
+.wm-ctl button:disabled { opacity: .35; cursor: default; }
+.wm-hint { position: absolute; left: .6rem; bottom: .55rem; z-index: 5; font-size: .7rem; color: #e9f3ff; padding: .12rem .6rem; border-radius: 999px; background: rgba(6, 18, 36, .7); backdrop-filter: blur(4px); pointer-events: none; }
+.wm-mini { display: block; width: 100%; height: auto; margin-top: .9rem; }
+.wm-mini text { fill: var(--hanji-dim); font-size: 9px; }
+.wm-mini text.on { fill: #fff; font-weight: 700; }
+.wm-mini-line { stroke-dasharray: 600; stroke-dashoffset: 600; animation: wm-mini-draw 1.2s .2s ease-out forwards; }
+@keyframes wm-mini-draw { to { stroke-dashoffset: 0; } }
+.wm-mini-ring { animation: vc-ring 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.wm-mini-col:hover rect:nth-child(2) { opacity: .85; }
+.wm-focus { margin-top: .8rem; width: 100%; padding: .45rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--tc) 55%, transparent); background: color-mix(in srgb, var(--tc) 14%, transparent); color: #fff; font-size: .84rem; cursor: pointer; transition: background .2s, transform .2s; }
+.wm-focus:hover { background: color-mix(in srgb, var(--tc) 28%, transparent); transform: translateY(-2px); }
+.wm-dirarrow { display: inline-block; margin-left: .35rem; color: #c4b5fd; }
+.wm-legend b { margin-right: .3rem; }
+@media (max-width: 860px) { .wm-pin.compact .wm-bubble b { font-size: .7rem; } }

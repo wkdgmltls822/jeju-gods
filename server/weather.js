@@ -2,9 +2,11 @@
 const URL_BASE = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
 
 // 기상청 격자 좌표
-// 한림·성산·모슬포는 위도·경도를 기상청 격자로 바꿔 구한 값이다 (지역별 날씨 지도에서 쓴다)
+// 제주시·서귀포시 외에는 읍·면 중심의 위도·경도를 기상청 격자(5km)로 바꿔 구한 값이다 (지역별 날씨 지도에서 쓴다)
 const GRID = {
-  제주시: { nx: 52, ny: 38 }, 한림: { nx: 48, ny: 36 }, 성산: { nx: 60, ny: 37 }, 서귀포시: { nx: 52, ny: 33 }, 모슬포: { nx: 48, ny: 32 },
+  제주시: { nx: 52, ny: 38 }, 조천: { nx: 55, ny: 39 }, 구좌: { nx: 59, ny: 39 }, 성산: { nx: 60, ny: 37 },
+  애월: { nx: 49, ny: 37 }, 한림: { nx: 48, ny: 36 }, 한경: { nx: 46, ny: 33 }, 대정: { nx: 48, ny: 32 }, 안덕: { nx: 49, ny: 32 },
+  서귀포시: { nx: 52, ny: 33 }, 남원: { nx: 56, ny: 33 }, 표선: { nx: 58, ny: 34 }, 한라산: { nx: 53, ny: 35 },
 }
 
 export const PLACES = Object.keys(GRID)
@@ -59,6 +61,8 @@ export async function getWeather({ place = '제주시' } = {}) {
       rain: PTY[t.PTY] ?? '-',
       rainChance: Number(t.POP),
       wind: Number(t.WSD),
+      windDir: t.VEC !== undefined ? Number(t.VEC) : null, // 바람이 불어오는 방향(도)
+      humidity: t.REH !== undefined ? Number(t.REH) : null,
     }))
   return { place, hours }
 }
