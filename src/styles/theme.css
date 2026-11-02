@@ -475,3 +475,36 @@ h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
   background: rgba(6, 16, 28, .65); padding: .15rem .7rem; border-radius: 999px; white-space: nowrap; }
 .star3d-label { color: var(--hanji-dim); font-family: 'Noto Serif KR', serif; font-size: 13px; white-space: nowrap; text-shadow: 0 0 6px #06101c, 0 0 12px #06101c; user-select: none; }
 .star3d-label.on { color: #fff; font-weight: 700; }
+
+/* 홈: 오늘의 신 카드 */
+.today-card { --c: #7dd3fc; position: relative; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); max-width: 960px; margin: 1rem auto 0;
+  border-radius: 1.25rem; overflow: hidden; border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  background: linear-gradient(135deg, #0f2a46, var(--basalt-2) 60%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .03), 0 24px 60px -24px color-mix(in srgb, var(--c) 70%, transparent), 0 0 80px -30px var(--c); }
+.today-card::before { content: ''; position: absolute; width: 380px; height: 380px; left: -120px; top: -140px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--c) 35%, transparent), transparent); animation: pbg-breathe 6s ease-in-out infinite; }
+.today-art { position: relative; min-height: 300px; }
+.today-art .god-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.today-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 55%, #0f2a46 100%); }
+.today-badge { position: absolute; left: 1rem; top: 1rem; z-index: 1; font-size: .75rem; letter-spacing: .06em; color: #fff; padding: .25rem .75rem; border-radius: 999px;
+  background: rgba(6, 16, 28, .6); border: 1px solid color-mix(in srgb, var(--c) 60%, transparent); backdrop-filter: blur(6px); box-shadow: 0 0 16px -4px var(--c); }
+.today-body { position: relative; padding: 1.6rem 1.8rem 1.6rem 1.2rem; display: flex; flex-direction: column; justify-content: center; text-align: left; }
+.today-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .9rem; }
+.today-chips span { font-size: .75rem; padding: .15rem .6rem; border-radius: 999px; color: var(--hanji); background: rgba(255, 255, 255, .06); border: 1px solid var(--line); }
+.today-chips .bi { margin-right: .3rem; color: var(--c); }
+.today-tale { font-size: .75rem; letter-spacing: .08em; color: var(--c); }
+.today-name { font-size: 2.3rem; font-weight: 900; letter-spacing: -.02em; margin: .1rem 0 0;
+  background: linear-gradient(90deg, #fff, var(--c)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.today-role { color: var(--c); margin: 0 0 .9rem; }
+.today-reason { position: relative; margin: 0 0 .8rem; padding: .65rem .9rem .65rem 1rem; border-radius: .8rem; font-weight: 600; line-height: 1.6; color: var(--hanji);
+  background: color-mix(in srgb, var(--c) 12%, transparent); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); border-left: 3px solid var(--c); }
+.today-reason .bi { color: var(--c); margin-right: .25rem; }
+.today-text { color: var(--hanji-dim); line-height: 1.8; margin-bottom: 1.1rem; }
+.today-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+@media (max-width: 767px) {
+  .today-card { grid-template-columns: 1fr; }
+  .today-art { min-height: 190px; }
+  .today-art::after { background: linear-gradient(180deg, transparent 50%, #0f2a46 100%); }
+  .today-body { padding: 1rem 1.2rem 1.4rem; }
+  .today-name { font-size: 1.9rem; }
+}
