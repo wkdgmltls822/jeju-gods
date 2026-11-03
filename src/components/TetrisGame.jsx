@@ -43,6 +43,14 @@ function makeBag() {
   return a
 }
 
+// 바닥에 닿은 조각은 곧바로 굳지 않고 잠깐(0.45초) 더 움직일 수 있다. 움직이거나 돌릴 때마다 시간이 다시 시작된다(최대 15번).
+const LOCK_MS = 450, DAS = 130, ARR = 38, SOFT_ARR = 30
+function touchLock(s) {
+  if (collide(s.board, s.cur.m, s.cur.x, s.cur.y + 1)) {
+    if (s.lockStart && s.resets < 15) { s.lockStart = performance.now(); s.resets += 1 }
+  } else s.lockStart = 0
+}
+
 function drawCell(ctx, x, y, col, size, alpha = 1) {
   ctx.globalAlpha = alpha
   const g = ctx.createLinearGradient(x, y, x + size, y + size)
@@ -76,6 +84,7 @@ export default function TetrisGame({ onBack }) {
   const nextCv = useRef(null)
   const holdCv = useRef(null)
   const g = useRef(null) // 게임 상태(화면 갱신 없이 빠르게 바뀌는 값들)
+  const held = useRef({}) // 지금 누르고 있는 방향키 { 키: { t0, last, on } }
   const [ui, setUi] = useState({ score: 0, lines: 0, level: 1, status: 'ready', next: null, hold: null })
   const [best, setBest] = useState(readBest)
   const [toast, setToast] = useState(null)
@@ -94,6 +103,7 @@ export default function TetrisGame({ onBack }) {
     const m = PIECES[type].m.map((r) => [...r])
     s.cur = { type, m, x: Math.floor((COLS - m[0].length) / 2), y: type === 'I' ? -1 : 0 }
     s.canHold = true
+    s.lockStart = 0; s.resets = 0
     if (collide(s.board, s.cur.m, s.cur.x, s.cur.y)) {
       s.status = 'over'
       try { if (s.score > readBest()) { localStorage.setItem(BEST_KEY, String(s.score)); setBest(s.score) } } catch { /* 저장이 막혀 있어도 게임은 계속 */ }
@@ -132,17 +142,17 @@ export default function TetrisGame({ onBack }) {
     spawn()
   }, [spawn, say])
 
-  const move = useCallback((dx) => { const s = g.current; if (s?.status !== 'playing' || !s.cur || s.clearing) return; if (!collide(s.board, s.cur.m, s.cur.x + dx, s.cur.y)) s.cur.x += dx }, [])
+  const move = useCallback((dx) => { const s = g.current; if (s?.status !== 'playing' || !s.cur || s.clearing) return; if (!collide(s.board, s.cur.m, s.cur.x + dx, s.cur.y)) { s.cur.x += dx; touchLock(s) } }, [])
   const turn = useCallback((cw = true) => {
     const s = g.current
     if (s?.status !== 'playing' || !s.cur || s.clearing) return
     const m = cw ? rotate(s.cur.m) : rotateCCW(s.cur.m)
-    for (const k of [0, -1, 1, -2, 2]) if (!collide(s.board, m, s.cur.x + k, s.cur.y)) { s.cur.m = m; s.cur.x += k; return }
+    for (const k of [0, -1, 1, -2, 2]) if (!collide(s.board, m, s.cur.x + k, s.cur.y)) { s.cur.m = m; s.cur.x += k; touchLock(s); return }
   }, [])
   const soft = useCallback(() => {
     const s = g.current
     if (s?.status !== 'playing' || !s.cur || s.clearing) return
-    if (!collide(s.board, s.cur.m, s.cur.x, s.cur.y + 1)) { s.cur.y += 1; s.score += 1; s.acc = 0 } else lockPiece()
+    if (!collide(s.board, s.cur.m, s.cur.x, s.cur.y + 1)) { s.cur.y += 1; s.score += 1; s.acc = 0; s.lockStart = 0 } else lockPiece()
   }, [lockPiece])
   const hard = useCallback(() => {
     const s = g.current
@@ -184,10 +194,23 @@ export default function TetrisGame({ onBack }) {
         if (s.clearing) { if (t >= s.clearing.until) finishClear() } else if (s.cur) {
           if (s.last) s.acc += t - s.last
           const speed = Math.max(90, 820 * Math.pow(0.86, s.level - 1))
-          if (s.acc >= speed) {
-            s.acc = 0
-            if (!collide(s.board, s.cur.m, s.cur.x, s.cur.y + 1)) s.cur.y += 1; else lockPiece()
+          if (collide(s.board, s.cur.m, s.cur.x, s.cur.y + 1)) {
+            if (!s.lockStart) { s.lockStart = t; s.resets = 0 }
+            if (t - s.lockStart >= LOCK_MS) lockPiece()
+          } else if (s.acc >= speed) { s.acc = 0; s.cur.y += 1; s.lockStart = 0 }
+          // 누르고 있는 방향키: 처음 한 칸 → 잠깐 뒤 빠르게 반복(DAS/ARR). 운영체제 키 반복보다 훨씬 부드럽다.
+          const hd = held.current
+          let moved = false
+          for (const k of ['ArrowLeft', 'ArrowRight']) {
+            const h = hd[k]
+            if (!h || !g.current.cur) continue
+            if (!h.on) { if (t - h.t0 >= DAS) { h.on = true; h.last = t } } else {
+              while (t - h.last >= ARR && g.current.cur) { move(k === 'ArrowLeft' ? -1 : 1); h.last += ARR }
+            }
           }
+          const dn = hd.ArrowDown
+          if (dn && g.current.cur) { while (t - dn.last >= SOFT_ARR && g.current.cur) { soft(); dn.last += SOFT_ARR; moved = true } }
+          if (moved) sync()
         }
         s.last = t
       }
@@ -198,19 +221,24 @@ export default function TetrisGame({ onBack }) {
     const onHide = () => { if (document.hidden && g.current.status === 'playing') pause() }
     document.addEventListener('visibilitychange', onHide)
     return () => { cancelAnimationFrame(raf); document.removeEventListener('visibilitychange', onHide) }
-  }, [finishClear, lockPiece, pause, sync])
+  }, [finishClear, lockPiece, pause, sync, move, soft])
 
   // 키보드: ← → 이동, ↓ 내리기, ↑/X 돌리기, Z 반대로, 스페이스 한 번에, C 보관, P 멈춤
+  // 방향키를 누르고 있을 때의 반복은 운영체제 대신 게임 루프에서 직접 한다(처음 지연이 짧고 빠르게 이어짐)
   useEffect(() => {
+    const used = ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', ' ', 'x', 'X', 'z', 'Z', 'c', 'C', 'Shift', 'p', 'P', 'Escape']
     const onKey = (e) => {
       const k = e.key
-      const used = ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', ' ', 'x', 'X', 'z', 'Z', 'c', 'C', 'Shift', 'p', 'P', 'Escape']
       if (!used.includes(k)) return
-      if (g.current?.status === 'playing' || g.current?.status === 'paused') e.preventDefault()
-      if (k === 'ArrowLeft') move(-1)
-      else if (k === 'ArrowRight') move(1)
-      else if (k === 'ArrowDown') soft()
-      else if (e.repeat) return
+      const st = g.current?.status
+      if (st === 'playing' || st === 'paused') e.preventDefault()
+      if (e.repeat) return
+      const now = performance.now()
+      if (k === 'ArrowLeft' || k === 'ArrowRight') {
+        held.current[k === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft'] = undefined // 마지막으로 누른 방향이 우선
+        held.current[k] = { t0: now, last: now, on: false }
+        move(k === 'ArrowLeft' ? -1 : 1)
+      } else if (k === 'ArrowDown') { held.current.ArrowDown = { t0: now, last: now, on: true }; soft() }
       else if (k === 'ArrowUp' || k === 'x' || k === 'X') turn(true)
       else if (k === 'z' || k === 'Z') turn(false)
       else if (k === ' ') hard()
@@ -218,8 +246,12 @@ export default function TetrisGame({ onBack }) {
       else pause()
       if (g.current) sync()
     }
+    const onUp = (e) => { held.current[e.key] = undefined }
+    const clear = () => { held.current = {} }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('keyup', onUp)
+    window.addEventListener('blur', clear)
+    return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('keyup', onUp); window.removeEventListener('blur', clear) }
   }, [move, soft, turn, hard, hold, pause, sync])
 
   useEffect(() => { drawMini(nextCv.current, ui.next) }, [ui.next])
@@ -235,7 +267,7 @@ export default function TetrisGame({ onBack }) {
     let a, b
     const stop = () => { clearTimeout(a); clearInterval(b) }
     return {
-      onPointerDown: (e) => { e.preventDefault(); fn(); sync(); a = setTimeout(() => { b = setInterval(() => { fn(); sync() }, 90) }, 220) },
+      onPointerDown: (e) => { e.preventDefault(); fn(); sync(); a = setTimeout(() => { b = setInterval(() => { fn(); sync() }, 45) }, 150) },
       onPointerUp: stop, onPointerLeave: stop, onPointerCancel: stop,
     }
   }

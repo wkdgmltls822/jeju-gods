@@ -21,7 +21,7 @@ export default function Game() {
 
   return (
     <div className="page-game">
-      <PageHeader title="신들의 놀이터" desc="제주 신들과 함께 즐기는 두 가지 게임. 최고 기록은 이 기기에 저장돼요." />
+      <PageHeader title="신들의 놀이터" titleClass="title-shimmer flow flow-game" desc="제주 신들과 함께 즐기는 두 가지 게임. 최고 기록은 이 기기에 저장돼요." />
       <div className="gh-grid">
         <button type="button" className="gh-card tetris" onClick={() => setMode('tetris')}>
           <span className="gh-art" aria-hidden="true">
