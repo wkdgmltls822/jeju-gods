@@ -105,9 +105,21 @@ async function runClaude({ god, message, history, steps }) {
   const messages = [...history.slice(-10), { role: 'user', content: message }] // 최근 10개만 보내 비용 절약
 
   for (let turn = 0; turn < MAX_TURNS; turn++) {
-    const r = await client.messages.create({ model: pickClaudeModel(), max_tokens: 1024, system: systemPrompt(god), tools, messages })
+    const ask = (extra = {}) => client.messages.create({ model: pickClaudeModel(), max_tokens: 1500, system: systemPrompt(god), tools, messages, ...extra })
+    let r = await ask()
+    if (r.stop_reason !== 'tool_use') {
+      const textOf = (x) => x.content.filter((b) => b.type === 'text').map((b) => b.text).join('\n').trim()
+      let text = textOf(r)
+      // 모델이 글자 없이 끝내는 경우가 있다 → 도구는 그만 쓰고 지금까지 알아낸 걸로 답하라고 한 번 더 요청
+      if (!text) {
+        const last = messages[messages.length - 1]
+        if (Array.isArray(last.content)) last.content.push({ type: 'text', text: '위 도구 결과를 바탕으로 신의 말투로 답해 주렴.' })
+        r = await ask({ tool_choice: { type: 'none' } })
+        text = textOf(r)
+      }
+      return text || null // 그래도 비면 호출한 쪽이 안내 문구를 대신 보낸다
+    }
     messages.push({ role: 'assistant', content: r.content })
-    if (r.stop_reason !== 'tool_use') return r.content.filter((b) => b.type === 'text').map((b) => b.text).join('\n')
 
     const results = []
     for (const block of r.content.filter((b) => b.type === 'tool_use')) {
