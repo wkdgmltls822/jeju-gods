@@ -75,9 +75,9 @@ export const useAppStore = create(
         const godId = get().chatGodId
         set({ messages: [...get().messages, { role: 'user', text }], chatLoading: true, chatError: '' })
         try {
-          const { answer, steps, provider, demoReason } = await askAgent(text, history, godId)
+          const { answer, steps, provider, demoReason, model } = await askAgent(text, history, godId)
           const demo = provider === 'demo' // API 연동 없는 데모 응답인지
-          set({ messages: [...get().messages, { role: 'assistant', text: answer, steps, demo, demoReason }] })
+          set({ messages: [...get().messages, { role: 'assistant', text: answer, steps, demo, demoReason, model }] })
           get().saveChat(godId, [{ role: 'user', text }, { role: 'assistant', text: answer }]) // 기다리지 않고 저장
         } catch (e) {
           set({ chatError: e.message })

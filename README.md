@@ -115,7 +115,10 @@ npm run dev                  # http://localhost:5173  (화면 + /api 함께 실�
 | `VITE_SUPABASE_ANON_KEY` | Supabase 공개(publishable) 키 | 공개용 |
 | `DATA_GO_KR_KEY` | 공공데이터포털 인증키 | 서버만 |
 | `ANTHROPIC_API_KEY` | Claude 키 | 서버만 |
+| `CLAUDE_MODEL` | Claude 모델 선택: `haiku`(개발·테스트, 기본) / `sonnet`(시연 영상·발표). 키가 아니라서 노출돼도 괜찮다 | 서버만 |
 | `GEMINI_API_KEY` | (임시) Gemini 키 | 서버만 |
+
+**모델 바꾸는 법**: 코드는 그대로 두고 Vercel → Settings → Environment Variables 에서 `CLAUDE_MODEL` 값을 `haiku` 또는 `sonnet` 으로 바꾼 뒤 다시 배포(Redeploy)하면 된다. 값이 없으면 `haiku`. 신과 대화 화면의 답변 아래에 어떤 모델이 답했는지 작게 표시된다. (선택 코드: `api/agent.js` 의 `pickClaudeModel`)
 
 `.env.local`은 `.gitignore`에 들어 있어 GitHub에 올라가지 않는다. 배포할 때는 Vercel → Settings → Environment Variables에 같은 이름으로 입력한다.
 

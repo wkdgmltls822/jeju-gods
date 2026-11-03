@@ -70,6 +70,9 @@ function TypeText({ text, animate, onTick, onDone }) {
   return <>{text.slice(0, n)}{n < text.length && <span className="type-caret" aria-hidden="true" />}</>
 }
 
+// 어떤 Claude 모델이 답했는지 보여 준다 (개발 중에는 Haiku, 시연·발표에서는 Sonnet)
+const modelLabel = (id) => (/haiku/i.test(id) ? "Claude Haiku" : /sonnet/i.test(id) ? "Claude Sonnet" : id)
+
 function AssistantBody({ m, animate, onTick }) {
   const [done, setDone] = useState(!animate)
   return (
@@ -78,6 +81,7 @@ function AssistantBody({ m, animate, onTick }) {
       {done && (m.demo
         ? <div className="steps demo-note"><i className="bi bi-info-circle me-1" />데모 응답 · AI·API 없이 미리 준비한 답이에요 ({m.demoReason})</div>
         : <Steps steps={m.steps} />)}
+      {done && m.model && <div className="model-tag"><i className="bi bi-cpu me-1" />{modelLabel(m.model)}</div>}
     </>
   )
 }

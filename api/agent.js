@@ -5,7 +5,16 @@ import { getVisitors } from '../server/visitors.js'
 import { dummyReply } from '../server/dummyChat.js'
 import { GODS, godById } from '../src/data/gods.js'
 
-const CLAUDE_MODEL = 'claude-sonnet-5-5'
+// ── Claude 모델 선택 ──────────────────────────────────────────────
+// 환경변수 CLAUDE_MODEL 로 고른다. (Vercel 환경변수에서 바꾸고 다시 배포하면 적용됨 — 코드는 안 고쳐도 된다)
+//   haiku  : 개발·테스트용 (빠르고 저렴해서 키 사용량을 아낀다)  ← 값을 안 쓰면 기본
+//   sonnet : 시연 영상·발표용 (답이 더 풍부하다)
+//   그 밖에 모델 ID 를 그대로 써도 된다 (예: claude-sonnet-5-5)
+const CLAUDE_MODELS = { haiku: 'claude-haiku-5-5', sonnet: 'claude-sonnet-5-5' }
+const pickClaudeModel = () => {
+  const v = (process.env.CLAUDE_MODEL || 'haiku').trim()
+  return CLAUDE_MODELS[v.toLowerCase()] ?? v
+}
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash'
 const MAX_TURNS = 5
 
@@ -94,7 +103,7 @@ async function runClaude({ god, message, history, steps }) {
   const messages = [...history.slice(-10), { role: 'user', content: message }] // 최근 10개만 보내 비용 절약
 
   for (let turn = 0; turn < MAX_TURNS; turn++) {
-    const r = await client.messages.create({ model: CLAUDE_MODEL, max_tokens: 1024, system: systemPrompt(god), tools, messages })
+    const r = await client.messages.create({ model: pickClaudeModel(), max_tokens: 1024, system: systemPrompt(god), tools, messages })
     messages.push({ role: 'assistant', content: r.content })
     if (r.stop_reason !== 'tool_use') return r.content.filter((b) => b.type === 'text').map((b) => b.text).join('\n')
 
@@ -191,7 +200,7 @@ export default async function handler(req, res) {
 
   try {
     const answer = await (useClaude ? runClaude : runGemini)({ god, message, history, steps })
-    res.status(200).json({ answer: answer ?? '이야기가 길어졌어요. 한 번만 더 물어봐 주세요.', steps, provider: useClaude ? 'claude' : 'gemini' })
+    res.status(200).json({ answer: answer ?? '이야기가 길어졌어요. 한 번만 더 물어봐 주세요.', steps, provider: useClaude ? 'claude' : 'gemini', model: useClaude ? pickClaudeModel() : undefined })
   } catch (e) {
     console.error('agent error:', e.message)
     const msg = String(e.message)

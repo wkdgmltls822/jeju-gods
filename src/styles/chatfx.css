@@ -7,3 +7,4 @@
 .thinking-text { margin-left: .7rem; font-size: .82rem; color: var(--hanji-dim); animation: think-in .5s both; }
 @keyframes think-in { from { opacity: 0; translate: 0 5px; } }
 .bubble .body:has(.typing) { display: inline-flex; align-items: center; }
+.model-tag { margin: .3rem 0 0 .4rem; font-size: .68rem; letter-spacing: .03em; color: var(--hanji-dim); opacity: .8; }
