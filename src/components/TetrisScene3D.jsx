@@ -173,21 +173,10 @@ function Stage() {
   )
 }
 
-// 카메라가 마우스를 따라 살짝 움직여서 입체감이 느껴지게
+// 카메라는 판 가로 중심 정면에 고정한다 (흔들리거나 마우스를 따라 움직이면 판이 어지럽고 중앙에서 벗어나 보인다)
 function Rig() {
-  // 휴대폰(터치)에서는 카메라를 고정한다: 천천히 흔들리거나 손가락을 따라 움직이면 판이 흔들려 보여서 조작하기 어렵다
-  const fixed = useMemo(() => window.matchMedia('(hover: none)').matches, [])
-  useFrame(({ camera, pointer, clock, gl }, dt) => {
-    gl.domElement.dataset.camx = camera.position.x.toFixed(2) // (확인용) 카메라 가로 위치
-    if (fixed) {
-      camera.position.set((COLS - 1) / 2, 12.5, 30) // 판 가로 중심 정면
-      camera.lookAt((COLS - 1) / 2, 9.4, 0)
-      return
-    }
-    const k = 1 - Math.pow(0.02, dt)
-    const sway = Math.sin(clock.elapsedTime * 0.45) * 2.2
-    camera.position.x += ((COLS - 1) / 2 + 3 + sway + pointer.x * 5 - camera.position.x) * k
-    camera.position.y += (13 + pointer.y * 2.2 - camera.position.y) * k
+  useFrame(({ camera }) => {
+    camera.position.set((COLS - 1) / 2, 12.5, 30)
     camera.lookAt((COLS - 1) / 2, 9.4, 0)
   })
   return null
@@ -195,7 +184,7 @@ function Rig() {
 
 export default function TetrisScene3D({ gref, colorOf, collide }) {
   return (
-    <Canvas camera={{ position: [4.5, 12.5, 30], fov: 38 }} dpr={[1.5, 2]} gl={{ antialias: true }}>
+    <Canvas camera={{ position: [(COLS - 1) / 2, 12.5, 30], fov: 38 }} dpr={[1.5, 2]} gl={{ antialias: true }}>
       <color attach="background" args={['#070f2e']} />
       <fog attach="fog" args={['#070f2e', 38, 85]} />
       <ambientLight intensity={0.5} color="#9db8ff" />

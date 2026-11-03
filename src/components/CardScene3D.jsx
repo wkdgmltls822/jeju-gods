@@ -167,11 +167,10 @@ function Table() {
   )
 }
 
+// 카메라는 테이블 중앙 위에 고정한다 (마우스를 따라 움직이면 화면이 흔들려 보인다)
 function Rig() {
-  useFrame(({ camera, pointer }, dt) => {
-    const k = 1 - Math.pow(0.03, dt)
-    camera.position.x += (pointer.x * 3 - camera.position.x) * k
-    camera.position.y += (13.5 + pointer.y * 1.2 - camera.position.y) * k
+  useFrame(({ camera }) => {
+    camera.position.set(0, 13.5, 8.2)
     camera.lookAt(0, 0, 0.4)
   })
   return null
