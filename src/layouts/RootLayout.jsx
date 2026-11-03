@@ -5,6 +5,7 @@ import PageBackground from '../components/PageBackground'
 import SiteFooter from '../components/SiteFooter'
 import ScrollUI from '../components/ScrollUI'
 import SideDecor from '../components/SideDecor'
+import CursorGlow from '../components/CursorGlow'
 
 // 홈은 자기 하늘이 있어서, 나머지 화면만 주소에 맞는 배경을 깐다
 const BG_THEME = { '/myths': 'myths', '/agent': 'agent', '/my': 'my' }
@@ -46,6 +47,7 @@ export default function RootLayout() {
       </main>
       <SiteFooter />
       <ScrollUI />
+      <CursorGlow />
     </>
   )
 }

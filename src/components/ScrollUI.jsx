@@ -11,6 +11,7 @@ export default function ScrollUI() {
       const p = max > 0 ? Math.min(1, window.scrollY / max) : 0
       if (bar.current) bar.current.style.transform = `scaleX(${p})`
       setShow(window.scrollY > 700)
+      document.documentElement.classList.toggle("scrolled", window.scrollY > 24)
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })

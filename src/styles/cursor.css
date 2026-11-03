@@ -1,0 +1,15 @@
+/* 마우스 달빛과 별 흔적 (마우스가 있는 큰 화면에서만) */
+.cg { display: none; }
+@media (pointer: fine) and (min-width: 992px) {
+  .cg { display: block; position: fixed; inset: 0; z-index: 1040; pointer-events: none; overflow: hidden; }
+}
+.cg-glow { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform; }
+.cg-glow::before { content: ''; position: absolute; width: 360px; height: 360px; margin: -180px 0 0 -180px; border-radius: 50%; background: radial-gradient(circle, rgba(150, 200, 255, .13), rgba(150, 200, 255, .05) 40%, transparent 70%); mix-blend-mode: screen; }
+.cg-star { position: absolute; font-style: normal; line-height: 1; text-shadow: 0 0 8px currentColor; opacity: 0; translate: -50% -50%; animation: cg-fall .95s ease-out forwards; }
+.cg-star.burst { animation: cg-burst .8s cubic-bezier(.2, .8, .3, 1) forwards; }
+@keyframes cg-fall { 0% { opacity: .95; scale: .6; } 100% { opacity: 0; scale: 1.1; translate: calc(-50% + var(--dx) * .5) calc(-50% + var(--dy)); rotate: var(--r); } }
+@keyframes cg-burst { 0% { opacity: 1; scale: .4; } 70% { opacity: .9; } 100% { opacity: 0; scale: 1.2; translate: calc(-50% + var(--dx)) calc(-50% + var(--dy)); rotate: var(--r); } }
+
+/* 위로 내려오면 메뉴바가 살짝 가벼워지며 그림자가 생긴다 */
+.site-nav { transition: box-shadow .3s ease, background-color .3s ease; }
+html.scrolled .site-nav { box-shadow: 0 10px 30px -14px rgba(0, 0, 0, .7); background-color: rgba(8, 18, 46, .86); }
