@@ -9,8 +9,7 @@ import GodArt from './GodArt'
 
 // 신 카드 짝맞추기 3D 장면: 별빛 탁자 위에 입체 카드 16장이 놓여 있고, 누르면 떠올라 뒤집힌다.
 const CW = 1.5, CH = 2.0 // 카드 크기
-const GAP_X = 1.78, GAP_Z = 2.5
-const TILT = 0.3 // 카드를 세우되 위쪽을 살짝 뒤로 눕혀서 뒷줄 카드도 보이게
+const GAP_X = 1.78, GAP_Z = 2.3
 const TEX_W = 512, TEX_H = 683
 
 const roundRect = (ctx, x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect(x, y, w, h, r) }
@@ -107,7 +106,7 @@ function Card({ card, index, open, matched, back, onFlip }) {
   const p = useRef(0)
   const hover = useRef(false)
   const [front, setFront] = useState(null)
-  const geo = useMemo(() => new RoundedBoxGeometry(CW, CH, 0.07, 2, 0.05), [])
+  const geo = useMemo(() => new RoundedBoxGeometry(CW, 0.07, CH, 2, 0.05), [])
   // (front 이미지는 나중에 로드되므로, 로드되면 재질을 새로 만들어 이미지가 반영되게 key 를 바꾼다)
   const x = ((index % 4) - 1.5) * GAP_X
   const z = (Math.floor(index / 4) - 1.5) * GAP_Z
@@ -120,8 +119,8 @@ function Card({ card, index, open, matched, back, onFlip }) {
     p.current += (target - p.current) * Math.min(1, dt * 9)
     const k = p.current
     const lift = Math.sin(Math.min(1, Math.max(0, k)) * Math.PI) * 1.25 + (hover.current && !open ? 0.3 : 0) + (matched ? Math.sin(clock.elapsedTime * 2 + index) * 0.05 + 0.12 : 0)
-    grp.current.position.set(x, (CH / 2) * Math.cos(TILT) + 0.06 + lift, z)
-    grp.current.rotation.set(-TILT, k * Math.PI, 0) // 세워 둔 채 세로축을 중심으로 뒤집힌다
+    grp.current.position.set(x, 0.06 + lift, z)
+    grp.current.rotation.z = k * Math.PI
     if (ring.current) ring.current.material.opacity = matched ? 0.32 + Math.sin(clock.elapsedTime * 3 + index) * 0.12 : 0
   })
 
@@ -134,18 +133,18 @@ function Card({ card, index, open, matched, back, onFlip }) {
         <mesh geometry={geo}>
           <meshStandardMaterial color="#0e1a44" roughness={0.5} metalness={0.3} emissive={color} emissiveIntensity={matched ? 0.5 : 0.05} />
         </mesh>
-        <mesh position={[0, 0, 0.037]}>
+        <mesh position={[0, 0.037, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[CW - 0.06, CH - 0.06]} />
           <meshStandardMaterial map={back} roughness={0.45} metalness={0.1} />
         </mesh>
-        <mesh position={[0, 0, -0.037]} rotation={[0, Math.PI, 0]}>
+        <mesh position={[0, -0.037, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <planeGeometry args={[CW - 0.06, CH - 0.06]} />
           <meshStandardMaterial key={front ? "loaded" : "empty"} map={front} color={front ? '#ffffff' : '#1b2a55'} roughness={0.4} metalness={0.1} emissive="#ffffff" emissiveMap={front} emissiveIntensity={0.18} />
         </mesh>
       </group>
       {/* 짝을 맞춘 카드 밑의 빛 */}
       <mesh ref={ring} position={[x, 0.03, z]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[CW + 0.4, 0.9]} />
+        <planeGeometry args={[CW + 0.4, CH + 0.4]} />
         <meshBasicMaterial color={color} transparent opacity={0} blending={AdditiveBlending} depthWrite={false} side={DoubleSide} />
       </mesh>
     </group>
@@ -170,11 +169,9 @@ function Table() {
 
 // 카메라는 테이블 중앙 위에 고정한다 (마우스를 따라 움직이면 화면이 흔들려 보인다)
 function Rig() {
-  useFrame(({ camera, size }) => {
-    // 세로로 긴 휴대폰 화면에서도 4열이 다 보이도록 화면 비율에 맞춰 거리를 늘린다
-    const d = Math.max(12.5, 11.5 / (size.width / size.height))
-    camera.position.set(0, 0.8 + d * 0.62, d * 0.78)
-    camera.lookAt(0, 0.8, 0)
+  useFrame(({ camera }) => {
+    camera.position.set(0, 13.5, 8.2)
+    camera.lookAt(0, 0, 0.4)
   })
   return null
 }
@@ -182,7 +179,7 @@ function Rig() {
 export default function CardScene3D({ deck, flipped, matched, onFlip }) {
   const back = useMemo(() => makeBackFinal(), [])
   return (
-    <Canvas camera={{ position: [0, 8.5, 9.8], fov: 38 }} dpr={[1.5, 2]} gl={{ antialias: true }}>
+    <Canvas camera={{ position: [0, 13.5, 8.2], fov: 38 }} dpr={[1.5, 2]} gl={{ antialias: true }}>
       <color attach="background" args={['#060d28']} />
       <fog attach="fog" args={['#060d28', 26, 60]} />
       <ambientLight intensity={0.75} color="#a9bdff" />
