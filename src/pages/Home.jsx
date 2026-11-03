@@ -1,7 +1,6 @@
 import { lazy, Suspense, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import TodayGod from '../components/TodayGod'
-import HealthCheck from '../components/HealthCheck'
 import SkyBackground from '../components/SkyBackground'
 import HeroConstellation from '../components/HeroConstellation'
 import GodMarquee from '../components/GodMarquee'
@@ -59,7 +58,6 @@ export default function Home() {
       <Reveal className="mb-5"><IntroVideo /></Reveal>
       <Reveal><TodayGod /></Reveal>
       <FeatureTiles />
-      <Reveal delay={0.1}><HealthCheck /></Reveal>
     </>
   )
 }
