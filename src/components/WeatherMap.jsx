@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { COAST } from '../lib/jeju'
-import { BUILDINGS, CITIES, cityBlocks, toLand } from '../lib/buildings'
+import { BUILDINGS, CITIES, cityBlocks, marginOf, toLand } from '../lib/buildings'
 import { fetchWeather } from '../api/client'
 import { ErrorNote, Loading } from './Status'
 import '../styles/wxmap.css'
@@ -33,7 +33,7 @@ const LAND = (() => {
   for (let i = 0; i < n; i++) { const p = PTS[i], m = mid(p, PTS[(i + 1) % n]); d += ` Q${p[0].toFixed(1)} ${p[1].toFixed(1)} ${m[0].toFixed(1)} ${m[1].toFixed(1)}` }
   return d + 'Z'
 })()
-const BUILDINGS_ON_LAND = BUILDINGS.map((b) => ({ ...b, pos: toLand(b.pos) })) // 그림 지도는 해안선이 단순해서, 바다 위에 선 건물은 육지로 당겨 그린다
+const BUILDINGS_ON_LAND = BUILDINGS.map((b) => ({ ...b, pos: toLand(b.pos, marginOf(b)) })) // 그림 지도는 해안선이 단순해서, 바다 위에 선 건물은 육지로 당겨 그린다
 const CITY_RECTS =CITIES.flatMap((c) => cityBlocks(c).map(([lng, lat, sz]) => ({ x: px(lng), y: py(lat), w: 2.2 + sz * 2.6 })))
 const HALLA = [px(126.533), py(33.362)]
 

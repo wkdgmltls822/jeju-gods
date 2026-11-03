@@ -2,13 +2,13 @@ import { useLayoutEffect, useMemo, useRef } from 'react'
 import { AdditiveBlending, Color, Object3D } from 'three'
 import { useFrame } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
-import { BUILDINGS, CITIES, cityBlocks, seeded, toLand } from '../lib/buildings'
+import { BUILDINGS, CITIES, cityBlocks, marginOf, seeded, toLand } from '../lib/buildings'
 import { heightAt, toXZ } from '../lib/jeju'
 import { glowTexture } from '../lib/glow'
 
 // 3D 지도 위의 건물 모형: 도심의 빌딩 숲, 등대, 기와집, 초가, 공항, 경기장, 리조트…
 // 바다 위에 서지 않게 육지로 당기고, 파도보다 높은 곳에 세운다
-const at = (pos) => { const [x, z] = toXZ(toLand(pos)); return [x, Math.max(heightAt(x, z), 0.05) + 0.01, z] }
+const at = (pos, margin = 0.04) => { const [x, z] = toXZ(toLand(pos, margin)); return [x, Math.max(heightAt(x, z), 0.05) + 0.01, z] }
 // 이름표는 눈에 띄는 큰 시설에만 (나머지는 모형만 보여 화면이 복잡해지지 않게)
 const LABELED = new Set(['tower']) // 이름표는 가장 눈에 띄는 타워에만
 const WALL ='#d8e2f2', WARM = '#ffd98a'
@@ -91,7 +91,7 @@ function Harbor({ p }) {
 }
 
 function Building({ b }) {
-  const p = at(b.pos)
+  const p = at(b.pos, marginOf(b))
   const rot = b.rot ?? 0
   switch (b.kind) {
     case 'lighthouse': return <Lighthouse p={p} phase={b.pos[0] * 9} />
@@ -171,7 +171,7 @@ function CityLights() {
     const rnd = seeded(31)
     return CITIES.slice(0, 2).flatMap((c) => Array.from({ length: 16 }, () => {
       const a = rnd() * 6.283, d = Math.sqrt(rnd()) * c.r * 1.3
-      const [x, y, z] = at([c.pos[0] + Math.cos(a) * d * 1.15, c.pos[1] + Math.sin(a) * d])
+      const [x, y, z] = at([c.pos[0] + Math.cos(a) * d * 1.15, c.pos[1] + Math.sin(a) * d], 0.13)
       return [x, y + 0.28 + rnd() * 0.2, z, rnd() * 6]
     }))
   }, [])
@@ -196,7 +196,7 @@ export default function Buildings3D() {
       <CityLights />
       {BUILDINGS.map((b) => <Building key={b.name} b={b} />)}
       {BUILDINGS.filter((b) => LABELED.has(b.kind)).map((b) => {
-        const [x, y, z] = at(b.pos)
+        const [x, y, z] = at(b.pos, marginOf(b))
         return (
           <Html key={b.name} center distanceFactor={12} position={[x, y + (b.kind === 'tower' ? 0.62 : b.kind === 'lighthouse' ? 0.42 : 0.3), z]} pointerEvents="none">
             <span className="lm3d bld"><i className={`bi bi-${b.icon}`} />{b.name}</span>

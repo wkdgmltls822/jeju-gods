@@ -1,4 +1,4 @@
-import { HALLA, heightAt, toXZ } from './jeju'
+import { HALLA, heightAt, shoreDist, toXZ } from './jeju'
 
 // 제주의 대표 건물·시설: 그림 지도(아이콘), 3D 지도(건물 모형)가 함께 쓴다.
 // kind: airport 공항 · tower 고층 타워 · lighthouse 등대 · hall 전통 건물 · hanok 초가마을 · museum 박물관 · resort 리조트 · stadium 경기장 · harbor 항구 · office 관공서
@@ -31,17 +31,22 @@ export const CITIES = [
   { name: '표선', pos: [126.8335, 33.3265], r: 0.014, n: 10 },
 ]
 
-// 그림 지도·3D 지도에서 바다 위에 선 건물을 육지 안쪽(한라산 쪽)으로 당긴다.
-// 해안선을 단순하게 그린 지도라서, 해안 도심(제주시·서귀포)의 좌표가 바다로 삐져나가는 경우가 있다.
-// 실제 지도(위성·도로)에는 진짜 좌표를 써야 하므로 이 함수는 3D·그림 지도에서만 쓴다.
-export function toLand(pos) {
+// 그림 지도·3D 지도에서 건물을 해안선에서 margin 만큼 육지 안쪽(한라산 쪽)으로 당겨 세운다.
+// 해안선을 단순하게 그린 지도라서 해안 도심의 좌표가 바다로 삐져나가거나 건물 몸통이 물 위에 걸치는 경우가 있다.
+// 실제 지도(위성·도로)에는 진짜 좌표를 써야 하므로 이 함수는 3D·그림 지도에서만 쓴다. (우도·마라도 같은 딸린 섬은 그대로 둔다)
+export function toLand(pos, margin = 0.04) {
   let [x, z] = toXZ(pos)
-  for (let i = 0; i < 40 && heightAt(x, z) < 0.04; i++) {
+  for (let i = 0; i < 80; i++) {
+    const sd = shoreDist(x, z)
+    if (sd >= margin || (sd < 0 && heightAt(x, z) >= 0.04)) break
     const dx = HALLA[0] - x, dz = HALLA[1] - z, l = Math.hypot(dx, dz) || 1
-    x += (dx / l) * 0.05; z += (dz / l) * 0.05
+    x += (dx / l) * 0.04; z += (dz / l) * 0.04
   }
   return [x / 15.2 + 126.56, 33.38 - z / 18.5] // toXZ 의 반대 계산
 }
+// 건물 종류별로 해안에서 떨어뜨릴 거리: 큰 시설일수록 멀리, 등대·항구는 바닷가에
+const MARGINS = { airport: 0.3, stadium: 0.2, resort: 0.16, tower: 0.14, office: 0.14, museum: 0.14, hall: 0.14, hanok: 0.16, lighthouse: 0.02, harbor: 0.02 }
+export const marginOf = (b) => MARGINS[b.kind] ?? 0.14
 
 // 항상 같은 모양이 나오게 하는 작은 난수
 export function seeded(seed) {
@@ -56,7 +61,7 @@ export function cityBlocks(c, seed = 7) {
   for (let i = 0; i < c.n; i++) {
     const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * c.r
     const near = 1 - d / c.r
-    const [lng, lat] = toLand([c.pos[0] + Math.cos(a) * d * 1.15, c.pos[1] + Math.sin(a) * d])
+    const [lng, lat] = toLand([c.pos[0] + Math.cos(a) * d * 1.15, c.pos[1] + Math.sin(a) * d], 0.13)
     out.push([lng, lat, 0.5 + rnd() * 0.5, 0.18 + near * 0.55 + rnd() * 0.27])
   }
   return out

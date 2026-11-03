@@ -56,6 +56,9 @@ function distCoast(x, z) {
   return best
 }
 
+// 해안선까지의 거리(섬 안쪽은 +, 바다 쪽은 -). 건물을 해안에서 얼마나 떨어뜨릴지 정할 때 쓴다
+export function shoreDist(x, z) { return inside(x, z) ? distCoast(x, z) : -distCoast(x, z) }
+
 const smooth = (a, b, v) => { const t = Math.max(0, Math.min(1, (v - a) / (b - a))); return t * t * (3 - 2 * t) }
 
 // 값 잡음(value noise): 산등성이의 자잘한 울퉁불퉁함에 쓴다
