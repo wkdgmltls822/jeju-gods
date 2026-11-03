@@ -57,7 +57,7 @@
 /* ───── 테트리스 ───── */
 .tg-body { display: flex; gap: 1.2rem; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
 .tg-board { position: relative; width: min(300px, 86vw); border-radius: 1rem; overflow: hidden; border: 1px solid rgba(125, 211, 252, .45); box-shadow: 0 0 40px -10px rgba(125, 211, 252, .5), inset 0 0 30px rgba(0, 0, 0, .4); }
-.tg-canvas { display: block; width: 100%; aspect-ratio: 1 / 2; background: #0a1340; }
+.tg-canvas { display: block; width: 100%; background: #070f2e; }
 .tg-over { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .7rem; text-align: center; padding: 1rem; background: rgba(5, 10, 31, .78); backdrop-filter: blur(3px); animation: gm-fade .3s; }
 .tg-over h3 { margin: 0; font-size: 1.4rem; }
 .tg-over p { margin: 0; color: var(--hanji-dim); font-size: .9rem; line-height: 1.6; }
@@ -73,7 +73,7 @@
 .tg-box small { color: var(--hanji-dim); font-size: .75rem; }
 .tg-meter { position: relative; width: 34px; height: 120px; border-radius: .6rem; background: rgba(255, 255, 255, .07); overflow: hidden; display: flex; align-items: flex-end; border: 1px solid var(--line); }
 .tg-meter i { display: block; width: 100%; background: linear-gradient(180deg, #f4f9ff, #8fb35a 40%, #2c6e50); transition: height .6s cubic-bezier(.3, 1.2, .4, 1); box-shadow: 0 0 14px rgba(244, 249, 255, .5); }
-.tg-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: .55rem; width: min(300px, 86vw); margin: 1rem auto 0; touch-action: manipulation; }
+.tg-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: .55rem; width: min(480px, 92vw); margin: 1rem auto 0; touch-action: manipulation; }
 .tg-pad button { height: 3rem; border-radius: .9rem; border: 1px solid rgba(125, 211, 252, .4); background: rgba(125, 211, 252, .1); color: #fff; font-size: 1.2rem; display: grid; place-items: center; user-select: none; -webkit-user-select: none; transition: background .15s, transform .1s; }
 .tg-pad button:active { background: rgba(125, 211, 252, .35); transform: scale(.95); }
 .tg-pad button.wide { grid-column: span 2; display: flex; gap: .5rem; align-items: center; justify-content: center; font-size: .95rem; }
@@ -82,3 +82,10 @@
 @media (hover: hover) and (pointer: fine) and (min-width: 992px) { .tg-pad { display: none; } }
 @media (hover: none), (max-width: 991px) { .tg-help { display: none; } }
 .title-shimmer.flow-game { background-image: linear-gradient(90deg, #bef264, #ffffff, #fde68a, #7dd3fc, #f9a8d4, #bef264); }
+
+/* 3D 테트리스 판: 가로 4 : 세로 5 (배경의 별과 한라산이 함께 보이게 넓게) */
+.tg-board { width: min(480px, 92vw); }
+.tg-canvas { aspect-ratio: 4 / 5; background: #070f2e; }
+.tg-canvas canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
+.tg-board { cursor: default; }
+@media (min-width: 640px) { .tg-side { width: 150px; } }

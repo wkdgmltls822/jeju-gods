@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { GOD_COLORS } from '../data/gods'
+import TetrisScene3D from './TetrisScene3D'
 
 // 신들의 테트리스: 조각 7개는 신 7명(색·이름), 줄을 지우면 신이 축복을 내리고, 지운 줄은 한라산(1,947m)을 쌓는다.
 // 설문대할망이 치마폭에 흙을 날라 오름과 한라산을 만들었다는 이야기에서 따왔다.
-const COLS = 10, ROWS = 20, CELL = 30
+const COLS = 10, ROWS = 20
 const BEST_KEY = 'jeju-game:tetris-best'
 const MOUNTAIN = 1947, M_PER_LINE = 20
 
@@ -21,6 +22,7 @@ const color = (t) => GOD_COLORS[PIECES[t].god]
 const BLESS = ['', '조왕할망이 부엌 불을 지펴 줘요', '문전신이 문을 열어 줘요', '영등할망이 바람을 불어 줘요', '설문대할망이 한라산을 한 번에 쌓았어요!']
 const SCORE = [0, 100, 300, 500, 800]
 
+let fxId = 0
 const rotate = (m) => m[0].map((_, i) => m.map((row) => row[i]).reverse())
 const rotateCCW = (m) => rotate(rotate(rotate(m)))
 const emptyBoard = () => Array.from({ length: ROWS }, () => Array(COLS).fill(null))
@@ -80,7 +82,6 @@ function drawMini(canvas, type) {
 }
 
 export default function TetrisGame({ onBack }) {
-  const canvas = useRef(null)
   const nextCv = useRef(null)
   const holdCv = useRef(null)
   const g = useRef(null) // 게임 상태(화면 갱신 없이 빠르게 바뀌는 값들)
@@ -124,6 +125,7 @@ export default function TetrisGame({ onBack }) {
     const rows = s.board.map((row, i) => (row.every(Boolean) ? i : -1)).filter((i) => i >= 0)
     if (rows.length) {
       s.clearing = { rows, until: performance.now() + 260 }
+      s.fx = { id: ++fxId, cells: rows.flatMap((r) => s.board[r].map((tp, cx) => ({ x: cx, y: ROWS - 1 - r, color: color(tp) }))) } // 줄을 지울 때 터져 나갈 조각들
       s.cur = null
     } else spawn()
   }, [spawn])
@@ -178,15 +180,10 @@ export default function TetrisGame({ onBack }) {
     sync()
   }, [sync])
 
-  // 게임 루프: 시간에 따라 조각이 내려오고, 매 프레임 화면을 그린다
+  // 게임 루프: 시간에 따라 조각이 내려온다 (화면은 TetrisScene3D 가 상태를 읽어서 3D로 그린다)
   useEffect(() => {
     g.current = { board: emptyBoard(), cur: null, queue: makeBag(), hold: null, canHold: true, score: 0, lines: 0, level: 1, status: 'ready', acc: 0, last: 0, clearing: null }
     sync()
-    const cv = canvas.current
-    const dpr = window.devicePixelRatio || 1
-    cv.width = COLS * CELL * dpr; cv.height = ROWS * CELL * dpr
-    const ctx = cv.getContext('2d')
-    ctx.scale(dpr, dpr)
     let raf = 0
     const frame = (t) => {
       const s = g.current
@@ -214,7 +211,6 @@ export default function TetrisGame({ onBack }) {
         }
         s.last = t
       }
-      draw(ctx, s, t)
       raf = requestAnimationFrame(frame)
     }
     raf = requestAnimationFrame(frame)
@@ -290,7 +286,7 @@ export default function TetrisGame({ onBack }) {
 
       <div className="tg-body">
         <div className="tg-board">
-          <canvas ref={canvas} className="tg-canvas" aria-label="테트리스 판" />
+          <div className="tg-canvas" aria-label="테트리스 3D 판"><TetrisScene3D gref={g} colorOf={color} collide={collide} /></div>
           {toast && <div key={toast.key} className="tg-toast"><i className="bi bi-stars" />{toast.text}</div>}
           {ui.status === 'ready' && (
             <div className="tg-over">
@@ -342,37 +338,4 @@ export default function TetrisGame({ onBack }) {
       <p className="tg-help"><kbd>←</kbd><kbd>→</kbd> 이동 · <kbd>↑</kbd> 돌리기 · <kbd>↓</kbd> 내리기 · <kbd>Space</kbd> 한 번에 · <kbd>C</kbd> 보관 · <kbd>P</kbd> 멈춤</p>
     </section>
   )
-}
-
-// 판 그리기: 밤하늘 배경, 쌓인 조각, 그림자(내려갈 자리), 지금 조각, 줄 지울 때의 번쩍임
-function draw(ctx, s, t) {
-  const W = COLS * CELL, H = ROWS * CELL
-  const bg = ctx.createLinearGradient(0, 0, 0, H)
-  bg.addColorStop(0, '#0a1340'); bg.addColorStop(0.6, '#10224d'); bg.addColorStop(1, '#0b2f4a')
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H)
-  // 멀리 보이는 한라산
-  ctx.fillStyle = '#ffffff0d'
-  ctx.beginPath(); ctx.moveTo(0, H); ctx.lineTo(W * 0.25, H * 0.82); ctx.lineTo(W * 0.5, H * 0.7); ctx.lineTo(W * 0.75, H * 0.84); ctx.lineTo(W, H); ctx.fill()
-  ctx.strokeStyle = '#ffffff0f'; ctx.lineWidth = 1
-  for (let c = 1; c < COLS; c++) { ctx.beginPath(); ctx.moveTo(c * CELL, 0); ctx.lineTo(c * CELL, H); ctx.stroke() }
-  for (let r = 1; r < ROWS; r++) { ctx.beginPath(); ctx.moveTo(0, r * CELL); ctx.lineTo(W, r * CELL); ctx.stroke() }
-
-  s.board.forEach((row, r) => row.forEach((v, c) => { if (v) drawCell(ctx, c * CELL, r * CELL, color(v), CELL) }))
-
-  if (s.cur && s.status !== 'ready') {
-    const { m, x, y, type } = s.cur
-    let gy = y
-    while (!collide(s.board, m, x, gy + 1)) gy += 1
-    m.forEach((row, r) => row.forEach((v, c) => {
-      if (!v) return
-      if (gy + r >= 0) { ctx.strokeStyle = color(type) + '99'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.strokeRect((x + c) * CELL + 3, (gy + r) * CELL + 3, CELL - 6, CELL - 6); ctx.setLineDash([]) }
-    }))
-    m.forEach((row, r) => row.forEach((v, c) => { if (v && y + r >= 0) drawCell(ctx, (x + c) * CELL, (y + r) * CELL, color(type), CELL) }))
-  }
-
-  if (s.clearing) {
-    const k = 0.5 + 0.5 * Math.sin(t / 25)
-    ctx.fillStyle = `rgba(255,255,255,${0.35 + k * 0.45})`
-    s.clearing.rows.forEach((r) => ctx.fillRect(0, r * CELL, W, CELL))
-  }
 }
