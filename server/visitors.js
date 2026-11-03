@@ -1,8 +1,9 @@
+import { memo } from './cache.js'
 // 제주특별자치도 서귀포시 직영관광지 관람객수 추이 (공공데이터포털 odcloud, 2025-10-02 기준 파일)
 // 월별로 6곳(감귤박물관·산방산_용머리·정방폭포·중문대포 주상절리대·천제연폭포·천지연폭포)의 관람객 수가 있습니다.
 const URL_BASE = 'https://api.odcloud.kr/api/15125100/v1/uddi:32a1b877-af20-4505-a76a-fd389ebd30ca'
 
-export async function getVisitors() {
+async function getVisitorsRaw() {
   const key = process.env.DATA_GO_KR_KEY
   if (!key) throw new Error('DATA_GO_KR_KEY 가 없어요 (.env.local 확인)')
 
@@ -23,3 +24,6 @@ export async function getVisitors() {
 
   return { months, sites: Object.keys(months[0]?.sites ?? {}) }
 }
+
+// 월별 통계라서 한 시간 동안은 다시 묻지 않는다
+export const getVisitors = () => memo('visitors', 3600_000, getVisitorsRaw)

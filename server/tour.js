@@ -1,8 +1,9 @@
+import { memo } from './cache.js'
 // 한국관광공사 국문 관광정보 서비스 (TourAPI) — 키워드로 장소 검색
 // 신 이름은 TourAPI 에 없어서, 신화와 이어지는 "장소"(삼성혈, 한라산 등)를 찾는 용도로 씁니다.
 const BASE = 'https://apis.data.go.kr/B551011/KorService2'
 
-export async function searchTour({ keyword = '', contentTypeId = '' } = {}) {
+async function searchTourRaw({ keyword = '', contentTypeId = '' } = {}) {
   const key = process.env.DATA_GO_KR_KEY
   if (!key) throw new Error('DATA_GO_KR_KEY 가 없어요 (.env.local 확인)')
   if (!keyword.trim()) throw new Error('keyword 가 필요해요')
@@ -34,3 +35,6 @@ export async function searchTour({ keyword = '', contentTypeId = '' } = {}) {
       type: i.contenttypeid,
     }))
 }
+
+// 같은 검색은 12시간 동안 다시 묻지 않는다 (한도에 걸리면 예전 결과로 버틴다)
+export const searchTour = (args = {}) => memo(`tour:${(args.keyword ?? '').trim()}:${args.contentTypeId ?? ''}`, 12 * 3600_000, () => searchTourRaw(args))

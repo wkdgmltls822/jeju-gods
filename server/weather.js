@@ -1,3 +1,4 @@
+import { memo } from './cache.js'
 // 기상청 단기예보 조회서비스 — 제주시·서귀포시 등 지역별 앞으로 몇 시간 예보
 const URL_BASE = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
 
@@ -29,7 +30,7 @@ function latestBase() {
   return { base_date: ymd, base_time: String(hour).padStart(2, '0') + '00' }
 }
 
-export async function getWeather({ place = '제주시' } = {}) {
+async function getWeatherRaw({ place = '제주시' } = {}) {
   const key = process.env.DATA_GO_KR_KEY
   if (!key) throw new Error('DATA_GO_KR_KEY 가 없어요 (.env.local 확인)')
   const grid = GRID[place]
@@ -66,3 +67,6 @@ export async function getWeather({ place = '제주시' } = {}) {
     }))
   return { place, hours }
 }
+
+// 예보는 10분 동안 같은 지역을 다시 묻지 않는다
+export const getWeather = (args = {}) => memo(`weather:${args.place ?? '제주시'}`, 10 * 60_000, () => getWeatherRaw(args))
