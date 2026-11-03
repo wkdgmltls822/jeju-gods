@@ -28,13 +28,14 @@ function Star({ god, index }) {
   const halo = useRef(), core = useRef(), cross = useRef()
   const color = GOD_COLORS[god.id]
   const near = (POS[god.id][2] + 3.4) / 6.8 // 0: 가장 뒤, 1: 가장 앞
+  const small = useThree((st) => st.size.width < 600) ? 0.6 : 1 // 휴대폰에서는 글씨를 가리지 않게 별을 작게
   useFrame(({ clock }) => {
     const t = clock.elapsedTime
     const on = Math.min(1, Math.max(0, (t - (0.4 + index * 0.18)) / 0.7)) // 하나씩 켜진다
     const pulse = 1 + Math.sin(t * 1.6 + index) * 0.12
-    halo.current.scale.setScalar((2.1 + Math.sin(t * 1.3 + index * 1.7) * 0.35) * (0.8 + near * 0.45) * on * pulse)
-    core.current.scale.setScalar(on * (0.8 + near * 0.4))
-    cross.current.scale.setScalar((1.9 + near * 1.3) * on * (1 + Math.sin(t * 2.1 + index) * 0.08))
+    halo.current.scale.setScalar((2.1 + Math.sin(t * 1.3 + index * 1.7) * 0.35) * (0.8 + near * 0.45) * on * pulse * small)
+    core.current.scale.setScalar(on * (0.8 + near * 0.4) * small)
+    cross.current.scale.setScalar((1.9 + near * 1.3) * on * (1 + Math.sin(t * 2.1 + index) * 0.08) * small)
     cross.current.material.rotation = Math.sin(t * 0.4 + index) * 0.12
   })
   return (

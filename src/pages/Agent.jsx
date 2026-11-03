@@ -4,6 +4,7 @@ import GodAvatar from '../components/GodAvatar'
 import GodArt from '../components/GodArt'
 import { GODS, godById } from '../data/gods'
 import { useAppStore } from '../store/useAppStore'
+import '../styles/chatfx.css'
 
 const TOOL_LABEL = {
   get_weather: { icon: 'cloud-sun', text: '기상청 날씨 조회' },
@@ -36,13 +37,13 @@ const GREET = {
 function Steps({ steps }) {
   if (!steps?.length) return <div className="steps text-secondary">도구 없이 답했어요</div>
   return (
-    <div className="steps">
+    <div className="steps steps-in">
       <span className="text-secondary me-2">에이전트가 호출한 도구</span>
       {steps.map((s, i) => {
         const meta = TOOL_LABEL[s.tool] ?? { icon: 'tools', text: s.tool }
         const arg = Object.values(s.input ?? {})[0]
         return (
-          <span key={i} className={`step-chip ${s.ok ? '' : 'fail'}`}>
+          <span key={i} className={`step-chip ${s.ok ? '' : 'fail'}`} style={{ '--i': i }}>
             <i className={`bi bi-${meta.icon} me-1`} />{meta.text}{arg ? ` · ${arg}` : ''}
           </span>
         )
@@ -51,10 +52,49 @@ function Steps({ steps }) {
   )
 }
 
+// 방금 도착한 신의 답은 한 글자씩 써 내려가듯 보여 준다(지난 대화는 그대로). 다 쓰이면 호출한 도구 칩이 하나씩 나타난다.
+function TypeText({ text, animate, onTick, onDone }) {
+  const [n, setN] = useState(animate ? 0 : text.length)
+  useEffect(() => {
+    if (!animate) return undefined
+    const per = Math.max(1, Math.ceil(text.length / 70)) // 글이 길어도 약 1.7초 안에 끝난다
+    let i = 0, id = 0
+    const step = () => {
+      i = Math.min(text.length, i + per)
+      setN(i); onTick?.()
+      if (i < text.length) id = setTimeout(step, 24); else onDone?.()
+    }
+    id = setTimeout(step, 180)
+    return () => clearTimeout(id)
+  }, [animate, text]) // eslint-disable-line react-hooks/exhaustive-deps
+  return <>{text.slice(0, n)}{n < text.length && <span className="type-caret" aria-hidden="true" />}</>
+}
+
+function AssistantBody({ m, animate, onTick }) {
+  const [done, setDone] = useState(!animate)
+  return (
+    <>
+      <div className="body"><TypeText text={m.text} animate={animate} onTick={onTick} onDone={() => setDone(true)} /></div>
+      {done && (m.demo
+        ? <div className="steps demo-note"><i className="bi bi-info-circle me-1" />데모 응답 · AI·API 없이 미리 준비한 답이에요 ({m.demoReason})</div>
+        : <Steps steps={m.steps} />)}
+    </>
+  )
+}
+
+// 기다리는 동안 에이전트가 하는 일을 한 줄씩 보여 준다
+const THINKING = ['도구를 고르는 중…', '기상청·관광공사 자료를 살펴보는 중…', '신의 말투로 다듬는 중…']
+function Thinking() {
+  const [k, setK] = useState(0)
+  useEffect(() => { const t = setInterval(() => setK((v) => (v + 1) % THINKING.length), 1700); return () => clearInterval(t) }, [])
+  return <span className="thinking-text" key={k}>{THINKING[k]}</span>
+}
+
 export default function Agent() {
   const { chatGodId, setChatGod, messages, chatLoading, chatError, sendMessage } = useAppStore()
   const [text, setText] = useState('')
   const bottom = useRef(null)
+  const initialCount = useRef(messages.length) // 이 화면을 열 때 이미 있던 대화는 타자 효과 없이 보여 준다
   const god = godById(chatGodId)
 
   useEffect(() => { bottom.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }) }, [messages, chatLoading])
@@ -119,10 +159,7 @@ export default function Agent() {
                 <GodAvatar id={god.id} size={34} />
                 <div className="b-main">
                   <div className="who">{god.name}</div>
-                  <div className="body">{m.text}</div>
-                  {m.demo
-                    ? <div className="steps demo-note"><i className="bi bi-info-circle me-1" />데모 응답 · AI·API 없이 미리 준비한 답이에요 ({m.demoReason})</div>
-                    : <Steps steps={m.steps} />}
+                  <AssistantBody m={m} animate={i >= initialCount.current} onTick={() => bottom.current?.scrollIntoView({ block: 'end' })} />
                 </div>
               </div>
             ) : <div className="body">{m.text}</div>}
@@ -132,7 +169,7 @@ export default function Agent() {
           <div className="bubble assistant" role="status">
             <div className="b-row">
               <GodAvatar id={god.id} size={34} />
-              <div className="b-main"><div className="body"><span className="typing" aria-hidden="true"><i /><i /><i /></span><span className="visually-hidden">{god.name}이(가) 생각하는 중</span></div></div>
+              <div className="b-main"><div className="body"><span className="typing" aria-hidden="true"><i /><i /><i /></span><Thinking /><span className="visually-hidden">{god.name}이(가) 생각하는 중</span></div></div>
             </div>
           </div>
         )}

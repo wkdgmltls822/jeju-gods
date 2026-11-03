@@ -1,0 +1,9 @@
+/* 신과 대화: 타자 효과 커서, 도구 칩 등장, 생각 중 문구 */
+.type-caret { display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -0.15em; background: var(--sea); box-shadow: 0 0 8px var(--sea); animation: caret-blink .7s steps(2) infinite; }
+@keyframes caret-blink { 50% { opacity: 0; } }
+.steps-in .step-chip { animation: chip-pop .5s calc(var(--i) * .22s + .1s) cubic-bezier(.2, 1.5, .4, 1) both; box-shadow: 0 0 14px -4px var(--sea); }
+.steps-in > span:first-child { animation: fade-in .4s both; }
+@keyframes chip-pop { 0% { opacity: 0; scale: .4; translate: -8px 6px; } 100% { opacity: 1; scale: 1; translate: 0 0; } }
+.thinking-text { margin-left: .7rem; font-size: .82rem; color: var(--hanji-dim); animation: think-in .5s both; }
+@keyframes think-in { from { opacity: 0; translate: 0 5px; } }
+.bubble .body:has(.typing) { display: inline-flex; align-items: center; }

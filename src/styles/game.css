@@ -94,3 +94,26 @@
 .gm-3d { width: min(760px, 100%); aspect-ratio: 4 / 3.4; border-radius: 1.2rem; overflow: hidden; border: 1px solid rgba(125, 211, 252, .4); background: #060d28; box-shadow: 0 0 50px -14px rgba(125, 211, 252, .5); }
 .gm-3d canvas { display: block; width: 100% !important; height: 100% !important; }
 .gh-3d { font-size: .62rem; font-family: "Noto Sans KR", sans-serif; letter-spacing: .08em; vertical-align: middle; margin-left: .35rem; padding: .08rem .45rem; border-radius: 999px; color: #06202e; background: linear-gradient(135deg, #bef264, #7dd3fc); font-weight: 700; }
+
+/* ───── 허브 카드 3D 미리보기 (CSS 3D) ───── */
+.gh-scene { position: relative; display: block; height: 92px; perspective: 520px; }
+.gh-piece { position: absolute; left: 62px; top: 22px; width: 0; height: 0; transform-style: preserve-3d; animation: gh-spin 7s linear infinite; }
+@keyframes gh-spin { from { transform: rotateX(-26deg) rotateY(0deg); } to { transform: rotateX(-26deg) rotateY(360deg); } }
+.gh-cube { position: absolute; width: 26px; height: 26px; left: calc(var(--x) * 26px - 39px); top: calc(var(--y) * 26px - 13px); transform-style: preserve-3d; animation: gh-bob 2.4s calc(var(--x) * .12s) ease-in-out infinite; }
+@keyframes gh-bob { 50% { translate: 0 -5px; } }
+.gh-cube i { position: absolute; inset: 0; border-radius: 4px; background: var(--c); border: 1px solid rgba(255, 255, 255, .45); box-shadow: inset 0 0 8px rgba(255, 255, 255, .35); }
+.gh-cube i.f { transform: translateZ(13px); }
+.gh-cube i.b { transform: rotateY(180deg) translateZ(13px); filter: brightness(.7); }
+.gh-cube i.l { transform: rotateY(-90deg) translateZ(13px); filter: brightness(.85); }
+.gh-cube i.r { transform: rotateY(90deg) translateZ(13px); filter: brightness(.85); }
+.gh-cube i.t { transform: rotateX(90deg) translateZ(13px); filter: brightness(1.25); }
+.gh-cube i.u { transform: rotateX(-90deg) translateZ(13px); filter: brightness(.6); }
+.gh-shadow { position: absolute; left: 14px; top: 78px; width: 96px; height: 12px; border-radius: 50%; background: radial-gradient(ellipse, rgba(0, 0, 0, .5), transparent 70%); animation: gh-sh 2.4s ease-in-out infinite; }
+@keyframes gh-sh { 50% { scale: .85 1; opacity: .7; } }
+.gh-flip { position: absolute; top: 4px; left: calc(var(--i) * 62px); width: 54px; height: 76px; perspective: 400px; }
+.gh-flip-in { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; animation: gh-flip 5.4s calc(var(--i) * 1.2s) ease-in-out infinite; }
+@keyframes gh-flip { 0%, 18% { transform: rotateY(0); translate: 0 0; } 30%, 60% { transform: rotateY(180deg); translate: 0 -6px; } 72%, 100% { transform: rotateY(360deg); translate: 0 0; } }
+.gh-flip-back, .gh-flip-front { position: absolute; inset: 0; border-radius: 9px; backface-visibility: hidden; display: grid; place-items: center; }
+.gh-flip-back { background: radial-gradient(circle at 30% 20%, #4f46e5, #1e1b4b 65%); border: 1px solid rgba(165, 180, 252, .55); color: #ffd166; font-size: 1.3rem; }
+.gh-flip-front { transform: rotateY(180deg); background: linear-gradient(180deg, #1b2a55, #0b1b2e); border: 1px solid rgba(125, 211, 252, .6); box-shadow: 0 0 14px rgba(125, 211, 252, .4); }
+.gh-card:hover .gh-piece { animation-duration: 3s; }
