@@ -169,8 +169,10 @@ function Table() {
 
 // 카메라는 테이블 중앙 위에 고정한다 (마우스를 따라 움직이면 화면이 흔들려 보인다)
 function Rig() {
-  useFrame(({ camera }) => {
-    camera.position.set(0, 13.5, 8.2)
+  useFrame(({ camera, size }) => {
+    // 화면 비율에 맞춰 카드 4열이 화면 폭을 꽉 채우도록 거리를 정한다 (세로로 긴 휴대폰에서도 크게 보이게)
+    const d = Math.max(12.8, 7.8 / (0.689 * (size.width / size.height)))
+    camera.position.set(0, d * 0.823, d * 0.5)
     camera.lookAt(0, 0, 0.4)
   })
   return null
