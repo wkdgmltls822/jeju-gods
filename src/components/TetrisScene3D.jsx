@@ -175,7 +175,15 @@ function Stage() {
 
 // 카메라가 마우스를 따라 살짝 움직여서 입체감이 느껴지게
 function Rig() {
-  useFrame(({ camera, pointer, clock }, dt) => {
+  // 휴대폰(터치)에서는 카메라를 고정한다: 천천히 흔들리거나 손가락을 따라 움직이면 판이 흔들려 보여서 조작하기 어렵다
+  const fixed = useMemo(() => window.matchMedia('(hover: none)').matches, [])
+  useFrame(({ camera, pointer, clock, gl }, dt) => {
+    gl.domElement.dataset.camx = camera.position.x.toFixed(2) // (확인용) 카메라 가로 위치
+    if (fixed) {
+      camera.position.set((COLS - 1) / 2 + 2, 12.5, 30)
+      camera.lookAt((COLS - 1) / 2, 9.4, 0)
+      return
+    }
     const k = 1 - Math.pow(0.02, dt)
     const sway = Math.sin(clock.elapsedTime * 0.45) * 2.2
     camera.position.x += ((COLS - 1) / 2 + 3 + sway + pointer.x * 5 - camera.position.x) * k
