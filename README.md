@@ -27,6 +27,7 @@
 | 날씨 | `/weather` | 제주 읍·면 13곳의 기상청 예보를 올린 지역별 날씨 지도(기온·강수·바람 전환, 확대·이동, 시간별 차트). "실제 지도 · 건물" 버튼을 누르면 실제 지도(OpenStreetMap 기반) 위에 같은 날씨 핀과 3D 건물이 나온다 |
 | 신과 대화 | `/agent` | 신을 골라 대화. 답변 아래에 AI가 호출한 도구가 표시됨 |
 | 내 신 기록 | `/my` | 닉네임별 즐겨찾기한 신과 대화 기록 (Supabase) |
+| 게임 | `/game` | 제주 신 주제의 게임 2종. 신들의 테트리스(조각 7개가 신 7명, 줄을 지우면 신의 축복, 쌓은 줄은 한라산 1,947m)와 신 카드 짝맞추기(신 8명의 카드 16장, 짝을 맞추면 신 소개). 최고 기록은 브라우저에 저장 |
 | 소개 영상 | `/film` (홈에서도 재생) | 신 10명을 소개하는 1분 35초 영상. `/film` 은 전체 화면으로 재생되며 Esc 로 나갈 수 있다 |
 
 ## 사용한 공공데이터 API (3개)
@@ -86,7 +87,7 @@ src/
   main.jsx           Bootstrap + 우리 스타일, 라우터 시작
   router.jsx         메뉴(NAV_ITEMS) + 주소별 페이지
   layouts/           공통 틀 (메뉴·푸터)
-  pages/             Home, Myths, Weather, Agent, My, Film, NotFound
+  pages/             Home, Myths, Weather, Agent, My, Game, Film, NotFound
   components/        StarMap, StarMap3D(3D), JejuMap3D·JejuBuildings3D(3D 지도), WeatherMap·WeatherRealMap(날씨 지도), GodArt(신 그림), GodPanel, VisitorChart, SideDecor(넓은 화면 양옆 장식) ...
   store/             Zustand 전역 상태 (닉네임, 날씨, 즐겨찾기, 대화)
   data/gods.js       신 10명의 정보와 날씨 매칭 규칙

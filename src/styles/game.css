@@ -1,0 +1,83 @@
+/* ───── 게임 허브 ───── */
+.gh-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; max-width: 860px; }
+.gh-card { position: relative; text-align: left; color: var(--hanji); padding: 1.4rem 1.4rem 1.2rem; border-radius: 1.2rem; cursor: pointer; overflow: hidden;
+  background: linear-gradient(160deg, rgba(30, 41, 99, .75), rgba(11, 27, 46, .85)); border: 1px solid var(--line); transition: transform .25s, border-color .25s, box-shadow .25s; display: flex; flex-direction: column; gap: .5rem; }
+.gh-card:hover { transform: translateY(-5px); border-color: rgba(125, 211, 252, .6); box-shadow: 0 18px 40px -18px rgba(125, 211, 252, .55); }
+.gh-card h2 { font-size: 1.35rem; margin: .3rem 0 0; }
+.gh-card p { margin: 0; font-size: .9rem; color: var(--hanji-dim); line-height: 1.6; }
+.gh-meta { margin-top: .4rem; font-size: .82rem; color: #fde68a; }
+.gh-meta i { margin-right: .35rem; }
+.gh-go { margin-top: auto; padding-top: .6rem; font-weight: 700; color: #7dd3fc; display: inline-flex; align-items: center; gap: .4rem; transition: gap .2s; }
+.gh-card:hover .gh-go { gap: .8rem; }
+.gh-art { display: flex; gap: .3rem; height: 64px; align-items: flex-end; }
+.gh-art i { width: 26px; height: 26px; border-radius: 6px; background: var(--c); box-shadow: 0 0 16px var(--c); animation: gh-drop 2.6s calc(var(--i) * .35s) ease-in-out infinite; }
+.gh-art i:nth-child(2) { height: 52px; }
+@keyframes gh-drop { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+.gh-faces { display: flex; height: 64px; align-items: center; }
+.gh-faces .god-avatar { margin-right: -12px; box-shadow: 0 0 0 3px #10224d; transition: transform .3s; }
+.gh-card:hover .gh-faces .god-avatar { transform: translateY(-4px); }
+
+/* ───── 공통 막대·기록 ───── */
+.gm-bar { display: flex; align-items: center; flex-wrap: wrap; gap: .7rem 1rem; margin-bottom: 1rem; }
+.gm-back, .gm-restart { border: 1px solid var(--line); background: rgba(255, 255, 255, .05); color: var(--hanji); padding: .35rem .9rem; border-radius: 999px; font-size: .88rem; cursor: pointer; transition: background .2s, transform .2s; }
+.gm-back:hover, .gm-restart:hover { background: rgba(125, 211, 252, .18); transform: translateY(-1px); }
+.gm-stats { display: flex; flex-wrap: wrap; gap: .4rem 1rem; margin: 0 auto 0 .4rem; font-size: .92rem; color: var(--hanji); }
+.gm-stats i { margin-right: .35rem; color: #7dd3fc; }
+.gm-stats .best, .gm-stats .best i { color: #fde68a; }
+
+/* ───── 카드 짝맞추기 ───── */
+.gm-note { min-height: 2.4rem; display: flex; align-items: center; margin-bottom: .8rem; }
+.gm-note span { padding: .35rem .9rem; border-radius: 999px; font-size: .9rem; background: color-mix(in srgb, var(--c, #7dd3fc) 18%, transparent); border: 1px solid color-mix(in srgb, var(--c, #7dd3fc) 60%, transparent); animation: gm-pop .45s cubic-bezier(.2, 1.4, .4, 1); }
+.gm-note span.idle { background: none; border-color: transparent; color: var(--hanji-dim); }
+.gm-note i { margin-right: .4rem; color: var(--c, #fde68a); }
+@keyframes gm-pop { from { opacity: 0; translate: 0 8px; scale: .9; } }
+.gm-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem; max-width: 560px; }
+.mc { aspect-ratio: 3 / 4; padding: 0; border: 0; background: none; perspective: 700px; cursor: pointer; animation: gm-in .5s calc(var(--i) * .04s) both; }
+@keyframes gm-in { from { opacity: 0; translate: 0 14px; scale: .9; } }
+.mc-in { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.3, 1.2, .4, 1); }
+.mc.open .mc-in { transform: rotateY(180deg); }
+.mc-back, .mc-front { position: absolute; inset: 0; border-radius: .9rem; backface-visibility: hidden; display: grid; place-items: center; }
+.mc-back { background: radial-gradient(circle at 30% 20%, #4338ca, #1e1b4b 60%, #0b1340); border: 1px solid rgba(165, 180, 252, .45); color: #c7d2fe; font-size: 1.8rem; box-shadow: inset 0 0 22px rgba(129, 140, 248, .25); transition: box-shadow .25s; }
+.mc:hover .mc-back { box-shadow: inset 0 0 26px rgba(165, 180, 252, .55), 0 0 18px rgba(129, 140, 248, .4); }
+.mc-front { transform: rotateY(180deg); align-content: center; gap: .35rem; background: linear-gradient(180deg, color-mix(in srgb, var(--c) 28%, #0b1b2e), #0b1b2e); border: 1.5px solid color-mix(in srgb, var(--c) 70%, transparent); }
+.mc-front b { font-size: .78rem; font-family: 'Noto Serif KR', serif; color: #fff; text-align: center; }
+.mc.ok .mc-front { box-shadow: 0 0 22px color-mix(in srgb, var(--c) 65%, transparent); animation: gm-ok .7s ease-out; }
+@keyframes gm-ok { 40% { scale: 1.08; } }
+.gm-win { position: fixed; inset: 0; z-index: 1050; display: grid; place-items: center; background: rgba(4, 10, 28, .72); backdrop-filter: blur(4px); animation: gm-fade .3s; }
+@keyframes gm-fade { from { opacity: 0; } }
+.gm-win-card { text-align: center; padding: 1.8rem 2.2rem; border-radius: 1.3rem; background: linear-gradient(160deg, #1e2a63, #0b1b2e); border: 1px solid rgba(125, 211, 252, .5); box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .8); animation: gm-pop .5s cubic-bezier(.2, 1.4, .4, 1); max-width: 92vw; }
+.gm-win-card h3 { margin: .4rem 0 .5rem; }
+.gm-win-card p { color: var(--hanji-dim); }
+.gm-win-stars { font-size: 2rem; display: flex; justify-content: center; gap: .4rem; }
+.gm-win-stars i { color: #475569; }
+.gm-win-stars i.on { color: #fde68a; text-shadow: 0 0 16px rgba(253, 230, 138, .8); animation: gm-star .6s calc(var(--k) * .18s) both; }
+@keyframes gm-star { from { scale: 0; rotate: -90deg; } }
+.gm-win-btns { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+
+/* ───── 테트리스 ───── */
+.tg-body { display: flex; gap: 1.2rem; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+.tg-board { position: relative; width: min(300px, 86vw); border-radius: 1rem; overflow: hidden; border: 1px solid rgba(125, 211, 252, .45); box-shadow: 0 0 40px -10px rgba(125, 211, 252, .5), inset 0 0 30px rgba(0, 0, 0, .4); }
+.tg-canvas { display: block; width: 100%; aspect-ratio: 1 / 2; background: #0a1340; }
+.tg-over { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .7rem; text-align: center; padding: 1rem; background: rgba(5, 10, 31, .78); backdrop-filter: blur(3px); animation: gm-fade .3s; }
+.tg-over h3 { margin: 0; font-size: 1.4rem; }
+.tg-over p { margin: 0; color: var(--hanji-dim); font-size: .9rem; line-height: 1.6; }
+.tg-toast { position: absolute; left: 50%; top: 14%; translate: -50% 0; width: max-content; max-width: 92%; padding: .45rem 1rem; border-radius: 999px; font-size: .86rem; color: #fff; background: rgba(125, 211, 252, .22); border: 1px solid rgba(125, 211, 252, .7); box-shadow: 0 0 20px rgba(125, 211, 252, .5); animation: tg-toast 1.5s ease-out forwards; pointer-events: none; text-align: center; }
+.tg-toast i { margin-right: .4rem; color: #fde68a; }
+@keyframes tg-toast { 0% { opacity: 0; translate: -50% 10px; scale: .9; } 14% { opacity: 1; translate: -50% 0; scale: 1; } 80% { opacity: 1; } 100% { opacity: 0; translate: -50% -14px; } }
+.tg-side { display: flex; flex-direction: row; flex-wrap: wrap; gap: .8rem; width: min(300px, 86vw); }
+@media (min-width: 640px) { .tg-side { flex-direction: column; width: 150px; } }
+.tg-box { flex: 1 1 120px; display: grid; justify-items: center; gap: .25rem; padding: .7rem; border-radius: 1rem; background: rgba(255, 255, 255, .05); border: 1px solid var(--line); text-align: center; }
+.tg-label { font-size: .75rem; color: var(--hanji-dim); letter-spacing: .04em; }
+.tg-mini { width: 96px; height: 96px; }
+.tg-box b { font-size: .9rem; font-family: 'Noto Serif KR', serif; }
+.tg-box small { color: var(--hanji-dim); font-size: .75rem; }
+.tg-meter { position: relative; width: 34px; height: 120px; border-radius: .6rem; background: rgba(255, 255, 255, .07); overflow: hidden; display: flex; align-items: flex-end; border: 1px solid var(--line); }
+.tg-meter i { display: block; width: 100%; background: linear-gradient(180deg, #f4f9ff, #8fb35a 40%, #2c6e50); transition: height .6s cubic-bezier(.3, 1.2, .4, 1); box-shadow: 0 0 14px rgba(244, 249, 255, .5); }
+.tg-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: .55rem; width: min(300px, 86vw); margin: 1rem auto 0; touch-action: manipulation; }
+.tg-pad button { height: 3rem; border-radius: .9rem; border: 1px solid rgba(125, 211, 252, .4); background: rgba(125, 211, 252, .1); color: #fff; font-size: 1.2rem; display: grid; place-items: center; user-select: none; -webkit-user-select: none; transition: background .15s, transform .1s; }
+.tg-pad button:active { background: rgba(125, 211, 252, .35); transform: scale(.95); }
+.tg-pad button.wide { grid-column: span 2; display: flex; gap: .5rem; align-items: center; justify-content: center; font-size: .95rem; }
+.tg-help { text-align: center; margin: .9rem 0 0; font-size: .8rem; color: var(--hanji-dim); }
+.tg-help kbd { padding: .05rem .4rem; margin: 0 .1rem; border-radius: .35rem; border: 1px solid var(--line); background: rgba(255, 255, 255, .06); color: var(--hanji); font-size: .75rem; }
+@media (hover: hover) and (pointer: fine) and (min-width: 992px) { .tg-pad { display: none; } }
+@media (hover: none), (max-width: 991px) { .tg-help { display: none; } }
