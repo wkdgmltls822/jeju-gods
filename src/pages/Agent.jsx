@@ -86,8 +86,8 @@ function AssistantBody({ m, animate, onTick }) {
   )
 }
 
-// 기다리는 동안 에이전트가 하는 일을 한 줄씩 보여 준다
-const THINKING = ['도구를 고르는 중…', '기상청·관광공사 자료를 살펴보는 중…', '신의 말투로 다듬는 중…']
+// 기다리는 동안 신이 헤아리는 모습을 한 줄씩 보여 준다 (도구 호출 같은 기술 용어는 쓰지 않는다)
+const THINKING = ['별빛에 귀를 기울이는 중…', '바람과 구름의 기별을 읽는 중…', '섬 곳곳의 이야기를 불러 모으는 중…', '신의 말씀으로 빚는 중…']
 function Thinking() {
   const [k, setK] = useState(0)
   useEffect(() => { const t = setInterval(() => setK((v) => (v + 1) % THINKING.length), 1700); return () => clearInterval(t) }, [])
