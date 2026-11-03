@@ -53,7 +53,7 @@
 
 안전장치: 도구 호출 루프 상한 5회, 대화 기록은 최근 10개만 전송, 답은 5문장 이내, "도구 결과에 없는 내용은 지어내지 않는다" 지시.
 
-AI는 `ANTHROPIC_API_KEY`가 있으면 Claude(`claude-sonnet-5-5`)를, 없고 `GEMINI_API_KEY`만 있으면 Gemini를 쓴다.
+AI는 `ANTHROPIC_API_KEY`가 있으면 Claude(`CLAUDE_MODEL` 로 고른 모델 — 기본 haiku, 시연·발표는 sonnet)를, 없고 `GEMINI_API_KEY`만 있으면 Gemini를 쓴다.
 
 **데모 채팅(폴백)**: AI 키가 없거나 사용 한도를 넘었거나 연결에 실패하면, API 연동 없이 미리 준비한 답(`server/dummyChat.js`)으로 대신 응답한다. 이때 화면에는 호출한 도구 대신 "데모 응답 · AI·API 없이 미리 준비한 답이에요 (이유)"가 표시되어, 실제 AI 답변과 구분된다. 날씨·관람객 같은 실시간 정보는 지어내지 않고 "지금은 확인할 수 없다"고 답한다. `AI_DEMO=1` 환경변수로 일부러 데모 모드를 켤 수도 있다.
 
