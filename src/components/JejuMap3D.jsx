@@ -16,7 +16,7 @@ const starPos = (g) => [(g.x - 400) * 0.0215, SKY_Y + (LIFT[g.id] ?? 0), (g.y - 
 const pinPos = (p) => { const [x, z] = toXZ(p.pos); return [x, Math.max(heightAt(x, z), 0) + 0.02, z] }
 
 // 지형 색: 해변 모래 → 숲 → 바위 → 한라산 정상
-const STOPS = [[-0.55, '#071d38'], [-0.14, '#0b3a5e'], [-0.03, '#1b8fa0'], [0, '#6fd0c8'], [0.03, '#cdbd86'], [0.08, '#8fb35a'], [0.16, '#3f9a62'], [0.4, '#2c6e50'], [0.6, '#6c7568'], [0.88, '#a9a39c'], [1.1, '#f4f9ff']].map(([h, c]) => [h, new Color(c)])
+const STOPS = [[-0.55, '#071d38'], [-0.14, '#0b3a5e'], [-0.03, '#1b9aa8'], [0, '#7fe0d2'], [0.03, '#f0e0a4'], [0.065, '#a5d65a'], [0.13, '#52b865'], [0.3, '#2f9157'], [0.5, '#2a6e4c'], [0.68, '#7a6f5e'], [0.88, '#a8a095'], [1.02, '#e4e0d8'], [1.15, '#ffffff']].map(([h, c]) => [h, new Color(c)])
 function colorAt(h, out) {
   if (h <= STOPS[0][0]) return out.copy(STOPS[0][1])
   for (let i = 1; i < STOPS.length; i++) {
@@ -27,7 +27,7 @@ function colorAt(h, out) {
 
 function Island() {
   const geo = useMemo(() => {
-    const g = new PlaneGeometry(14.4, 10.6, 320, 236)
+    const g = new PlaneGeometry(14.4, 10.6, 480, 354)
     g.rotateX(-Math.PI / 2)
     const p = g.attributes.position
     const col = new Float32Array(p.count * 3)
@@ -43,14 +43,20 @@ function Island() {
     return g
   }, [])
   const mat = useMemo(() => {
-    const m = new MeshStandardMaterial({ vertexColors: true, roughness: 1 })
+    // 선명한 지형: 푸른 숲·모래·바위 색을 또렷하게, 가파른 곳은 바위색, 잔 무늬로 숲의 결, 등고선은 은은하게
+    const m = new MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0, emissive: '#0c2a22', emissiveIntensity: 0.55 })
     m.onBeforeCompile = (sh) => {
-      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying float vY;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvY = position.y;')
-      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vY;')
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying float vY; varying vec3 vPos;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvY = position.y; vPos = position;')
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vY; varying vec3 vPos;')
         .replace('#include <color_fragment>', `#include <color_fragment>
           float cf = vY * 18.0; float fw = fwidth(cf); float fr = fract(cf); float dl = min(fr, 1.0 - fr);
           float ln = 1.0 - smoothstep(0.0, fw * 1.4 + 0.001, dl);
-          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.92, 1.0, 0.95), ln * 0.2 * step(0.035, vY));`)
+          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.92, 1.0, 0.95), ln * 0.09 * step(0.035, vY));
+          float g1 = sin(vPos.x * 38.0 + sin(vPos.z * 31.0) * 2.0) * sin(vPos.z * 43.0 + sin(vPos.x * 27.0) * 2.0);
+          diffuseColor.rgb *= 1.0 + 0.13 * g1 * step(0.03, vY);
+          vec3 fn = normalize(cross(dFdx(vPos), dFdy(vPos)));
+          float slope = clamp((1.0 - abs(fn.y) - 0.05) * 6.0, 0.0, 1.0) * step(0.04, vY);
+          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.50, 0.43, 0.35) * (0.85 + 0.25 * g1), slope * 0.7);`)
     }
     return m
   }, [])
