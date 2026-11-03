@@ -1,0 +1,21 @@
+/* 화면 전환: 중심에서 별빛이 사방으로 쏟아지고, 새 화면이 깊은 곳에서 앞으로 떠오른다 */
+.warp { position: fixed; inset: 0; z-index: 1060; pointer-events: none; overflow: hidden; }
+.warp-flash { position: absolute; left: 50%; top: 50%; width: 30vmax; height: 30vmax; margin: -15vmax 0 0 -15vmax; border-radius: 50%;
+  background: radial-gradient(circle, rgba(190, 225, 255, .55), rgba(110, 140, 255, .22) 40%, transparent 70%); animation: warp-flash .8s ease-out both; }
+@keyframes warp-flash { 0% { opacity: 0; scale: .2; } 25% { opacity: 1; } 100% { opacity: 0; scale: 3.4; } }
+.warp i { position: absolute; left: 50%; top: 50%; width: var(--l); height: var(--w); border-radius: 99px; transform-origin: 0 50%;
+  background: linear-gradient(90deg, transparent, var(--c) 55%, #fff); box-shadow: 0 0 12px var(--c); opacity: 0;
+  animation: warp-streak .78s var(--d) cubic-bezier(.2, .7, .3, 1) both; }
+@keyframes warp-streak {
+  0% { transform: rotate(var(--a)) translateX(2vmax) scaleX(.02); opacity: 0; }
+  22% { opacity: 1; }
+  100% { transform: rotate(var(--a)) translateX(50vmax) scaleX(1); opacity: 0; }
+}
+
+/* 새 화면이 뒤에서 앞으로 다가오며 나타난다 (위치가 고정된 요소가 틀어지지 않게 끝에는 변형을 남기지 않는다) */
+.page-enter { animation: page-warp-in .7s cubic-bezier(.2, .8, .2, 1) backwards; transform-origin: 50% 20%; }
+@keyframes page-warp-in {
+  0% { opacity: 0; transform: perspective(1400px) translate3d(0, 28px, -220px) rotateX(7deg) scale(.97); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}

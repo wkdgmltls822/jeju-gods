@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { lazy, Suspense, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import TodayGod from '../components/TodayGod'
 import HealthCheck from '../components/HealthCheck'
@@ -10,11 +10,22 @@ import Reveal from '../components/Reveal'
 import IntroVideo from '../components/IntroVideo'
 import '../styles/home.css'
 
+// 3D 별자리: WebGL 을 쓸 수 있고 '움직임 줄이기'가 아닐 때만. 아니면(또는 불러오는 동안) 기존 2D 별자리를 보여 준다
+const HeroConstellation3D = lazy(() => import('../components/HeroConstellation3D'))
+const canUse3D = () => {
+  try {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
+    const c = document.createElement('canvas')
+    return Boolean(c.getContext('webgl2') || c.getContext('webgl'))
+  } catch { return false }
+}
+
 // 첫 화면: 기획 의도가 한 줄로 보여야 합니다
 const INTENT = '1만 8천 신이 깃든 땅의 신화와 설화를 AI 이야기꾼과 함께 오늘의 날씨와 장소 위에서 다시 만납니다.'
 
 export default function Home() {
   const hero = useRef(null)
+  const use3d = useRef(canUse3D()).current
   // 마우스를 움직이면 달·오로라·별자리가 층마다 다르게 따라 움직인다 (시차)
   const onMove = (e) => {
     const r = hero.current.getBoundingClientRect()
@@ -25,7 +36,7 @@ export default function Home() {
     <>
       <section ref={hero} className="hero" onMouseMove={onMove}>
         <SkyBackground />
-        <HeroConstellation />
+        {use3d ? <Suspense fallback={<HeroConstellation />}><HeroConstellation3D /></Suspense> : <HeroConstellation />}
         <div className="aurora" aria-hidden="true" />
         <div className="moon" />
         <p className="page-eyebrow mb-2 rise" style={{ animationDelay: '.15s' }}>Jeju Myth · Public Data · AI Agent</p>
