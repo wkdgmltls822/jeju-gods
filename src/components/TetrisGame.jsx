@@ -92,7 +92,7 @@ export default function TetrisGame({ onBack }) {
 
   const sync = useCallback(() => {
     const s = g.current
-    setUi({ score: s.score, lines: s.lines, level: s.level, status: s.status, next: s.queue[0], hold: s.hold })
+    setUi({ score: s.score, lines: s.lines, level: s.level, status: s.status, next: s.queue[0], hold: s.hold, cx: s.cur ? s.cur.x : null, shape: s.cur ? s.cur.m.flat().join('') : '' })
   }, [])
 
   const say = useCallback((text) => setToast({ text, key: Math.random() }), [])
@@ -113,6 +113,7 @@ export default function TetrisGame({ onBack }) {
   }, [sync])
 
   const reset = useCallback(() => {
+    if (window.matchMedia("(hover: none)").matches) document.querySelector(".tg")?.scrollIntoView({ behavior: "smooth", block: "start" }) // 휴대폰: 판과 버튼이 한 화면에 보이게
     g.current = { board: emptyBoard(), cur: null, queue: makeBag(), hold: null, canHold: true, score: 0, lines: 0, level: 1, status: 'playing', acc: 0, last: 0, clearing: null }
     setToast(null)
     spawn()
@@ -259,13 +260,42 @@ export default function TetrisGame({ onBack }) {
   }, [toast])
 
   // 화면 버튼(휴대폰): 누르고 있으면 반복
-  const holdBtn = (fn) => {
-    let a, b
-    const stop = () => { clearTimeout(a); clearInterval(b) }
-    return {
-      onPointerDown: (e) => { e.preventDefault(); fn(); sync(); a = setTimeout(() => { b = setInterval(() => { fn(); sync() }, 45) }, 150) },
-      onPointerUp: stop, onPointerLeave: stop, onPointerCancel: stop,
-    }
+  // 반복 타이머는 한 곳(ref)에 둔다. 화면이 다시 그려질 때마다 새로 만들어지는 변수에 두면, 손을 뗄 때 이전 타이머를 못 꺼서 계속 반복된다.
+  const rep = useRef({ a: 0, b: 0 })
+  const stopRep = () => { clearTimeout(rep.current.a); clearInterval(rep.current.b) }
+  useEffect(() => stopRep, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const holdBtn = (fn) => ({
+    onPointerDown: (e) => {
+      e.preventDefault(); stopRep(); fn(); sync()
+      rep.current.a = setTimeout(() => { rep.current.b = setInterval(() => { fn(); sync() }, 45) }, 160)
+    },
+    onPointerUp: stopRep, onPointerLeave: stopRep, onPointerCancel: stopRep,
+  })
+  // 판을 직접 터치: 좌우로 밀면 이동, 아래로 밀면 내리기, 짧게 탭하면 돌리기, 아래로 빠르게 튕기면 한 번에 내리기
+  const touch = useRef(null)
+  const onTouchStart = (e) => {
+    if (e.pointerType === 'mouse') return
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+    touch.current = { x0: e.clientX, y0: e.clientY, t0: performance.now(), ax: 0, ay: 0, lx: e.clientX, ly: e.clientY, moved: false }
+  }
+  const onTouchMove = (e) => {
+    const t = touch.current
+    if (!t) return
+    const cell = Math.max(18, e.currentTarget.clientWidth * 0.056) // 한 칸에 해당하는 손가락 이동 거리
+    t.ax += e.clientX - t.lx; t.ay += e.clientY - t.ly; t.lx = e.clientX; t.ly = e.clientY
+    while (Math.abs(t.ax) >= cell) { move(t.ax > 0 ? 1 : -1); t.ax -= Math.sign(t.ax) * cell; t.moved = true }
+    while (t.ay >= cell * 1.15) { soft(); t.ay -= cell * 1.15; t.moved = true }
+    if (t.ay < 0) t.ay = 0
+    if (t.moved) sync()
+  }
+  const onTouchEnd = (e) => {
+    const t = touch.current
+    touch.current = null
+    if (!t) return
+    const dt = Math.max(1, performance.now() - t.t0), dx = e.clientX - t.x0, dy = e.clientY - t.y0
+    if (!t.moved && Math.hypot(dx, dy) < 14 && dt < 320) turn(true) // 짧게 탭: 돌리기
+    else if (dy > 70 && Math.abs(dx) < 50 && dy / dt > 0.8) hard() // 아래로 빠르게 튕기기: 한 번에 내리기
+    sync()
   }
   const tap = (fn) => ({ onPointerDown: (e) => { e.preventDefault(); fn(); sync() } })
 
@@ -285,8 +315,8 @@ export default function TetrisGame({ onBack }) {
       </div>
 
       <div className="tg-body">
-        <div className="tg-board">
-          <div className="tg-canvas" aria-label="테트리스 3D 판"><TetrisScene3D gref={g} colorOf={color} collide={collide} /></div>
+        <div className="tg-board" data-cx={ui.cx ?? ""} data-shape={ui.shape}>
+          <div className="tg-canvas" aria-label="테트리스 3D 판" onPointerDown={onTouchStart} onPointerMove={onTouchMove} onPointerUp={onTouchEnd} onPointerCancel={() => { touch.current = null }}><TetrisScene3D gref={g} colorOf={color} collide={collide} /></div>
           {toast && <div key={toast.key} className="tg-toast"><i className="bi bi-stars" />{toast.text}</div>}
           {ui.status === 'ready' && (
             <div className="tg-over">
@@ -320,7 +350,7 @@ export default function TetrisGame({ onBack }) {
           </div>
           <div className="tg-box tg-mt">
             <span className="tg-label"><i className="bi bi-triangle-fill" /> 한라산 쌓기</span>
-            <div className="tg-meter"><i style={{ height: `${(meters / MOUNTAIN) * 100}%` }} /></div>
+            <div className="tg-meter"><i style={{ "--p": `${(meters / MOUNTAIN) * 100}%` }} /></div>
             <b>{meters.toLocaleString()} / 1,947m</b>
             <small>{ui.lines}줄 지움</small>
           </div>
@@ -335,6 +365,7 @@ export default function TetrisGame({ onBack }) {
         <button type="button" aria-label="한 번에 내리기" className="wide" {...tap(hard)}><i className="bi bi-chevron-double-down" />한 번에</button>
         <button type="button" aria-label="보관" {...tap(hold)}><i className="bi bi-box-arrow-in-down" /></button>
       </div>
+      <p className="tg-touch-help"><i className="bi bi-hand-index me-1" />판을 밀어서 이동 · 탭하면 돌리기 · 아래로 튕기면 한 번에 내려요</p>
       <p className="tg-help"><kbd>←</kbd><kbd>→</kbd> 이동 · <kbd>↑</kbd> 돌리기 · <kbd>↓</kbd> 내리기 · <kbd>Space</kbd> 한 번에 · <kbd>C</kbd> 보관 · <kbd>P</kbd> 멈춤</p>
     </section>
   )

@@ -72,7 +72,7 @@
 .tg-box b { font-size: .9rem; font-family: 'Noto Serif KR', serif; }
 .tg-box small { color: var(--hanji-dim); font-size: .75rem; }
 .tg-meter { position: relative; width: 34px; height: 120px; border-radius: .6rem; background: rgba(255, 255, 255, .07); overflow: hidden; display: flex; align-items: flex-end; border: 1px solid var(--line); }
-.tg-meter i { display: block; width: 100%; background: linear-gradient(180deg, #f4f9ff, #8fb35a 40%, #2c6e50); transition: height .6s cubic-bezier(.3, 1.2, .4, 1); box-shadow: 0 0 14px rgba(244, 249, 255, .5); }
+.tg-meter i { display: block; width: 100%; height: var(--p, 0%); background: linear-gradient(180deg, #f4f9ff, #8fb35a 40%, #2c6e50); transition: height .6s, width .6s cubic-bezier(.3, 1.2, .4, 1); box-shadow: 0 0 14px rgba(244, 249, 255, .5); }
 .tg-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: .55rem; width: min(480px, 92vw); margin: 1rem auto 0; touch-action: manipulation; }
 .tg-pad button { height: 3rem; border-radius: .9rem; border: 1px solid rgba(125, 211, 252, .4); background: rgba(125, 211, 252, .1); color: #fff; font-size: 1.2rem; display: grid; place-items: center; user-select: none; -webkit-user-select: none; transition: background .15s, transform .1s; }
 .tg-pad button:active { background: rgba(125, 211, 252, .35); transform: scale(.95); }
@@ -117,3 +117,25 @@
 .gh-flip-back { background: radial-gradient(circle at 30% 20%, #4f46e5, #1e1b4b 65%); border: 1px solid rgba(165, 180, 252, .55); color: #ffd166; font-size: 1.3rem; }
 .gh-flip-front { transform: rotateY(180deg); background: linear-gradient(180deg, #1b2a55, #0b1b2e); border: 1px solid rgba(125, 211, 252, .6); box-shadow: 0 0 14px rgba(125, 211, 252, .4); }
 .gh-card:hover .gh-piece { animation-duration: 3s; }
+
+/* 휴대폰: 판을 직접 터치해서 조작 (밀기·탭·튕기기) */
+.tg-canvas { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.tg-touch-help { display: none; text-align: center; margin: .7rem 0 0; font-size: .8rem; color: var(--hanji-dim); }
+@media (hover: none) { .tg-touch-help { display: block; } }
+
+/* ───── 휴대폰 테트리스: 판과 조작 버튼이 한 화면에 들어오게 (정보 상자는 판 위의 얇은 줄로) ───── */
+@media (max-width: 639px) {
+  .tg { scroll-margin-top: 108px; }
+  .tg-body { flex-direction: column; align-items: center; gap: .55rem; }
+  .tg-side { order: -1; flex-direction: row; flex-wrap: nowrap; gap: .45rem; width: min(480px, 92vw); }
+  .tg-box { flex: 1 1 0; padding: .35rem .3rem; gap: .1rem; border-radius: .8rem; }
+  .tg-mini { width: 52px; height: 52px; }
+  .tg-label { font-size: .66rem; }
+  .tg-box b { font-size: .78rem; }
+  .tg-box small { display: none; }
+  .tg-meter { width: 100%; height: 14px; align-items: stretch; border-radius: 999px; }
+  .tg-meter i { width: var(--p, 0%); height: 100%; }
+  .tg-canvas { aspect-ratio: 1 / 1.08; }
+  .tg-pad { grid-template-columns: repeat(4, 1fr); margin-top: .55rem; }
+  .tg-pad button.wide { grid-column: span 3; }
+}
