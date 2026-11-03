@@ -137,7 +137,7 @@ export default function TetrisGame({ onBack }) {
     s.board = [...Array.from({ length: n }, () => Array(COLS).fill(null)), ...s.board.filter((_, i) => !s.clearing.rows.includes(i))]
     s.lines += n
     s.score += SCORE[n] * s.level
-    const lv = 1 + Math.floor(s.score / 1000) // 레벨은 점수 1000점마다 한 단계
+    const lv = 1 + Math.floor(s.lines / 10)
     if (lv > s.level) say(`한라산이 한 층 높아졌어요 (레벨 ${lv})`)
     else say(BLESS[n])
     s.level = lv
@@ -191,7 +191,7 @@ export default function TetrisGame({ onBack }) {
       if (s.status === 'playing') {
         if (s.clearing) { if (t >= s.clearing.until) finishClear() } else if (s.cur) {
           if (s.last) s.acc += t - s.last
-          const speed = Math.max(80, 820 * Math.pow(0.9, s.score / 400)) // 점수가 오를수록 조금씩 계속 빨라진다
+          const speed = Math.max(90, 820 * Math.pow(0.9, s.score / 1500)) // 점수가 오를수록 조금씩 계속 빨라진다 (점수는 레벨과 무관하게 속도만 정한다)
           if (collide(s.board, s.cur.m, s.cur.x, s.cur.y + 1)) {
             if (!s.lockStart) { s.lockStart = t; s.resets = 0 }
             if (t - s.lockStart >= LOCK_MS) lockPiece()
