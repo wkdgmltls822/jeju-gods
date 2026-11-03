@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { AdditiveBlending, Color } from 'three'
+import { AdditiveBlending, CanvasTexture, Color } from 'three'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Line, Sparkles, Stars } from '@react-three/drei'
 import { GODS, EDGES, GOD_COLORS } from '../data/gods'
@@ -8,21 +8,39 @@ import { glowTexture } from '../lib/glow'
 // 홈 히어로 뒤에 떠 있는 3D 별자리: 신 10명이 깊이가 다른 별로 떠 있고, 선이 차례로 그려지며,
 // 빛알갱이가 선을 따라 흐른다. 마우스를 움직이면 별자리 전체가 기울어져서 입체감이 느껴진다.
 // 별자리 지도(800×520)의 좌표를 3D 공간으로 옮기고, 별마다 앞뒤 깊이를 다르게 준다.
+// 네 갈래로 뻗는 별빛(십자 반짝임) 무늬
+const flare = (() => {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 128
+  const c = cv.getContext('2d')
+  const g = c.createRadialGradient(64, 64, 0, 64, 64, 64)
+  g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.12, 'rgba(255,255,255,.75)'); g.addColorStop(0.35, 'rgba(255,255,255,.12)'); g.addColorStop(1, 'rgba(255,255,255,0)')
+  c.fillStyle = g; c.fillRect(0, 0, 128, 128)
+  for (const [w, h] of [[120, 3], [3, 120]]) {
+    const l = c.createLinearGradient(64 - w / 2, 64 - h / 2, 64 + w / 2, 64 + h / 2)
+    l.addColorStop(0, 'rgba(255,255,255,0)'); l.addColorStop(0.5, 'rgba(255,255,255,.95)'); l.addColorStop(1, 'rgba(255,255,255,0)')
+    c.fillStyle = l; c.fillRect(64 - w / 2, 64 - h / 2, w, h)
+  }
+  return new CanvasTexture(cv)
+})()
 const POS = Object.fromEntries(GODS.map((g, i) => [g.id, [(g.x - 400) / 36, -(g.y - 250) / 36, Math.sin(i * 2.3) * 3.4]]))
 
 function Star({ god, index }) {
-  const halo = useRef(), core = useRef()
+  const halo = useRef(), core = useRef(), cross = useRef()
   const color = GOD_COLORS[god.id]
+  const near = (POS[god.id][2] + 3.4) / 6.8 // 0: 가장 뒤, 1: 가장 앞
   useFrame(({ clock }) => {
     const t = clock.elapsedTime
     const on = Math.min(1, Math.max(0, (t - (0.4 + index * 0.18)) / 0.7)) // 하나씩 켜진다
     const pulse = 1 + Math.sin(t * 1.6 + index) * 0.12
-    halo.current.scale.setScalar((3.2 + Math.sin(t * 1.3 + index * 1.7) * 0.5) * on * pulse)
-    core.current.scale.setScalar(on)
+    halo.current.scale.setScalar((2.1 + Math.sin(t * 1.3 + index * 1.7) * 0.35) * (0.8 + near * 0.45) * on * pulse)
+    core.current.scale.setScalar(on * (0.8 + near * 0.4))
+    cross.current.scale.setScalar((1.9 + near * 1.3) * on * (1 + Math.sin(t * 2.1 + index) * 0.08))
+    cross.current.material.rotation = Math.sin(t * 0.4 + index) * 0.12
   })
   return (
     <group position={POS[god.id]}>
-      <sprite ref={halo}><spriteMaterial map={glowTexture} color={color} transparent opacity={0.85} depthWrite={false} blending={AdditiveBlending} /></sprite>
+      <sprite ref={halo}><spriteMaterial map={glowTexture} color={color} transparent opacity={0.55 + near * 0.35} depthWrite={false} blending={AdditiveBlending} /></sprite>
+      <sprite ref={cross}><spriteMaterial map={flare} color="#ffffff" transparent opacity={0.5 + near * 0.45} depthWrite={false} blending={AdditiveBlending} /></sprite>
       <mesh ref={core}>
         <sphereGeometry args={[0.2, 20, 20]} />
         <meshBasicMaterial color="#ffffff" />

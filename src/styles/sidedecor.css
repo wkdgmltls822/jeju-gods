@@ -1,6 +1,6 @@
 /* 넓은 화면 양옆 장식. 좁은 화면(1400px 미만)에서는 아예 나타나지 않는다. */
 .sd { display: none; }
-@media (min-width: 1400px) {
+@media (min-width: 1560px) {
   .sd { display: block; position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; --sy: 0; }
   .sd-col { position: absolute; top: 0; bottom: 0; width: min(32vw, 620px); }
   .sd-left { left: 0; mask-image: linear-gradient(90deg, #000 40%, transparent); }
