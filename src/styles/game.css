@@ -89,3 +89,8 @@
 .tg-canvas canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
 .tg-board { cursor: default; }
 @media (min-width: 640px) { .tg-side { width: 150px; } }
+
+/* 3D 카드 탁자: 가로로 넓게 (카드 4×4 가 한눈에) */
+.gm-3d { width: min(760px, 100%); aspect-ratio: 4 / 3.4; border-radius: 1.2rem; overflow: hidden; border: 1px solid rgba(125, 211, 252, .4); background: #060d28; box-shadow: 0 0 50px -14px rgba(125, 211, 252, .5); }
+.gm-3d canvas { display: block; width: 100% !important; height: 100% !important; }
+.gh-3d { font-size: .62rem; font-family: "Noto Sans KR", sans-serif; letter-spacing: .08em; vertical-align: middle; margin-left: .35rem; padding: .08rem .45rem; border-radius: 999px; color: #06202e; background: linear-gradient(135deg, #bef264, #7dd3fc); font-weight: 700; }

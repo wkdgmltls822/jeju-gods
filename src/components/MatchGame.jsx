@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { GODS, GOD_COLORS } from '../data/gods'
-import GodAvatar from './GodAvatar'
+import CardScene3D from './CardScene3D'
 
 // 신 카드 짝맞추기: 신 8명의 카드 두 장씩(16장)을 섞어 놓고 같은 신 두 장을 찾는다.
 // 짝을 맞출 때마다 그 신의 한 줄 소개가 나오고, 걸린 시간·뒤집은 횟수를 기록한다(최고 기록은 이 브라우저에 저장).
@@ -82,24 +82,8 @@ export default function MatchGame({ onBack }) {
           : <span className="idle">같은 신의 카드 두 장을 찾아 보세요</span>}
       </div>
 
-      <div className="gm-grid">
-        {deck.map((c, i) => {
-          const ok = matched.includes(c.id)
-          const open = ok || flipped.includes(c.uid)
-          const g = godOf(c.id)
-          return (
-            <button key={c.uid} type="button" className={`mc ${open ? 'open' : ''} ${ok ? 'ok' : ''}`} style={{ '--c': GOD_COLORS[c.id], '--i': i }}
-              onClick={() => flip(c)} aria-label={open ? g.name : '뒤집힌 카드'} aria-pressed={open}>
-              <span className="mc-in">
-                <span className="mc-back"><i className="bi bi-moon-stars-fill" /></span>
-                <span className="mc-front">
-                  <GodAvatar id={c.id} size={72} active={ok} />
-                  <b>{g.name.replace(/\(.*\)/, '')}</b>
-                </span>
-              </span>
-            </button>
-          )
-        })}
+      <div className="gm-3d" aria-label="카드 16장이 놓인 3D 탁자" data-deck={deck.map((c) => c.id).join(",")}>
+        <CardScene3D deck={deck} flipped={flipped} matched={matched} onFlip={flip} />
       </div>
 
       {done && (
