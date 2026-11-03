@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { COAST } from '../lib/jeju'
-import { BUILDINGS, CITIES, cityBlocks } from '../lib/buildings'
+import { BUILDINGS, CITIES, cityBlocks, toLand } from '../lib/buildings'
 import { fetchWeather } from '../api/client'
 import { ErrorNote, Loading } from './Status'
 import '../styles/wxmap.css'
@@ -33,7 +33,8 @@ const LAND = (() => {
   for (let i = 0; i < n; i++) { const p = PTS[i], m = mid(p, PTS[(i + 1) % n]); d += ` Q${p[0].toFixed(1)} ${p[1].toFixed(1)} ${m[0].toFixed(1)} ${m[1].toFixed(1)}` }
   return d + 'Z'
 })()
-const CITY_RECTS = CITIES.flatMap((c) => cityBlocks(c).map(([lng, lat, sz]) => ({ x: px(lng), y: py(lat), w: 2.2 + sz * 2.6 })))
+const BUILDINGS_ON_LAND = BUILDINGS.map((b) => ({ ...b, pos: toLand(b.pos) })) // 그림 지도는 해안선이 단순해서, 바다 위에 선 건물은 육지로 당겨 그린다
+const CITY_RECTS =CITIES.flatMap((c) => cityBlocks(c).map(([lng, lat, sz]) => ({ x: px(lng), y: py(lat), w: 2.2 + sz * 2.6 })))
 const HALLA = [px(126.533), py(33.362)]
 
 const hourOf = (t) => Number(t.slice(0, 2))
@@ -230,7 +231,7 @@ export default function WeatherMap({ patch = null }) {
               <text x={px(126.265) + 12} y={py(33.115) + 4} className="wm-name small">마라도</text>
             </svg>
             {mode === 'wind' && windy.h.wind >= 3 && <div className="wm-windlines" aria-hidden="true">{Array.from({ length: 5 }, (_, i) => <i key={i} style={{ top: `${18 + i * 16}%`, animationDelay: `${i * 0.7}s`, animationDuration: `${Math.max(2.2, 5.5 - windy.h.wind * 0.3)}s` }} />)}</div>}
-            {BUILDINGS.map((b) => (
+            {BUILDINGS_ON_LAND.map((b) => (
               <span key={b.name} className={`wm-bld ${b.kind} ${compact ? '' : 'show'}`} style={{ left: `${(px(b.pos[0]) / W) * 100}%`, top: `${(py(b.pos[1]) / H) * 100}%` }} title={b.name}>
                 <i className={`bi bi-${b.icon}`} /><em>{b.name}</em>
               </span>

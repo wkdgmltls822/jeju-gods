@@ -1,3 +1,5 @@
+import { HALLA, heightAt, toXZ } from './jeju'
+
 // 제주의 대표 건물·시설: 그림 지도(아이콘), 3D 지도(건물 모형)가 함께 쓴다.
 // kind: airport 공항 · tower 고층 타워 · lighthouse 등대 · hall 전통 건물 · hanok 초가마을 · museum 박물관 · resort 리조트 · stadium 경기장 · harbor 항구 · office 관공서
 export const BUILDINGS = [
@@ -29,6 +31,18 @@ export const CITIES = [
   { name: '표선', pos: [126.8335, 33.3265], r: 0.014, n: 10 },
 ]
 
+// 그림 지도·3D 지도에서 바다 위에 선 건물을 육지 안쪽(한라산 쪽)으로 당긴다.
+// 해안선을 단순하게 그린 지도라서, 해안 도심(제주시·서귀포)의 좌표가 바다로 삐져나가는 경우가 있다.
+// 실제 지도(위성·도로)에는 진짜 좌표를 써야 하므로 이 함수는 3D·그림 지도에서만 쓴다.
+export function toLand(pos) {
+  let [x, z] = toXZ(pos)
+  for (let i = 0; i < 40 && heightAt(x, z) < 0.04; i++) {
+    const dx = HALLA[0] - x, dz = HALLA[1] - z, l = Math.hypot(dx, dz) || 1
+    x += (dx / l) * 0.05; z += (dz / l) * 0.05
+  }
+  return [x / 15.2 + 126.56, 33.38 - z / 18.5] // toXZ 의 반대 계산
+}
+
 // 항상 같은 모양이 나오게 하는 작은 난수
 export function seeded(seed) {
   let s = seed >>> 0 || 1
@@ -42,7 +56,8 @@ export function cityBlocks(c, seed = 7) {
   for (let i = 0; i < c.n; i++) {
     const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * c.r
     const near = 1 - d / c.r
-    out.push([c.pos[0] + Math.cos(a) * d * 1.15, c.pos[1] + Math.sin(a) * d, 0.5 + rnd() * 0.5, 0.18 + near * 0.55 + rnd() * 0.27])
+    const [lng, lat] = toLand([c.pos[0] + Math.cos(a) * d * 1.15, c.pos[1] + Math.sin(a) * d])
+    out.push([lng, lat, 0.5 + rnd() * 0.5, 0.18 + near * 0.55 + rnd() * 0.27])
   }
   return out
 }

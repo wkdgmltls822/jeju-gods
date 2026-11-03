@@ -2,12 +2,13 @@ import { useLayoutEffect, useMemo, useRef } from 'react'
 import { AdditiveBlending, Color, Object3D } from 'three'
 import { useFrame } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
-import { BUILDINGS, CITIES, cityBlocks, seeded } from '../lib/buildings'
+import { BUILDINGS, CITIES, cityBlocks, seeded, toLand } from '../lib/buildings'
 import { heightAt, toXZ } from '../lib/jeju'
 import { glowTexture } from '../lib/glow'
 
 // 3D 지도 위의 건물 모형: 도심의 빌딩 숲, 등대, 기와집, 초가, 공항, 경기장, 리조트…
-const at = (pos) => { const [x, z] = toXZ(pos); return [x, Math.max(heightAt(x, z), 0), z] }
+// 바다 위에 서지 않게 육지로 당기고, 파도보다 높은 곳에 세운다
+const at = (pos) => { const [x, z] = toXZ(toLand(pos)); return [x, Math.max(heightAt(x, z), 0.05) + 0.01, z] }
 // 이름표는 눈에 띄는 큰 시설에만 (나머지는 모형만 보여 화면이 복잡해지지 않게)
 const LABELED = new Set(['tower']) // 이름표는 가장 눈에 띄는 타워에만
 const WALL ='#d8e2f2', WARM = '#ffd98a'
